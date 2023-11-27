@@ -53,6 +53,7 @@ jobs:
   
       - name: Copy files from base
         run: |
+          ls -la .github/base
           cp -r .github/base/. .
 
       - name: Check for changes
