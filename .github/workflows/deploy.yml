@@ -23,15 +23,12 @@ jobs:
       # - name: Clone rust-lang-uz/rust-by-example
       #   run: git clone https://github.com/rust-lang-uz/rust-by-example rust-examples
 
-      - name: Create tools directory
-        run: mkdir -p ~/.tools
-
       - name: Install mdbook
         run: |
-          curl -Lf https://github.com/rust-lang/mdBook/releases/download/v0.4.35/mdbook-v0.4.35-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=~/.tools
-          ls -la ~/.tools
-          echo ~/.tools/mdbook-v0.4.35-x86_64-unknown-linux-gnu >> $GITHUB_PATH
-        working-directory: ~/.tools
+          mkdir -p .tools
+          curl -Lf https://github.com/rust-lang/mdBook/releases/download/v0.4.35/mdbook-v0.4.35-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./.tools
+          ls -la .tools
+          echo `pwd`/.tools >> $GITHUB_PATH
 
       - name: Build rust-book
         run: |
@@ -45,10 +42,11 @@ jobs:
       #     mdbook build
       #     mv book ../rust-by-example
   
-      - name: Clean up cloned repos
+      - name: Clean up
         run: |
           rm -rf rust-book
           # rm -rf rust-examples
+          rm -rf .tools
   
       - name: Copy files from base
         run: |
