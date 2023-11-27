@@ -24,13 +24,16 @@ jobs:
       #   run: git clone https://github.com/rust-lang-uz/rust-by-example rust-examples
   
       - name: Install mdbook
-        run: cargo install mdbook
+        run: |
+          curl -Lf https://github.com/rust-lang/mdBook/releases/download/v0.4.35/mdbook-v0.4.35-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=~/.cargo/bin
+          echo ~/.cargo/bin >> $GITHUB_PATH
+        working-directory: ~/.cargo/bin
 
       - name: Build rust-book
         run: |
-          cd rust-book
           mdbook build
           mv book ../book
+        working-directory: rust-book
   
       # - name: Build rust-examples
       #   run: |
