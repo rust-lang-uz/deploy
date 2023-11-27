@@ -55,6 +55,7 @@ jobs:
         run: |
           ls -la .github/base
           cp -r .github/base .
+          ls -la .
 
       - name: Check for changes
         run: |
