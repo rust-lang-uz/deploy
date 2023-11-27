@@ -23,8 +23,8 @@ jobs:
       - name: Clone rust-lang-uz/book
         run: git clone https://github.com/rust-lang-uz/book rust-book --depth 1
   
-      # - name: Clone rust-lang-uz/rust-by-example
-      #   run: git clone https://github.com/rust-lang-uz/rust-by-example rust-examples
+      - name: Clone rust-lang-uz/rust-by-example
+        run: git clone https://github.com/rust-lang-uz/rust-by-example rust-example --depth 1
 
       - name: Install mdbook
         run: |
@@ -39,16 +39,16 @@ jobs:
           mv book ../../book
         working-directory: rust-book/rustbook-uz
   
-      # - name: Build rust-examples
-      #   run: |
-      #     cd rust-examples
-      #     mdbook build
-      #     mv book ../rust-by-example
-  
+      - name: Build rust-example
+        run: |
+          mdbook build
+          mv book ../../rust-by-example
+        working-directory: rust-example/rustbook-uz
+
       - name: Clean up
         run: |
           rm -rf rust-book
-          # rm -rf rust-examples
+          rm -rf rust-example
           rm -rf .tools
   
       - name: Copy files from base
