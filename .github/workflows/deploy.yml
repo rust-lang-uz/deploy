@@ -1,0 +1,63 @@
+name: Deploy CI
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+  
+      - name: Clean up repository
+        run: |
+          find . -maxdepth 1 ! -name '.github' ! -name '.git' ! -name '.' ! -name '..' -exec rm -rf {} \;
+  
+      - name: Clone rust-lang-uz/book
+        run: git clone https://github.com/rust-lang-uz/book rust-book
+  
+      # - name: Clone rust-lang-uz/rust-by-example
+      #   run: git clone https://github.com/rust-lang-uz/rust-by-example rust-examples
+  
+      - name: Install mdbook
+        run: cargo install mdbook
+
+      - name: Build rust-book
+        run: |
+          cd rust-book
+          mdbook build
+          mv book ../book
+  
+      # - name: Build rust-examples
+      #   run: |
+      #     cd rust-examples
+      #     mdbook build
+      #     mv book ../rust-by-example
+  
+      - name: Clean up cloned repos
+        run: |
+          rm -rf rust-book
+          # rm -rf rust-examples
+  
+      - name: Copy files from base
+        run: |
+          cp -r .github/base/* .
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --quiet || echo "::set-output name=changes::true"
+  
+      - name: Commit and Push changes
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your-email@example.com'
+          git add .
+          git commit -m 'Update book and rust-examples'
+          git push
+  
