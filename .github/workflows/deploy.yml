@@ -59,7 +59,7 @@ jobs:
       - name: Check for changes
         id: git-check
         run: |
-          [[ -z $(git status -uno --porcelain) ]] && echo "this branch is clean, no need to push..." && echo "::set-output name=changes::false";
+          [[ -z $(git status -uno --porcelain) ]] && echo "this branch is clean, no need to push..." && echo "::set-output name=changes::false" && exit 0;
   
       - name: Commit and Push changes
         if: steps.git-check.outputs.changes == 'true'
