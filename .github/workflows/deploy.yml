@@ -56,16 +56,13 @@ jobs:
           ls -la .github/base
           cp -r .github/base .
           ls -la .
-
-      - name: Check for changes
+  
+      - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
           [[ -z $(git status -uno --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
-  
-      - name: Commit and Push changes
-        run: |
           git commit -m 'Update book and rust-examples $(date +%Y-%m-%d)'
           git push
   
