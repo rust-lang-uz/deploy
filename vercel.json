@@ -2,9 +2,6 @@
     "version": 2,
     "name": "rust-docs",
     "public": true,
-    "builds": [
-        { "src": "**/*", "use": "@now/static" }
-    ],
     "redirects": [
         {
         "source": "/",
