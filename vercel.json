@@ -4,9 +4,14 @@
     "public": true,
     "redirects": [
         {
-        "source": "/",
-        "destination": "https://rust-lang.uz",
-        "permanent": false
+            "source": "/",
+            "destination": "https://rust-lang.uz",
+            "permanent": false
+        },
+        {
+            "source": "/book",
+            "destination": "https://doc.rust-lang.uz/book/",
+            "permanent": false
         }
     ]
 }
