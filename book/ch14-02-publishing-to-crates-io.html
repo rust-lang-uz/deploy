@@ -1,0 +1,516 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Crateni Crates.io-ga nashr qilish - Rust dasturlash tili</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">Rust dasturlash tili</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Muqaddima</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Kirish</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Ishni boshlash</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> O'rnatish</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> Hello, World!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> Hello, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Taxmin qilish o'yinini dasturlash</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Umumiy dasturlash tushunchalari</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> O'zgaruvchilar va o'zgaruvchanlik</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Ma'lumotlar turlari</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funksiyalar</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Izohlar</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Control Flow</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Ownershipni tushunish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> Ownership nima?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencelar va  Borrowing</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> Slice turi</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Tegishli ma'lumotlarni tuzish uchun Structdan foydalanish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Structlarni aniqlash va yaratish</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Structs yordamida namunaviy dastur</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Metod sintaksisi</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enumlar va patternlarni moslashtirish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Enumni aniqlash</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> match Control Flow konstruksiyasi</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> if let bilan qisqacha Control Flow</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> O'sib borayotgan loyihalarni Paketlar, Cratelar va Modullar bilan boshqarish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paketlar va Cratelar</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Qo'llanish doirasi va maxfiylikni nazorat qilish uchun modullarni aniqlash</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Modul daraxtidagi elementga murojaat qilish yo'llari</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> use kalit so'zi bilan yo'llarni qamrab olish</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Modullarni turli fayllarga ajratish</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Umumiy to'plamlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Vectorlar bilan qiymatlar ro'yxatini saqlash</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> UTF-8 kodlangan matnni Stringlar bilan saqlash</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Hash Mapda bog'langan qiymatlarga ega kalitlarni saqlash</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Xatolar bilan ishlash</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> panic! bilan tuzatib bo'lmaydigan xatolar</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Result bilan tiklanadigan xatolar</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! yoki panic! emas</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Umumiy turlar, traitlar va lifetime</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Generik ma'lumotlar turlari</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traitlar: umumiy xatti-harakatni aniqlash</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Referencelarni lifetime bilan tekshirish</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Avtomatlashtirilgan testlarni yozish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Testlarni qanday yozish kerak</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Sinovlar qanday o'tkazilishini nazorat qilish</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Test tashkil etish</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> I/O loyihasi: Buyruqlar qatori dasturini yaratish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Buyruqlar qatori argumentini qabul qilishs</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Faylni o'qish</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Modullikni yaxshilash va xatolarni qayta ishlash uchun refactoring</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Sinovga asoslangan ishlab chiqish bilan kutubxonaning funksionalligini rivojlantirish</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Environment o'zgaruvchilari bilan ishlash</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Xato xabarlarini standart chiqish o'rniga standart xatoga yozish</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Funksional til xususiyatlari: iteratorlar va closurelar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closurelar: Environmentni qamrab oladigan anonim funksiyalar</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Iteratorlar bilan bir qator elementlarga ishlov berish</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> I/O loyihamizni takomillashtirish</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Ishlash samaradorligini solishtirish: Looplar va iteratorlar</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Cargo va Crates.io haqida ko'proq</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Reliz profillari bilan structlarni moslashtirish</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html" class="active"><strong aria-hidden="true">14.2.</strong> Crateni Crates.io-ga nashr qilish</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspacelar</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Binary fayllarni Crates.io'dan cargo install bilan o'rnatish</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Maxsus buyruqlar bilan Cargoni kengaytirish</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointerlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Heapdagi ma'lumotlarni ko'rsatish uchun Box&lt;T&gt; dan foydalanish</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Deref Traitidan foydalangan holda oddiy referencelar kabi Smart Pointerlar bilan ishlash</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Drop Traiti bilan tozalashda kodni ishga tushirish</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, reference hisoblangan Smart Pointer</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; va ichki o'zgaruvchanlik namunasi</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Reference Cycles Can Leak Memory</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Qo'rqmas parallellik</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Kodni bir vaqtning o'zida ishga tushirish uchun threadlardan foydalanish</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Threadlar orasidagi ma'lumotlarni uzatish uchun xabar uzatishdan(Message Passing) foydalanish</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Shared-State Concurrency</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Sync va Send traitlari bilan kengaytiriladigan parallellik</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rustning ob'ektga yo'naltirilgan dasturlash xususiyatlari- OOP</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Ob'ektga yo'naltirilgan tillarning xususiyatlari</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Har xil turdagi qiymatlarga ruxsat beruvchi trait ob'ektlaridan foydalanish</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Ob'ektga yo'naltirilgan dizayn patternini implement qilish</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patternlar va Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> All the Places Patterns Can Be Used</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutability: Whether a Pattern Might Fail to Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Pattern Sintaksisi</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Kengaytirilgan Xususiyatlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Xavfsiz Rust</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Murakkab Traitlar</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Kengaytirilgan Turlar</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Kengaytirilgan funksiyalar va closurelar</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Makrolar</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Yakuniy loyiha: Ko'p tarmoqli veb-serverni qurish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Yagona tarmoqli veb-serverni qurish</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Bizning yagona tarmoqli serverimizni ko'p tarmoqli serverga aylantirish</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Ajoyib o'chirish va tozalash</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Ilova</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Kalit so'zlar</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operatorlar va Symbollar</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Hosilaviy Traitlar</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Foydali Development Toollar</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Nashrlar</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Kitobning tarjimalari</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Rust qanday yasaladi va “Nightly Rust”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust dasturlash tili</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="crateni-cratesio-ga-nashr-qilish"><a class="header" href="#crateni-cratesio-ga-nashr-qilish">Crateni Crates.io-ga nashr qilish</a></h2>
+<p>Biz <a href="https://crates.io/">crates.io</a><!-- ignore --> paketlaridan loyihamizga dependency sifatida foydalandik, lekin siz oʻz paketlaringizni nashr(publish) qilish orqali kodingizni boshqa odamlar bilan ham baham koʻrishingiz mumkin. <a href="https://crates.io/">crates.io</a><!-- ignore --> saytidagi crate registri paketlaringizning manba kodini tarqatadi, shuning uchun u birinchi navbatda open source kodni saqlaydi.</p>
+<p>Rust va Cargoda publish etilgan paketingizni odamlar topishi va undan foydalanishini osonlashtiradigan funksiyalar mavjud. Biz ushbu xususiyatlarning ba'zilari haqida keyin gaplashamiz va keyin paketni qanday nashr(publish) qilishni tushuntiramiz.</p>
+<h3 id="foydali-hujjatlargadocumentation-sharhlarcomment-qoyish"><a class="header" href="#foydali-hujjatlargadocumentation-sharhlarcomment-qoyish">Foydali hujjatlarga(documentation) sharhlar(comment) qo'yish</a></h3>
+<p>Paketlaringizni to'g'ri hujjatlashtirish boshqa foydalanuvchilarga ulardan qanday va qachon foydalanishni bilishga yordam beradi, shuning uchun texnik hujjatlarni yozish uchun vaqt sarflashga arziydi. 3-bobda biz Rust kodini ikkita slash <code>//</code> yordamida qanday izohlashni(comment) muhokama qildik. Rust shuningdek, HTML hujjatlarini yaratadigan <em>documentation comment</em> deb nomlanuvchi hujjatlar uchun o'ziga xos izohga ega. HTML sizning cratengiz qanday <em>impelemnent qilinganidan</em> farqli o'laroq, sizning cratengizdan qanday <em>foydalanishni</em> bilishga qiziqqan dasturchilar uchun mo'ljallangan umumiy API elementlari uchun hujjat sharhlari mazmunini ko'rsatadi.</p>
+<p>Hujjatlarga sharhlar ikkita o'rniga uchta slashdan foydalaniladi, <code>///</code> va matnni formatlash uchun Markdown notationni qo'llab-quvvatlaydi. Hujjatlarga sharhlarni ular hujjatlashtirilayotgan element oldiga qo'ying. 14-1 Ro'yxatda <code>my_crate</code> nomli cratedagi <code>bir_qoshish</code> funksiyasi uchun hujjat sharhlari ko'rsatilgan.</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
+<pre><code class="language-rust ignore">/// Berilgan raqamga bitta qo'shadi.
+///
+/// # Misollar
+///
+/// ```
+/// let argument = 5;
+/// let javob = my_crate::bir_qoshish(argument);
+///
+/// assert_eq!(6, javob);
+/// ```
+pub fn bir_qoshish(x: i32) -&gt; i32 {
+    x + 1
+}</code></pre>
+<p><span class="caption">Ro'yxat 14-1: Funksiya uchun hujjat sharhi(documentation comment</span></p>
+<p>Bu yerda biz <code>bir_qoshish</code> funksiyasi nima qilishini tavsiflab beramiz, <code>Misollar</code> sarlavhasi bilan bo‘limni boshlaymiz, so‘ngra <code>bir_qoshish</code>  funksiyasidan qanday foydalanishni ko‘rsatadigan kodni taqdim etamiz. Biz ushbu hujjat sharhidan HTML hujjatlarini <code>cargo doc</code>ni ishga tushirish orqali yaratishimiz mumkin. Bu buyruq Rust bilan tarqatilgan <code>rustdoc</code> toolini ishga tushiradi va yaratilgan HTML hujjatlarini <em>target/doc</em> jildiga joylashtiradi.</p>
+<p>Qulaylik uchun <code>cargo doc --open</code> ni ishga tushirish joriy crate hujjatlari uchun HTML-ni yaratadi (shuningdek, cratengizning barcha dependencilari uchun hujjatlar) va natijani veb-brauzerda ochadi. <code>bir_qoshish</code> funksiyasiga o‘ting va 14-1-rasmda ko‘rsatilganidek, hujjat sharhlaridagi matn qanday ko‘rsatilishini ko‘rasiz:</p>
+<img alt="Rendered HTML documentation for the `bir_qoshish` function of `my_crate`" src="img/trlpuz1.png" class="center" />
+<p><span class="caption">14-1-Rasm: <code>bir_qoshish</code> funksiyasi uchun HTML hujjatlari</span></p>
+<h4 id="tez-tez-ishlatiladigan-bolimlar"><a class="header" href="#tez-tez-ishlatiladigan-bolimlar">Tez-tez ishlatiladigan bo'limlar</a></h4>
+<p>Biz HTML-da <code>Misollar</code> sarlavhali bo'lim yaratish uchun 14-1 ro'yxatdagi <code># Misollar</code> Markdown sarlavhasidan foydalandik. Mualliflar o'z hujjatlarida tez-tez foydalanadigan boshqa bo'limlar:</p>
+<ul>
+<li><strong>Panics</strong>: Hujjat yozilayotan funksiya senariylari panic qo'zg'atishi mumkin. O'z dasturlari panic qo'zg'ashini istamaydigan funksiyaning murojaat qiluvchilari bunday holatlarda funksiyani chaqirmasliklariga ishonch hosil qilishlari kerak.</li>
+<li><strong>Errors</strong>: Agar funksiya <code>Result</code> ni qaytarsa, yuzaga kelishi mumkin bo'lgan xatolar turlarini tavsiflash va bu xatolar qaytarilishiga qanday sharoitlar sabab bo'lishi mumkinligi murojaat qiluvchilar uchun foydali bo'lishi mumkin, shuning uchun ular turli xil xatolarni turli yo'llar bilan hal qilish uchun kod yozishlari mumkin.</li>
+<li><strong>Safety</strong>: Agar funksiya murojaat qilish uchun <code>unsafe</code>  bo'lsa (biz 19-bobda xavfsizlikni muhokama qilamiz), funksiya nima uchun xavfli ekanligini tushuntiruvchi bo'lim bo'lishi kerak va funksiya murojaat qiluvchilar qo'llab-quvvatlashini kutayotgan o'zgarmaslarni qamrab oladi.</li>
+</ul>
+<p>Ko'pgina hujjatlar sharhlari ushbu bo'limlarning barchasiga muhtoj emas, ammo bu sizning kodingiz foydalanuvchilari bilishni qiziqtiradigan jihatlarni eslatish uchun yaxshi nazorat ro'yxati.</p>
+<h4 id="texnik-hujjatlarga-sharhlar-test-sifatida"><a class="header" href="#texnik-hujjatlarga-sharhlar-test-sifatida">Texnik hujjatlarga sharhlar test sifatida</a></h4>
+<p>Hujjatlarga sharhlaringizga(documentation comment) misol kod bloklarini qo'shish kutubxonangizdan(library) qanday foydalanishni ko'rsatishga yordam beradi va bu qo'shimcha bonusga ega bo'ladi: <code>cargo test</code> ishga tushirish hujjatlaringizdagi kod misollarini test sifatida ishga tushiradi! Hech narsa misollar bilan hujjatlashtirishdan yaxshiroq emas. Lekin hech narsa ishlamaydigan misollardan ko'ra yomonroq emas, chunki hujjatlar yozilgandan beri kod o'zgargan. Agar biz 14-1 roʻyxatdagi <code>bir_qoshish</code> funksiyasi uchun hujjatlar bilan <code>cargo test</code> oʻtkazsak, test natijalarida quyidagi boʻlimni koʻramiz:</p>
+<!-- manual-regeneration
+cd listings/ch14-more-about-cargo/listing-14-01/
+cargo test
+copy just the doc-tests section below
+-->
+<pre><code class="language-text">   Doc-tests my_crate
+
+running 1 test
+test src/lib.rs - bir_qoshish (line 5) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+</code></pre>
+<p>Endi funksiyani yoki misolni, misoldagi <code>assert_eq!</code> panic qo'zg'atadigan tarzda o'zgartirsak va yana <code>cargo test</code> ishga tushirsak, hujjat testlari misol va kod bir-biri bilan sinxronlanmaganligini aniqlaymiz.!</p>
+<h4 id="oz-ichiga-olgan-elementlarni-sharhlash"><a class="header" href="#oz-ichiga-olgan-elementlarni-sharhlash">O'z ichiga olgan elementlarni sharhlash</a></h4>
+<p>Hujjat sharhining uslubi <code>//!</code> hujjatni sharhlardan keyingi elementlarga emas, balki sharhlarni o'z ichiga olgan elementga qo'shadi. Biz odatda bu doc izohlaridan cratening ildiz(root) faylida (odatda <em>src/lib.rs</em>) yoki modul ichida crateni yoki butun modulni hujjatlash uchun foydalanamiz.</p>
+<p>Masalan, <code>bir_qoshish</code> funksiyasini o'z ichiga olgan <code>my_crate</code> cratesi maqsadini tavsiflovchi hujjatlarni qo'shish uchun biz <em>src/lib.rs</em> faylining boshiga <code>//!</code> bilan boshlanadigan hujjat sharhlarini qo`shamiz, 14-2 ro'yxatda ko'rsatilganidek:</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
+<pre><code class="language-rust ignore">//! # Mening Crateyim
+//!
+//! `my_crate` - muayyan hisob-kitoblarni bajarishni qulayroq qilish uchun
+//! yordamchi dasturlar to'plami.
+
+/// Berilgan raqamga bitta qo'shadi.
+// --snip--
+<span class="boring">///
+</span><span class="boring">/// # Misollar
+</span><span class="boring">///
+</span><span class="boring">/// ```
+</span><span class="boring">/// let argument = 5;
+</span><span class="boring">/// let javob = my_crate::bir_qoshish(argument);
+</span><span class="boring">///
+</span><span class="boring">/// assert_eq!(6, javob);
+</span><span class="boring">/// ```
+</span><span class="boring">pub fn bir_qoshish(x: i32) -&gt; i32 {
+</span><span class="boring">    x + 1
+</span><span class="boring">}</span></code></pre>
+<p><span class="caption">Ro'yxat 14-2: Umuman olganda, <code>my_crate</code> cratesi uchun hujjatlar</span></p>
+<p>E'tibor bering, <code>//!</code> bilan boshlanadigan oxirgi qatordan keyin hech qanday kod yo'q. Fikrlarni <code>///</code> o'rniga <code>//!</code> bilan boshlaganimiz sababli, biz ushbu sharhdan keyingi elementni emas, balki ushbu sharhni o'z ichiga olgan elementni hujjatlashtirmoqdamiz. Bunday holda, bu element crate ildizi(root) bo'lgan <em>src/lib.rs</em> faylidir. Ushbu sharhlar butun crateni tasvirlaydi.</p>
+<p><code>cargo doc --open</code>ni ishga tushirganimizda, bu izohlar 14-2-rasmda ko‘rsatilganidek, <code>my_crate</code> hujjatlarining birinchi sahifasida cratedagi public itemlar ro‘yxati ustida ko'rsatiladi:</p>
+<img alt="Rendered HTML documentation with a comment for the crate as a whole" src="img/trlpuz2.png" class="center" />
+<p><span class="caption">14-2-rasm: <code>my_crate</code> uchun taqdim etilgan hujjatlar, jumladan, crateni bir butun sifatida tavsiflovchi sharh</span></p>
+<p>Elementlar ichidagi hujjat sharhlari, ayniqsa, cratelar va modullarni tavsiflash uchun foydalidir. Foydalanuvchilarga cratening tashkil etilishini tushunishlariga yordam berish uchun konteynerning umumiy maqsadini tushuntirish uchun ulardan foydalaning.</p>
+<h3 id="pub-use-bilan-qulay-public-apini-eksport-qilish"><a class="header" href="#pub-use-bilan-qulay-public-apini-eksport-qilish"><code>pub use</code> bilan qulay Public APIni eksport qilish</a></h3>
+<p>Public API structi crateni nashr qilishda muhim ahamiyatga ega. Sizning cratengizdan foydalanadigan odamlar structureni sizdan ko'ra kamroq bilishadi va agar sizning cratengiz katta modul ierarxiyasiga ega bo'lsa, ular foydalanmoqchi bo'lgan qismlarni topishda qiyinchiliklarga duch kelishlari mumkin.</p>
+<p>7-bobda biz <code>pub</code> kalit so‘zi yordamida itemlarni qanday qilib hammaga ochiq(public) qilish va <code>use</code> kalit so‘zi bilan obyektlarni qamrovga(scope) kiritishni ko‘rib chiqdik.Biroq, crateni ishlab chiqishda sizga mantiqiy bo'lgan structure foydalanuvchilaringiz uchun unchalik qulay bo'lmasligi mumkin. Siz structlaringizni bir nechta darajalarni o'z ichiga olgan ierarxiyada tartibga solishni xohlashingiz mumkin, ammo keyin siz ierarxiyada chuqur aniqlagan turdan foydalanmoqchi bo'lgan odamlar ushbu tur mavjudligini aniqlashda muammolarga duch kelishlari mumkin.
+Ular, shuningdek, <code>use</code> <code>my_crate::FoydaliTur;</code> o'rniga <code>use</code> <code>my_crate::biror_modul::boshqa_modul::FoydaliTur;</code> ni kiritishlari kerakligidan bezovtalanishi mumkin.</p>
+<p>Yaxshi xabar shundaki, agar sturcture boshqa kutubxonadan(library) foydalanishi uchun <em>qulay bo'lmasa</em>, ichki organizationgizni o'zgartirishingiz shart emas: Buning o'rniga, <code>pub use</code> dan foydalanib, private structuredan farq qiladigan public structure yaratish uchun itemlarni qayta eksport qilishingiz mumkin. Qayta eksport qilish public ob'ektni bir joyda oladi va uni boshqa joyda hammaga ochiq(public) qiladi, go'yo u boshqa joyda aniqlangandek.</p>
+<p>Masalan, badiiy tushunchalarni modellashtirish uchun <code>rassom</code> nomli kutubxona(library) yaratdik, deylik.
+Ushbu kutubxona ichida ikkita modul mavjud: 14-3 roʻyxatda koʻrsatilganidek, <code>AsosiyRang</code> va <code>IkkilamchiRang</code> nomli ikkita raqamni oʻz ichiga olgan <code>turlar</code> moduli va <code>aralashtirish</code> nomli funksiyani oʻz ichiga olgan <code>yordamchi</code> moduli:
+<span class="filename">Fayl nomi: src/lib.rs</span></p>
+<pre><code class="language-rust noplayground test_harness">//! # Rassom
+//!
+//! Badiiy tushunchalarni modellashtirish uchun kutubxona.
+
+pub mod turlar {
+    /// RYB rang modeliga muvofiq asosiy ranglar.
+    pub enum AsosiyRang {
+        Qizil,
+        Sariq,
+        Kok,
+    }
+
+    /// RYB rang modeliga muvofiq ikkinchi darajali ranglar.
+    pub enum IkkilamchiRang {
+        Qovoqrang,
+        Yashil,
+        Siyohrang,
+    }
+}
+
+pub mod yordamchi {
+    use crate::turlar::*;
+
+    /// Ikkilamchi rang yaratish uchun ikkita asosiy rangni teng
+    /// miqdorda birlashtiradi.
+    pub fn aralashtirish(c1: AsosiyRang, c2: AsosiyRang) -&gt; IkkilamchiRang {
+        // --snip--
+<span class="boring">        unimplemented!();
+</span>    }
+}</code></pre>
+<p><span class="caption">Roʻyxat 14-3: <code>turlar</code> va <code>yordamchi</code> modullariga ajratilgan <code>rassom</code> kutubxonasi</span></p>
+<p>14-3-rasmda <code>cargo doc</code> tomonidan yaratilgan ushbu crate uchun hujjatlarning bosh sahifasi qanday ko'rinishi ko'rsatilgan:</p>
+<img alt="Rendered documentation for the `art` crate that lists the `kinds` and `utils` modules" src="img/trpl14-03.png" class="center" />
+<p><span class="caption">14-3-rasm: <code>turlar</code> va <code>yordamchi</code> modullari ro‘yxati keltirilgan <code>rassom</code> hujjatlarining bosh sahifasi</span></p>
+<p>E'tibor bering, <code>AsosiyRang</code> va <code>IkkilamchiRang</code> turlari birinchi sahifada ko'rsatilmagan va <code>aralashtirish</code> funksiyasi ham mavjud emas. Ularni ko'rish uchun <code>turlar</code> va <code>yordamchi</code> ni bosishimiz kerak.</p>
+<p>Ushbu kutubxonaga bog'liq bo'lgan boshqa cratega <code>rassom</code> dan elementlarni qamrab oladigan, hozirda aniqlangan modul stryucturedan ko'rsatadigan <code>use</code> statementlari kerak bo'ladi. 14-4 roʻyxatda <code>rassom</code> cratesidagi <code>AsosiyRang</code> va <code>aralashtirish</code> elementlaridan foydalanadigan crate misoli koʻrsatilgan:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
+<pre><code class="language-rust ignore">use art::turlar::AsosiyRang;
+use rassom::yordamchi::aralashtirish;
+
+fn main() {
+    let qizil = AsosiyRang::Qizil;
+    let yellow = AsosiyRang::Sariq;
+    aralashtirish(qizil, sariq);
+}</code></pre>
+<p><span class="caption">Roʻyxat 14-4: <code>rassom</code> crate itemlaridan foydalanilgan, ichki stuctureni eksport qilingan crate</span></p>
+<p><code>rassom</code> cratesidan foydalanadigan 14-4-Ro'yxatdagi kod muallifi <code>AsosiyRang</code> <code>turlar</code> modulida, <code>aralashtirish</code> esa <code>yordamchi</code> modulida ekanligini aniqlashi kerak edi. <code>rassom</code> cratening modul stucturesi undan foydalanadiganlarga qaraganda <code>rassom</code> crate ustida ishlayotgan developerlarga ko'proq mos keladi. The internal
+structure doesn’t contain any useful information for someone trying to
+understand how to use the <code>art</code> crate, but rather causes confusion because
+developers who use it have to figure out where to look, and must specify the
+module names in the <code>use</code> statements.
+Ichki stuctureda <code>rassom</code> cratesidan qanday foydalanishni tushunishga urinayotganlar uchun foydali ma'lumotlar mavjud emas, aksincha, chalkashliklarga sabab bo'ladi, chunki undan foydalanadigan developerlar qayerga qarash kerakligini aniqlashlari kerak va <code>use</code> statementlarida modul nomlarini ko'rsatishi kerak.</p>
+<p>Ichki organizationni public API’dan olib tashlash uchun biz 14-5 ro‘yxatda ko‘rsatilganidek, top leveldagi elementlarni qayta eksport qilish uchun <code>pub use</code> statementlarini qo‘shish uchun 14-3 ro‘yxatdagi <code>rassom</code> crate kodini o‘zgartirishimiz mumkin:</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
+<pre><code class="language-rust ignore">//! # Rassom
+//!
+//! Badiiy tushunchalarni modellashtirish uchun kutubxona.
+
+pub use self::turlar::AsosiyRang;
+pub use self::turlar::IkkilamchiRang;
+pub use self::yordamchi::aralashtirish;
+
+pub mod turlar {
+    // --snip--
+<span class="boring">    /// RYB rang modeliga muvofiq asosiy ranglar.
+</span><span class="boring">    pub enum AsosiyRang {
+</span><span class="boring">        Qizil,
+</span><span class="boring">        Sariq,
+</span><span class="boring">        Kok,
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    /// RYB rang modeliga muvofiq ikkinchi darajali ranglar.
+</span><span class="boring">    pub enum IkkilamchiRang {
+</span><span class="boring">        Qovoqrang,
+</span><span class="boring">        Yashil,
+</span><span class="boring">        Siyohrang,
+</span><span class="boring">    }
+</span>}
+
+pub mod yordamchi {
+    // --snip--
+<span class="boring">    use crate::turlar::*;
+</span><span class="boring">
+</span><span class="boring">    /// Ikkilamchi rang yaratish uchun ikkita asosiy rangni teng
+</span><span class="boring">    /// miqdorda birlashtiradi.
+</span><span class="boring">    pub fn aralashtirish(c1: AsosiyRang, c2: AsosiyRang) -&gt; IkkilamchiRang {
+</span><span class="boring">        IkkilamchiRang::Qovoqrang
+</span><span class="boring">    }
+</span>}</code></pre>
+<p><span class="caption">Ro'yxat 14-5: Elementlarni qayta eksport qilish uchun <code>pub use</code> statementlarini qo'shish</span></p>
+<p>Ushbu crate uchun <code>cargo doc</code> yaratadigan API hujjatlari Endi 14-4-rasmda ko'rsatilganidek, re-exportlarni birinchi sahifada listga oling va bog'lang, bu <code>AsosiyRang</code> va <code>IkkilamchiRang</code> turlarini va <code>aralashtirish</code> funksiyasini topishni osonlashtiradi.</p>
+<img alt="Rendered documentation for the `art` crate with the re-exports on the front page" src="img/trpluz14.png" class="center" />
+<p><span class="caption">14-4-rasm: re-exportlar ro'yxati keltirilgan <code>rassom</code> hujjatlarining birinchi sahifasi</span></p>
+<p><code>rassom</code> crate foydalanuvchilari hali ham 14-4 roʻyxatda koʻrsatilganidek, 14-3 roʻyxatdagi ichki(internal) structureni koʻrishlari va foydalanishlari mumkin yoki ular 14-6 roʻyxatda koʻrsatilganidek, 14-5 roʻyxatdagi qulayroq structuredan foydalanishlari mumkin:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
+<pre><code class="language-rust ignore">use rassom::aralashtirish;
+use rassom::AsosiyRang;
+
+fn main() {
+    // --snip--
+<span class="boring">    let qizil = AsosiyRang::qizil;
+</span><span class="boring">    let sariq = AsosiyRang::Sariq;
+</span><span class="boring">    mix(qizil, sariq);
+</span>}</code></pre>
+<p><span class="caption">Ro'yxat 14-6: <code>rassom</code> cratesidan re-export(qayta eksport) qilingan itemlarni ishlatadigan dastur</span></p>
+<p>Ko'plab ichki modullar mavjud bo'lsa, <code>pub use</code> bilan top leveldagi turlarni qayta eksport(re-export) qilish cratedan foydalanadigan foydalanuvchilar tajribasida sezilarli o'zgarishlarga olib kelishi mumkin. <code>pub use</code> ning yana bir keng tarqalgan qoʻllanilishi bu crate deifinationlarini cratengizning public API qismiga aylantirish uchun joriy cratedagi dependency definitionlarini qayta eksport qilishdir.</p>
+<p>Foydali public API stucturesini yaratish fandan ko'ra ko'proq san'atdir va siz foydalanuvchilaringiz uchun eng mos keladigan APIni topish uchun takrorlashingiz mumkin. <code>pub use</code> ni tanlash sizga cratengizni ichki stuctureda moslashuvchanlikni beradi va bu ichki stuctureni foydalanuvchilarga taqdim etgan narsadan ajratadi. O'rnatgan ba'zi cratelar kodlarini ko'rib chiqing, ularning ichki tuzilishi(internal structure) public APIdan farq qiladimi yoki yo'qmi.</p>
+<h3 id="cratesio-da-account-sozlash"><a class="header" href="#cratesio-da-account-sozlash">Crates.io da account sozlash</a></h3>
+<p>Har qanday cratelarni nashr qilishdan oldin <a href="https://crates.io/">crates.io</a><!-- ignore --> saytida hisob(account) yaratishingiz va API tokenini olishingiz kerak.
+Buning uchun <a href="https://crates.io/">crates.io</a><!-- ignore --> saytidagi bosh sahifaga tashrif buyuring va GitHub hisob qaydnomasi(account) orqali tizimga kiring. (GitHub hisobi hozirda talab hisoblanadi, ammo sayt kelajakda hisob yaratishning boshqa usullarini qo'llab-quvvatlashi mumkin.), Tizimga kirganingizdan so'ng,<a href="https://crates.io/me/">https://crates.io/me/</a><!-- ignore --> sahifasidagi hisob sozlamalariga tashrif buyuring va API kalitingizni(key) oling. Keyin API kalitingiz bilan <code>cargo login</code> buyrug'ini bajaring, masalan:</p>
+<pre><code class="language-console">$ cargo login abcdefghijklmnopqrstuvwxyz012345
+</code></pre>
+<p>Bu buyruq Cargoga API tokeningiz haqida xabar beradi va uni <em>~/.cargo/credentials</em> da saqlaydi. E'tibor bering, bu token <em>secret</em>: uni boshqa hech kim bilan baham ko'rmang. Agar biron-bir sababga ko'ra uni kimdir bilan baham ko'rsangiz, uni bekor qilishingiz va <a href="https://crates.io/">crates.io</a><!-- ignore --> saytida yangi token yaratishingiz kerak.</p>
+<h3 id="yangi-cratega-metadata-qoshish"><a class="header" href="#yangi-cratega-metadata-qoshish">Yangi cratega metadata qo'shish</a></h3>
+<p>Aytaylik, sizda nashr qilmoqchi bo'lgan cratengiz bor. Nashr qilishdan oldin cratening <em>Cargo.toml</em> faylining <code>[package]</code> boʻlimiga metamaʼlumotlar qoʻshishingiz kerak boʻladi.</p>
+<p>Sizning cratengizga noyob nom kerak bo'ladi. Mahalliy(local) miqyosda crate ustida ishlayotganingizda, cratega xohlaganingizcha nom berishingiz mumkin. Biroq, <a href="https://crates.io/">crates.io</a><!-- ignore --> saytidagi crate nomlari birinchi kelganda, birinchi navbatda beriladi. Crate nomi olingandan so'ng, boshqa hech kim bu nom bilan crateni nashr eta olmaydi. Crateni nashr etishga urinishdan oldin foydalanmoqchi bo'lgan nomni qidiring. Agar nom ishlatilgan bo'lsa, nashr qilish uchun yangi nomdan foydalanish uchun boshqa nom topib, <em>Cargo.toml</em> faylida <code>[package]</code> bo'limi ostidagi <code>name</code> maydonini tahrirlashingiz kerak bo'ladi:</p>
+<p><span class="filename">Fayl nomi: Cargo.toml</span></p>
+<pre><code class="language-toml">[package]
+name = &quot;kalkulyator&quot;
+</code></pre>
+<p>Noyob nom tanlagan bo'lsangiz ham, ushbu nuqtada crateni nashr qilish uchun <code>cargo publish</code> ni ishga tushirganingizda, siz ogohlantirish va keyin xatolikni olasiz:</p>
+<!-- manual-regeneration
+cd listings/ch14-more-about-cargo/listing-14-01/
+cargo publish
+copy just the relevant lines below
+-->
+<pre><code class="language-console">$ cargo publish
+    Updating crates.io index
+warning: manifest has no description, license, license-file, documentation, homepage or repository.
+See https://doc.rust-lang.org/cargo/reference/manifest.html#package-metadata for more info.
+--snip--
+error: failed to publish to registry at https://crates.io
+
+Caused by:
+  the remote server responded with an error: missing or empty metadata fields: description, license. Please see https://doc.rust-lang.org/cargo/reference/manifest.html for how to upload metadata
+</code></pre>
+<p>Bu xato, chunki sizda ba'zi muhim ma'lumotlar yetishmayapti: tavsif(description) va litsenziya talab qilinadi, shunda foydalanuvchilar sizning cratengiz nima qilishini va undan qanday shartlar ostida foydalanishlari mumkinligini bilishlari mumkin. <em>Cargo.toml</em> ga bir yoki ikki jumladan iborat tavsif(description) qo'shing, chunki u qidiruv natijalarida cratengiz bilan birga ko'rinadi. <code>license</code> maydoni uchun siz <em>litsenziya identifikatorining qiymatini</em> berishingiz kerak. <a href="http://spdx.org/licenses/">Linux
+Foundation’s Software Package Data Exchange (SPDX)</a> ushbu qiymat uchun foydalanishingiz mumkin bo'lgan identifikatorlarni sanab o'tadi. Masalan, MIT litsenziyasidan foydalangan holda cratengizni litsenziyalaganingizni ko'rsatish uchun <code>MIT</code> identifikatorini qo'shing:</p>
+<p><span class="filename">Fayl nomi: Cargo.toml</span></p>
+<pre><code class="language-toml">[package]
+name = &quot;kalkulyator&quot;
+license = &quot;MIT&quot;
+</code></pre>
+<p>Agar siz SPDX da ko'rinmaydigan litsenziyadan foydalanmoqchi bo'lsangiz, ushbu litsenziya matnini faylga joylashtirishingiz, faylni loyihangizga kiritishingiz kerak, va keyin <code>license</code> kalitidan foydalanish oʻrniga oʻsha fayl nomini koʻrsatish uchun <code>license-file</code> dan foydalaning.</p>
+<p>Loyihangiz uchun qaysi litsenziya to'g'ri kelishi haqidagi ko'rsatmalar ushbu kitob doirasidan tashqarida. Rust hamjamiyatidagi(community) ko'p odamlar o'z loyihalarini Rust bilan bir xil tarzda <code>MIT OR Apache-2.0</code> qo'sh litsenziyasidan foydalangan holda litsenziyalashadi. Ushbu amaliyot shuni ko'rsatadiki, loyihangiz uchun bir nechta litsenziyaga ega bo'lish uchun <code>OR</code> bilan ajratilgan bir nechta litsenziya identifikatorlarini ham belgilashingiz mumkin.</p>
+<p>Noyob nom, versiya, tavsif(description) va litsenziya qoʻshilgan holda nashr etishga tayyor boʻlgan loyiha uchun <em>Cargo.toml</em> fayli quyidagicha koʻrinishi mumkin:</p>
+<p><span class="filename">Fayl nomi: Cargo.toml</span></p>
+<pre><code class="language-toml">[package]
+name = &quot;kalkulyator&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+description = &quot;Sanoq tizimlari bilan ishlaydigan kalkulyator&quot;
+license = &quot;MIT OR Apache-2.0&quot;
+
+[dependencies]
+</code></pre>
+<p><a href="https://doc.rust-lang.org/cargo/">Cargo hujjatlarida</a> boshqalar sizning cratengizni osongina topishi va undan foydalanishi uchun siz belgilashingiz mumkin bo'lgan boshqa metama'lumotlar tasvirlangan.</p>
+<h3 id="cratesio-da-nashr-qilish"><a class="header" href="#cratesio-da-nashr-qilish">Crates.io-da nashr qilish</a></h3>
+<p>Endi siz hisob(account) yaratdingiz, API tokeningizni saqladingiz, cratengiz uchun nom tanladingiz va kerakli metamaʼlumotlarni koʻrsatdingiz, siz nashr(publish) qilishga tayyorsiz! Crateni nashr qilish boshqalar foydalanishi uchun <a href="https://crates.io/">crates.io</a><!-- ignore --> saytiga ma'lum bir versiyani yuklaydi.</p>
+<p>Ehtiyot bo'ling, chunki nashr <em>doimiydir(permanent)</em>. Versiyani hech qachon qayta yozib bo'lmaydi va kodni o'chirib bo'lmaydi.<a href="https://crates.io/">crates.io</a><!-- ignore --> -ning asosiy maqsadlaridan biri doimiy kod arxivi bo'lib xizmat qilishdir, shunda <a href="https://crates.io/">crates.io</a><!-- ignore -->-dan cratelarga bog'liq bo'lgan barcha loyihalar o'z ishini davom ettiradi. Versiyani o'chirishga ruxsat berish bu maqsadni amalga oshirishni imkonsiz qiladi. Biroq, siz nashr(publish) etishingiz mumkin bo'lgan crate versiyalari soniga cheklov yo'q.</p>
+<p><code>cargo publish</code> buyrug'ini qayta ishga tushiring. Endi u muvaffaqiyatli bo'lishi kerak:</p>
+<!-- manual-regeneration
+go to some valid crate, publish a new version
+cargo publish
+copy just the relevant lines below
+-->
+<pre><code class="language-console">$ cargo publish
+    Updating crates.io index
+   Packaging kalkulyator v0.1.0 (file:///projects/kalkulyator)
+   Verifying kalkulyator v0.1.0 (file:///projects/kalkulyator)
+   Compiling kalkulyator v0.1.0
+(file:///projects/kalkulyator/target/package/kalkulyator-0.1.0)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.19s
+   Uploading kalkulyator v0.1.0 (file:///projects/kalkulyator)
+</code></pre>
+<p>Tabriklaymiz! Siz endi kodingizni Rust hamjamiyatiga(community) ulashdingiz va
+har kim o'z loyihasiga dependency sifatida cratengizni osongina qo'shishi mumkin.</p>
+<h3 id="mavjud-cratening-yangi-versiyasini-nashr-qilish"><a class="header" href="#mavjud-cratening-yangi-versiyasini-nashr-qilish">Mavjud cratening yangi versiyasini nashr qilish</a></h3>
+<p>Cratengizga oʻzgartirishlar kiritib, yangi versiyani chiqarishga tayyor boʻlgach, <em>Cargo.toml</em> faylida koʻrsatilgan <code>version</code> qiymatini oʻzgartirasiz va qayta nashr qilasiz. Siz kiritgan o'zgartirishlar turiga qarab keyingi versiya raqami qanday bo'lishini aniqlash uchun <a href="http://semver.org/">semantik versiya qoidalaridan</a> foydalaning.
+Keyin yangi versiyani yuklash uchun <code>cargo publish</code>ni ishga tushiring.</p>
+<!-- Old link, do not remove -->
+<p><a id="removing-versions-from-cratesio-with-cargo-yank"></a></p>
+<h3 id="cratesio-dan-cargo-yank-bilan-eskirgan-versiyalar"><a class="header" href="#cratesio-dan-cargo-yank-bilan-eskirgan-versiyalar">Crates.io-dan <code>cargo yank</code> bilan eskirgan versiyalar</a></h3>
+<p>Cratening oldingi versiyalarini olib tashlamasangiz ham, kelajakdagi loyihalarni ularni yangi dependency sifatida qo'shishning oldini olishingiz mumkin. Bu crate versiyasi bir yoki boshqa sabablarga ko'ra buzilganda foydalidir. Bunday vaziyatlarda Cargo crate versiyasini <em>yanking(tortib)</em> olishni qo'llab-quvvatlaydi.</p>
+<p>Versiyani yanking o'zgartirish yangi loyihalarning ushbu versiyaga bog'lanishiga to'sqinlik qiladi, lekin shunga qaramay, unga bog'liq bo'lgan barcha mavjud loyihalarni ishlashni davom ettirishga imkon beradi. Aslini olganda, yank degani <em>Cargo.lock</em> bilan barcha loyihalar buzilmasligini va kelajakda yaratilgan <em>Cargo.lock</em> fayllari yanked versiyasidan foydalanmasligini anglatadi.</p>
+<p>Cratening versiyasini tortib olish uchun siz avval nashr qilgan crate jildida  <code>cargo yank</code> ni ishga tushiring va qaysi versiyani yank qilishni belgilang. Misol uchun, agar biz <code>kalkulyator</code> nomli 1.0.1 versiyasini chop etgan bo'lsak va biz uni yank qilib olmoqchi bo'lsak, <code>kalkulyator</code> loyihasi jildida biz quyidagi amllarni bajaramiz:</p>
+<!-- manual-regeneration:
+cargo yank carol-test --version 2.1.0
+cargo yank carol-test --version 2.1.0 --undo
+-->
+<pre><code class="language-console">$ cargo yank --vers 1.0.1
+    Updating crates.io index
+        Yank kalkulyator@1.0.1
+</code></pre>
+<p>Buyruqga <code>--undo</code> ni qo'shish orqali siz <code>yank</code> ni bekor qilishingiz va loyihalarni versiyaga qarab qaytadan boshlashga ruxsat berishingiz mumkin:</p>
+<pre><code class="language-console">$ cargo yank --vers 1.0.1 --undo
+    Updating crates.io index
+      Unyank kalkulyator@1.0.1
+</code></pre>
+<p>Yank <em>hech qanday kodni o'chirmaydi</em>. U, masalan, tasodifan yuklangan secretlarni o'chira olmaydi. Agar bu sodir bo'lsa, siz ushbu secretlarni darhol tiklashingiz kerak.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch14-01-release-profiles.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch14-03-cargo-workspaces.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch14-01-release-profiles.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch14-03-cargo-workspaces.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>
