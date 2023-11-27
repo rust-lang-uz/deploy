@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "name": "rust-docs",
+    "alias": ["doc.rust-lang.uz", "rust-docs"],
+    "public": true,
+    "builds": [
+        { "src": "**/*", "use": "@now/static" }
+    ],
+    "redirects": [
+        {
+        "source": "/",
+        "destination": "https://rust-lang.uz",
+        "permanent": false
+        }
+    ]
+}
