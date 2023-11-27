@@ -18,7 +18,7 @@ jobs:
           find . -maxdepth 1 ! -name '.github' ! -name '.git' ! -name '.' ! -name '..' -exec rm -rf {} \;
   
       - name: Clone rust-lang-uz/book
-        run: git clone https://github.com/rust-lang-uz/book rust-book
+        run: git clone https://github.com/rust-lang-uz/book rust-book --depth 1
   
       # - name: Clone rust-lang-uz/rust-by-example
       #   run: git clone https://github.com/rust-lang-uz/rust-by-example rust-examples
@@ -60,8 +60,8 @@ jobs:
       - name: Commit and Push changes
         if: steps.git-check.outputs.changes == 'true'
         run: |
-          git config --global user.name 'Your Name'
-          git config --global user.email 'your-email@example.com'
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m 'Update book and rust-examples'
           git push
