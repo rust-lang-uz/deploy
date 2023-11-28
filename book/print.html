@@ -11818,7 +11818,7 @@ cargo yank carol-test --version 2.1.0 --undo
       Unyank kalkulyator@1.0.1
 </code></pre>
 <p>Yank <em>hech qanday kodni o'chirmaydi</em>. U, masalan, tasodifan yuklangan secretlarni o'chira olmaydi. Agar bu sodir bo'lsa, siz ushbu secretlarni darhol tiklashingiz kerak.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="cargo-workspaselar"><a class="header" href="#cargo-workspaselar">Cargo Workspaselar</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="cargo-workspacelar"><a class="header" href="#cargo-workspacelar">Cargo Workspacelar</a></h2>
 <p>12-bobda biz bianry crate va kutubxona cratesini o'z ichiga olgan paketni yaratdik. Loyihangiz rivojlanib borgan sari, kutubxona(library) cratesi kattalashib borishini va paketingizni bir nechta kutubxona cratelariga bo'lishni xohlayotganingizni ko'rishingiz mumkin. Cargo tandemda ishlab chiqilgan bir nechta tegishli paketlarni boshqarishga yordam beradigan <em>workspaces</em> deb nomlangan xususiyatni taklif etadi.</p>
 <h3 id="workspace-yaratish"><a class="header" href="#workspace-yaratish">Workspace yaratish</a></h3>
 <p><em>workspace</em> - bu bir xil <em>Cargo.lock</em> va output(chiqish) jildiga ega bo'lgan paketlar to'plami. Keling, workspcedan foydalangan holda loyiha yarataylik - biz workspacening tuzilishiga e'tibor qaratishimiz uchun arzimas koddan foydalanamiz. Workspaceni tuzishning bir necha yo'li mavjud, shuning uchun biz faqat bitta umumiy usulni ko'rsatamiz. Binary(ikkilik) va ikkita kutubxonani o'z ichiga olgan workspacega ega bo'lamiz. Asosiy funksionallikni ta'minlaydigan binary ikkita kutubxonaga bog'liq bo'ladi. Bitta kutubxona <code>bitta_qoshish</code> funksiyasini, ikkinchi kutubxona esa <code>ikkita_qoshish</code> funksiyasini taqdim etadi.
@@ -11832,7 +11832,7 @@ Buning o'rniga, u binary(ikkilik) crate yordamida paketga yo'lni ko'rsatib, work
 <pre><code class="language-toml">[workspace]
 
 members = [
-    &quot;adder&quot;,
+    &quot;qoshuvchi&quot;,
 ]
 </code></pre>
 <p>Keyin, <em>qoshuvchi</em> jilida <code>cargo new</code> ni ishga tushirish orqali <code>qoshuvchi</code> binary cratesini yaratamiz:</p>
@@ -11928,7 +11928,7 @@ copy output below; the output updating script doesn't handle subdirectories in p
 <pre><code class="language-console">$ cargo run -p qoshuvchi
     Finished dev [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/qoshuvchi`
-Hello, world! 10 plus one is 11!
+Salom, Rust! 10 plyus bir 11 ga teng!
 </code></pre>
 <p>Bu kodni <em>qoshuvchi/src/main.rs</em> da ishga tushiradi, bu <code>bitta_qoshish</code> cratesiga bog'liq.</p>
 <h4 id="workspacedagi-tashqiexternal-paketga-bogliqlik"><a class="header" href="#workspacedagi-tashqiexternal-paketga-bogliqlik">Workspacedagi tashqi(external) paketga bog'liqlik</a></h4>
