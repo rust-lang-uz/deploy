@@ -14119,76 +14119,33 @@ information.</p>
 <p>Next, we’ll talk about concurrency in Rust. You’ll even learn about a few new
 smart pointers.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fearless-concurrency"><a class="header" href="#fearless-concurrency">Fearless Concurrency</a></h1>
-<p>Handling concurrent programming safely and efficiently is another of Rust’s
-major goals. <em>Concurrent programming</em>, where different parts of a program
-execute independently, and <em>parallel programming</em>, where different parts of a
-program execute at the same time, are becoming increasingly important as more
-computers take advantage of their multiple processors. Historically,
-programming in these contexts has been difficult and error prone: Rust hopes to
-change that.</p>
-<p>Initially, the Rust team thought that ensuring memory safety and preventing
-concurrency problems were two separate challenges to be solved with different
-methods. Over time, the team discovered that the ownership and type systems are
-a powerful set of tools to help manage memory safety <em>and</em> concurrency
-problems! By leveraging ownership and type checking, many concurrency errors
-are compile-time errors in Rust rather than runtime errors. Therefore, rather
-than making you spend lots of time trying to reproduce the exact circumstances
-under which a runtime concurrency bug occurs, incorrect code will refuse to
-compile and present an error explaining the problem. As a result, you can fix
-your code while you’re working on it rather than potentially after it has been
-shipped to production. We’ve nicknamed this aspect of Rust <em>fearless</em>
-<em>concurrency</em>. Fearless concurrency allows you to write code that is free of
-subtle bugs and is easy to refactor without introducing new bugs.</p>
+<p>Bir vaqtning o'zida dasturlashni(concurrent programming) xavfsiz va samarali boshqarish Rustning asosiy maqsadlaridan biridir. Dasturning turli qismlari mustaqil ravishda bajariladigan(execute) <em>concurrent programming</em> va dasturning turli qismlari bir vaqtning o'zida bajariladigan <em>parallel dasturlash</em> ko'proq kompyuterlar o'zlarining bir nechta protsessorlaridan foydalanishlari sababli tobora muhim ahamiyat kasb etmoqda. Tarixiy jihatdan, ushbu kontekstlarda dasturlash qiyin va xatolarga moyil bo'lgan: Rust buni o'zgartirishga umid qilmoqda.</p>
+<p>Dastlab, Rust jamoasi xotira xavfsizligini ta'minlash va parallel muammolarning oldini olish turli usullar bilan hal qilinishi kerak bo'lgan ikkita alohida muammo deb o'ylagan. Vaqt o'tishi bilan jamoa egalik(ownership) va turdagi tizimlar(type system) xotira xavfsizligi <em>va</em> parallellik muammolarini boshqarishga yordam beradigan kuchli vositalar to'plami ekanligini aniqladi! Ownership(egalik) va turlarni tekshirishdan(type checking) foydalangan holda, ko'plab parallellik xatolar runtimedagi xatolardan ko'ra Rustda kompilyatsiya vaqtidagi xatolardir. Shuning uchun, runtime bilan bir vaqtda xatolik yuzaga kelgan aniq holatlarni takrorlash uchun ko'p vaqt sarflashdan ko'ra, noto'g'ri kod kompilyatsiya qilishni rad etadi va muammoni tushuntiruvchi xatoni taqdim etadi. Natijada, siz kodingizni ishlab chiqarishga(production) yuborilgandan keyin emas, balki uning ustida ishlayotganingizda tuzatishingiz mumkin. Biz Rustning bu jihatini <em>fearless</em> <em>concurrency</em> deb nomladik. Fearless concurrency sizga nozik xatolarsiz kod yozish imkonini beradi va yangi xatolarni kiritmasdan qayta tiklash oson.</p>
 <blockquote>
-<p>Note: For simplicity’s sake, we’ll refer to many of the problems as
-<em>concurrent</em> rather than being more precise by saying <em>concurrent and/or
-parallel</em>. If this book were about concurrency and/or parallelism, we’d be
-more specific. For this chapter, please mentally substitute <em>concurrent
-and/or parallel</em> whenever we use <em>concurrent</em>.</p>
+<p>Eslatma: Oddiylik uchun biz ko'p muammolarni <em>concurrent</em> va yoki parallel
+deb aniqroq bo'lishdan ko'ra <em>concurrent</em> deb ataymiz.
+Agar bu kitob concurrency va yoki  parallellik haqida bo'lsa, biz aniqroq bo'lardik.
+Ushbu bo'lim uchun, iltimos, biz concurrent ishlatganimizda,
+parallel va/yoki concurrentni aqliy ravishda almashtiring.</p>
 </blockquote>
-<p>Many languages are dogmatic about the solutions they offer for handling
-concurrent problems. For example, Erlang has elegant functionality for
-message-passing concurrency but has only obscure ways to share state between
-threads. Supporting only a subset of possible solutions is a reasonable
-strategy for higher-level languages, because a higher-level language promises
-benefits from giving up some control to gain abstractions. However, lower-level
-languages are expected to provide the solution with the best performance in any
-given situation and have fewer abstractions over the hardware. Therefore, Rust
-offers a variety of tools for modeling problems in whatever way is appropriate
-for your situation and requirements.</p>
-<p>Here are the topics we’ll cover in this chapter:</p>
+<p>Ko'pgina tillar bir vaqtda muammolarni hal qilish(concurrent problem) uchun taklif qiladigan yechimlar haqida dogmatikdir. Misol uchun, Erlang xabarlarni bir vaqtda uzatish uchun oqlangan funksiyaga ega, ammo threadlar orasidagi holatni(state) almashishning noaniq usullariga ega. Mumkin bo'lgan yechimlarning faqat bir qismini qo'llab-quvvatlash high-leveldagi tillar uchun oqilona strategiyadir, chunki high-leveldagi til mavhumlikni qo'lga kiritish uchun ba'zi nazoratdan voz kechishdan foyda va'da qiladi. Biroq, low-leveldagi tillar har qanday vaziyatda eng yaxshi samaradorlik bilan yechimni ta'minlashi va hardwarega(qurilma) nisbatan kamroq abstraktsiyalarga ega bo'lishi kutilmoqda. Shu sababli, Rust sizning vaziyatingiz va talablaringizga mos keladigan tarzda muammolarni modellashtirish uchun turli xil vositalarni taklif qiladi.</p>
+<p>Mana biz ushbu bobda muhokama qiladigan mavzular:</p>
 <ul>
-<li>How to create threads to run multiple pieces of code at the same time</li>
-<li><em>Message-passing</em> concurrency, where channels send messages between threads</li>
-<li><em>Shared-state</em> concurrency, where multiple threads have access to some piece
-of data</li>
-<li>The <code>Sync</code> and <code>Send</code> traits, which extend Rust’s concurrency guarantees to
-user-defined types as well as types provided by the standard library</li>
+<li>Bir vaqtning o'zida bir nechta kod qismlarini ishlatish uchun threadlarni qanday yaratish kerak</li>
+<li><em>Message-passing</em> Xabarlarni uzatish concurrency, bu yerda kanallar threadlar o'rtasida xabarlar yuboradi</li>
+<li><em>Shared-state</em> bir vaqtning o'zida bir nechta thereadlar(multiple thread) ma'lumotlarning bir qismiga kirish huquqiga ega</li>
+<li><code>Sync</code> va <code>Send</code> traitlari, Rustning parallellik kafolatlarini foydalanuvchi tomonidan belgilangan turlarga hamda standart kutubxona tomonidan taqdim etilgan turlarga kengaytiradi.</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Using Threads to Run Code Simultaneously</a></h2>
-<p>In most current operating systems, an executed program’s code is run in a
-<em>process</em>, and the operating system will manage multiple processes at once.
-Within a program, you can also have independent parts that run simultaneously.
-The features that run these independent parts are called <em>threads</em>. For
-example, a web server could have multiple threads so that it could respond to
-more than one request at the same time.</p>
-<p>Splitting the computation in your program into multiple threads to run multiple
-tasks at the same time can improve performance, but it also adds complexity.
-Because threads can run simultaneously, there’s no inherent guarantee about the
-order in which parts of your code on different threads will run. This can lead
-to problems, such as:</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="kodni-bir-vaqtning-ozida-ishga-tushirish-uchun-thereadlardan-foydalanish"><a class="header" href="#kodni-bir-vaqtning-ozida-ishga-tushirish-uchun-thereadlardan-foydalanish">Kodni bir vaqtning o'zida ishga tushirish uchun thereadlardan foydalanish</a></h2>
+<p>Kodni bir vaqtning o'zida ishga tushirish(simultaneously) uchun thereadlardan foydalanish hozirgi operatsion tizimlarning ko'pchiligida bajarilgan(execute) dastur kodi <em>process</em> ishga tushiriladi va operatsion tizim bir vaqtning o'zida bir nechta processlarni boshqaradi.Dastur doirasida siz bir vaqtning o'zida ishlaydigan(simultaneously) mustaqil qismlarga(independent part) ham ega bo'lishingiz mumkin. Ushbu mustaqil qismlarni boshqaradigan xususiyatlar <em>thereadlar</em> deb ataladi. Masalan, veb-server bir vaqtning o'zida bir nechta so'rovlarga(requestlar) javob berishi uchun bir nechta(multiple) threadlarga ega bo'lishi mumkin.</p>
+<p>Bir vaqtning o'zida bir nechta vazifalarni(multiple task) bajarish uchun dasturingizdagi hisoblashni bir nechta(multiple) threadlarga bo'lish unumdorlikni oshirishi mumkin, ammo bu murakkablikni ham oshiradi.
+Theredlar bir vaqtning o'zida(simultaneously) ishlashi mumkinligi sababli, kodingizning turli xil ish threadlaridagi qismlari qaysi tartibda ishlashi haqida hech qanday kafolat yo'q. Bu muammolarga olib kelishi mumkin, masalan:</p>
 <ul>
-<li>Race conditions, where threads are accessing data or resources in an
-inconsistent order</li>
-<li>Deadlocks, where two threads are waiting for each other, preventing both
-threads from continuing</li>
-<li>Bugs that happen only in certain situations and are hard to reproduce and fix
-reliably</li>
+<li>Race conditionlari, bu yerda thereadlar ma'lumotlar yoki resurslarga mos kelmaydigan tartibda kirishadi</li>
+<li>Deadlock, bu yerda ikkita theread bir-birini kutib, ikkala thereadning davom etishiga to'sqinlik qiladi</li>
+<li>Faqat ma'lum holatlarda yuzaga keladigan va qayta ishlab chiqarish va ishonchli tarzda tuzatish qiyin bo'lgan xatolar</li>
 </ul>
-<p>Rust attempts to mitigate the negative effects of using threads, but
-programming in a multithreaded context still takes careful thought and requires
-a code structure that is different from that in programs running in a single
-thread.</p>
+<p>Rust thereadlardan foydalanishning salbiy ta'sirini yumshatishga harakat qiladi, lekin multithreadli kontekstda dasturlash hali ham ehtiyotkorlik bilan o'ylashni talab qiladi va bitta thereadda ishlaydigan dasturlardan farq qiladigan kod tuzilishini talab qiladi.</p>
 <p>Programming languages implement threads in a few different ways, and many
 operating systems provide an API the language can call for creating new
 threads. The Rust standard library uses a <em>1:1</em> model of thread implementation,

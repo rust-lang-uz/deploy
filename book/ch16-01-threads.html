@@ -176,30 +176,16 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="using-threads-to-run-code-simultaneously"><a class="header" href="#using-threads-to-run-code-simultaneously">Using Threads to Run Code Simultaneously</a></h2>
-<p>In most current operating systems, an executed program’s code is run in a
-<em>process</em>, and the operating system will manage multiple processes at once.
-Within a program, you can also have independent parts that run simultaneously.
-The features that run these independent parts are called <em>threads</em>. For
-example, a web server could have multiple threads so that it could respond to
-more than one request at the same time.</p>
-<p>Splitting the computation in your program into multiple threads to run multiple
-tasks at the same time can improve performance, but it also adds complexity.
-Because threads can run simultaneously, there’s no inherent guarantee about the
-order in which parts of your code on different threads will run. This can lead
-to problems, such as:</p>
+                        <h2 id="kodni-bir-vaqtning-ozida-ishga-tushirish-uchun-thereadlardan-foydalanish"><a class="header" href="#kodni-bir-vaqtning-ozida-ishga-tushirish-uchun-thereadlardan-foydalanish">Kodni bir vaqtning o'zida ishga tushirish uchun thereadlardan foydalanish</a></h2>
+<p>Kodni bir vaqtning o'zida ishga tushirish(simultaneously) uchun thereadlardan foydalanish hozirgi operatsion tizimlarning ko'pchiligida bajarilgan(execute) dastur kodi <em>process</em> ishga tushiriladi va operatsion tizim bir vaqtning o'zida bir nechta processlarni boshqaradi.Dastur doirasida siz bir vaqtning o'zida ishlaydigan(simultaneously) mustaqil qismlarga(independent part) ham ega bo'lishingiz mumkin. Ushbu mustaqil qismlarni boshqaradigan xususiyatlar <em>thereadlar</em> deb ataladi. Masalan, veb-server bir vaqtning o'zida bir nechta so'rovlarga(requestlar) javob berishi uchun bir nechta(multiple) threadlarga ega bo'lishi mumkin.</p>
+<p>Bir vaqtning o'zida bir nechta vazifalarni(multiple task) bajarish uchun dasturingizdagi hisoblashni bir nechta(multiple) threadlarga bo'lish unumdorlikni oshirishi mumkin, ammo bu murakkablikni ham oshiradi.
+Theredlar bir vaqtning o'zida(simultaneously) ishlashi mumkinligi sababli, kodingizning turli xil ish threadlaridagi qismlari qaysi tartibda ishlashi haqida hech qanday kafolat yo'q. Bu muammolarga olib kelishi mumkin, masalan:</p>
 <ul>
-<li>Race conditions, where threads are accessing data or resources in an
-inconsistent order</li>
-<li>Deadlocks, where two threads are waiting for each other, preventing both
-threads from continuing</li>
-<li>Bugs that happen only in certain situations and are hard to reproduce and fix
-reliably</li>
+<li>Race conditionlari, bu yerda thereadlar ma'lumotlar yoki resurslarga mos kelmaydigan tartibda kirishadi</li>
+<li>Deadlock, bu yerda ikkita theread bir-birini kutib, ikkala thereadning davom etishiga to'sqinlik qiladi</li>
+<li>Faqat ma'lum holatlarda yuzaga keladigan va qayta ishlab chiqarish va ishonchli tarzda tuzatish qiyin bo'lgan xatolar</li>
 </ul>
-<p>Rust attempts to mitigate the negative effects of using threads, but
-programming in a multithreaded context still takes careful thought and requires
-a code structure that is different from that in programs running in a single
-thread.</p>
+<p>Rust thereadlardan foydalanishning salbiy ta'sirini yumshatishga harakat qiladi, lekin multithreadli kontekstda dasturlash hali ham ehtiyotkorlik bilan o'ylashni talab qiladi va bitta thereadda ishlaydigan dasturlardan farq qiladigan kod tuzilishini talab qiladi.</p>
 <p>Programming languages implement threads in a few different ways, and many
 operating systems provide an API the language can call for creating new
 threads. The Rust standard library uses a <em>1:1</em> model of thread implementation,
