@@ -12133,111 +12133,121 @@ o'zgarmas tur ichki qiymatni o'zgartirish uchun APIni ochib beradi. Shuningdek,
 biz <em>reference davrlarini</em> muhokama qilamiz: ular xotirani oqishiga olib kelishi
 va ularni qanday oldini olish mumkin.</p>
 <p>Keling sho'ng'iymiz!</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="using-boxt-to-point-to-data-on-the-heap"><a class="header" href="#using-boxt-to-point-to-data-on-the-heap">Using <code>Box&lt;T&gt;</code> to Point to Data on the Heap</a></h2>
-<p>The most straightforward smart pointer is a <em>box</em>, whose type is written
-<code>Box&lt;T&gt;</code>. Boxes allow you to store data on the heap rather than the stack. What
-remains on the stack is the pointer to the heap data. Refer to Chapter 4 to
-review the difference between the stack and the heap.</p>
-<p>Boxes don’t have performance overhead, other than storing their data on the
-heap instead of on the stack. But they don’t have many extra capabilities
-either. You’ll use them most often in these situations:</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="heapdagi-malumotlarni-korsatish-uchun-boxt-dan-foydalanish"><a class="header" href="#heapdagi-malumotlarni-korsatish-uchun-boxt-dan-foydalanish">Heapdagi ma'lumotlarni ko'rsatish uchun <code>Box&lt;T&gt;</code> dan foydalanish</a></h2>
+<p>Eng sodda smart pointer bu <em>box</em> bo'lib, uning turi <code>Box&lt;T&gt;</code> deb yoziladi.
+Boxlar sizga ma'lumotlarni stackda emas, balki heapda saqlashga imkon beradi.
+Stackda esa heapdagi ma'lumotlariga pointer qoladi. Stack va heap o'rtasidagi
+farqni ko'rib chiqish uchun 4-bobga qarang.</p>
+<p>Boxlar o'z ma'lumotlarini stackda emas, balki heapda saqlashdan tashqari,
+ishlash bo'yicha qo'shimcha xarajatlarga ega emas. Lekin ularda ko'p qo'shimcha
+imkoniyatlar ham yo'q. Siz ulardan ko'pincha quyidagi holatlarda foydalanasiz:</p>
 <ul>
-<li>When you have a type whose size can’t be known at compile time and you want
-to use a value of that type in a context that requires an exact size</li>
-<li>When you have a large amount of data and you want to transfer ownership but
-ensure the data won’t be copied when you do so</li>
-<li>When you want to own a value and you care only that it’s a type that
-implements a particular trait rather than being of a specific type</li>
+<li>Agar sizda kompilyatsiya vaqtida o'lchami noma'lum bo'lgan tur mavjud bo'lsa
+va siz aniq o'lchamni talab qiladigan kontekstda ushbu turdagi qiymatdan
+foydalanmoqchi bo'lsangiz</li>
+<li>Agar sizda katta hajmdagi maʼlumotlar mavjud boʻlsa va siz egalik huquqini
+oʻtkazganingizda maʼlumotlardan nusxa olinmasligiga ishonch hosil qilmoqchi
+bo'lsangiz</li>
+<li>Agar siz biror qiymatga egalik qilmoqchi bo'lsangiz va siz uni ma'lum bir
+turda bo'lishiga emas, balki ma'lum bir traitni implement qiluvchi tur
+bo'lishi haqida qayg'ursangiz</li>
 </ul>
-<p>We’ll demonstrate the first situation in the <a href="ch15-01-box.html#enabling-recursive-types-with-boxes">“Enabling Recursive Types with
-Boxes”</a><!-- ignore --> section. In the
-second case, transferring ownership of a large amount of data can take a long
-time because the data is copied around on the stack. To improve performance in
-this situation, we can store the large amount of data on the heap in a box.
-Then, only the small amount of pointer data is copied around on the stack,
-while the data it references stays in one place on the heap. The third case is
-known as a <em>trait object</em>, and Chapter 17 devotes an entire section, <a href="ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types">“Using
-Trait Objects That Allow for Values of Different Types,”</a><!--
-ignore --> just to that topic. So what you learn here you’ll apply again in
-Chapter 17!</p>
-<h3 id="using-a-boxt-to-store-data-on-the-heap"><a class="header" href="#using-a-boxt-to-store-data-on-the-heap">Using a <code>Box&lt;T&gt;</code> to Store Data on the Heap</a></h3>
-<p>Before we discuss the heap storage use case for <code>Box&lt;T&gt;</code>, we’ll cover the
-syntax and how to interact with values stored within a <code>Box&lt;T&gt;</code>.</p>
-<p>Listing 15-1 shows how to use a box to store an <code>i32</code> value on the heap:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Birinchi holatni
+<a href="ch15-01-box.html#rekursiv-turlarni-boxlar-bilan-qollash">“Rekursiv turlarni Boxlar bilan qo'llash”</a><!-- ignore -->
+bo‘limida ko‘rsatamiz. Ikkinchi holatda, katta hajmdagi ma'lumotlarga egalik
+huquqini o'tkazish uzoq vaqt talab qilishi mumkin, chunki ma'lumotlar stackdan
+ko'chiriladi. Bunday vaziyatda ishlashni yaxshilash uchun biz katta hajmdagi
+ma'lumotlarni heapda box ichida saqlashimiz mumkin. Shundan so'ng, pointer
+ma'lumotlarining faqat kichik miqdori stackdan ko'chiriladi, heapdagi u
+reference qilingan ma'lumotlar esa bir joyda qoladi. Uchinchi holat <em>trait object</em>
+sifatida tanilgan va butun 17-bob shu mavzuga bag'ishlangan,
+<a href="ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types">“Turli turdagi qiymatlarga ruxsat beruvchi Trait Objectlaridan foydalanish”</a><!-- ignore -->
+o'sha mavzu. Shunday qilib, bu erda o'rgangan narsalaringizni 17-bobda yana
+qo'llaysiz!</p>
+<h3 id="heapda-malumotlarni-saqlash-uchun-boxt-dan-foydalanish"><a class="header" href="#heapda-malumotlarni-saqlash-uchun-boxt-dan-foydalanish">Heapda ma'lumotlarni saqlash uchun <code>Box&lt;T&gt;</code> dan foydalanish</a></h3>
+<p><code>Box&lt;T&gt;</code> uchun heap xotiradan foydalanish holatini muhokama qilishdan oldin, biz
+sintaksisni va <code>Box&lt;T&gt;</code> ichida saqlangan qiymatlar bilan qanday o'zaro aloqa
+qilishni ko'rib chiqamiz.</p>
+<p>15-1 ro'yxatda <code>i32</code> qiymatini heapda saqlash uchun boxdan qanday foydalanish
+ko'rsatilgan:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let b = Box::new(5);
     println!(&quot;b = {}&quot;, b);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-1: Storing an <code>i32</code> value on the heap using a
-box</span></p>
-<p>We define the variable <code>b</code> to have the value of a <code>Box</code> that points to the
-value <code>5</code>, which is allocated on the heap. This program will print <code>b = 5</code>; in
-this case, we can access the data in the box similar to how we would if this
-data were on the stack. Just like any owned value, when a box goes out of
-scope, as <code>b</code> does at the end of <code>main</code>, it will be deallocated. The
-deallocation happens both for the box (stored on the stack) and the data it
-points to (stored on the heap).</p>
-<p>Putting a single value on the heap isn’t very useful, so you won’t use boxes by
-themselves in this way very often. Having values like a single <code>i32</code> on the
-stack, where they’re stored by default, is more appropriate in the majority of
-situations. Let’s look at a case where boxes allow us to define types that we
-wouldn’t be allowed to if we didn’t have boxes.</p>
-<h3 id="enabling-recursive-types-with-boxes"><a class="header" href="#enabling-recursive-types-with-boxes">Enabling Recursive Types with Boxes</a></h3>
-<p>A value of <em>recursive type</em> can have another value of the same type as part of
-itself. Recursive types pose an issue because at compile time Rust needs to
-know how much space a type takes up. However, the nesting of values of
-recursive types could theoretically continue infinitely, so Rust can’t know how
-much space the value needs. Because boxes have a known size, we can enable
-recursive types by inserting a box in the recursive type definition.</p>
-<p>As an example of a recursive type, let’s explore the <em>cons list</em>. This is a data
-type commonly found in functional programming languages. The cons list type
-we’ll define is straightforward except for the recursion; therefore, the
-concepts in the example we’ll work with will be useful any time you get into
-more complex situations involving recursive types.</p>
-<h4 id="more-information-about-the-cons-list"><a class="header" href="#more-information-about-the-cons-list">More Information About the Cons List</a></h4>
-<p>A <em>cons list</em> is a data structure that comes from the Lisp programming language
-and its dialects and is made up of nested pairs, and is the Lisp version of a
-linked list. Its name comes from the <code>cons</code> function (short for “construct
-function”) in Lisp that constructs a new pair from its two arguments. By
-calling <code>cons</code> on a pair consisting of a value and another pair, we can
-construct cons lists made up of recursive pairs.</p>
-<p>For example, here’s a pseudocode representation of a cons list containing the
-list 1, 2, 3 with each pair in parentheses:</p>
+<p><span class="caption">Ro'yxat 15-1: <code>i32</code> qiymatini box yordamida heapda
+saqlash</span></p>
+<p>Biz <code>b</code> o'zgaruvchini heapda joylashgan <code>5</code>ga point qiluvchi <code>Box</code> qiymatiga ega
+bo'lishi uchun e'lon qilamiz. Ushbu dastur <code>b = 5</code> ni chop etadi; bu holda biz
+boxdagi ma'lumotlarga, stackda bo'lgani kabi kirishimiz mumkin. <code>main</code>ning
+oxiridagi <code>b</code> kabi boxlar scopedan chiqib ketganda, xuddi egalik qilingan
+qiymatlarga o'xshab, u ham xotiradan o'chiriladi. O'chirilish ham box (stackda
+saqlanuvchi) uchun va u point qiluvchi ma'lumotlar (heapda saqlanuvchi) uchun
+ham sodir bo'ladi.</p>
+<p>Heapda bitta qiymat saqlash unchalik foydali emas, shuning uchun boxlarni o'zini
+bu tarzda ko'pincha ishlatmaysiz. Ko'pincha holatlarda bitta <code>i32</code> kabi
+qiymatlarni stackda saqlash maqsadga muvofiq bo'ladi. Keling, boxlar, agar bizda
+boxlar bo'lmasa, ruxsat berilmaydigan turlarni e'lon qilishga imkon beradigan
+holatni ko'rib chiqaylik.</p>
+<h3 id="rekursiv-turlarni-boxlar-bilan-qollash"><a class="header" href="#rekursiv-turlarni-boxlar-bilan-qollash">Rekursiv turlarni Boxlar bilan qo'llash</a></h3>
+<p><em>Rekursiv tur</em>ning qiymati o'zining bir qismi sifatida bir xil turdagi boshqa
+qiymatga ega bo'lishi mumkin. Rekursiv turlar muammo tug'diradi, chunki
+kompilyatsiya vaqtida Rust tur qancha joy egallashini bilishi kerak. Biroq,
+rekursiv turdagi qiymatlarni joylashtirish nazariy jihatdan cheksiz davom etishi
+mumkin, shuning uchun Rust qiymat uchun qancha joy kerakligini bilmaydi. Boxlar
+ma'lum o'lchamga ega bo'lganligi sababli, biz rekursiv tur ta'rifiga box
+kiritish orqali rekursiv turlarni qo'llashimiz mumkin.</p>
+<p>Rekursiv turga misol sifatida keling, <em>cons list</em>ni o'rganamiz. Bu funktsional
+dasturlash tillarida keng tarqalgan ma'lumotlar turi hisoblanadi. Biz e'lon
+qiladigan cons list turi rekursiyadan tashqari sodda; shuning uchun biz
+ishlaydigan misoldagi tushunchalar rekursiv turlarni o'z ichiga olgan murakkab
+vaziyatlarga tushganingizda foydali bo'ladi.</p>
+<h4 id="cons-list-haqida-batafsil-malumot"><a class="header" href="#cons-list-haqida-batafsil-malumot">Cons List haqida batafsil ma'lumot</a></h4>
+<p><em>Cons list</em> Lisp dasturlash tili va uning dialektlaridan kelib chiqqan va
+ichma-ich juftliklardan tashkil topgan maʼlumotlar strukturasi boʻlib, linked
+listning Lispdagi versiyasi hisoblanadi. Uning nomi Lispdagi <code>cons</code>
+funktsiyasidan (“construct function” uchun qisqartma) kelib chiqqan bo'lib,
+uning ikkita argumentidan yangi juftlik yaratadi. Qiymat va boshqa juftlikdan
+iborat bo'lgan juftlikda <code>cons</code> ni chaqirish orqali biz rekursiv juftliklardan
+iborat bo'lgan cons list tuzishimiz mumkin.</p>
+<p>Misol uchun, bu yerda 1, 2, 3 ro'yxatini o'z ichiga olgan cons listining
+psevdokod ko'rinishi, har bir juft qavs ichida:</p>
 <pre><code class="language-text">(1, (2, (3, Nil)))
 </code></pre>
-<p>Each item in a cons list contains two elements: the value of the current item
-and the next item. The last item in the list contains only a value called <code>Nil</code>
-without a next item. A cons list is produced by recursively calling the <code>cons</code>
-function. The canonical name to denote the base case of the recursion is <code>Nil</code>.
-Note that this is not the same as the “null” or “nil” concept in Chapter 6,
-which is an invalid or absent value.</p>
-<p>The cons list isn’t a commonly used data structure in Rust. Most of the time
-when you have a list of items in Rust, <code>Vec&lt;T&gt;</code> is a better choice to use.
-Other, more complex recursive data types <em>are</em> useful in various situations,
-but by starting with the cons list in this chapter, we can explore how boxes
-let us define a recursive data type without much distraction.</p>
-<p>Listing 15-2 contains an enum definition for a cons list. Note that this code
-won’t compile yet because the <code>List</code> type doesn’t have a known size, which
-we’ll demonstrate.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Cons listdagi har bir element ikkita elementni o'z ichiga oladi: shu elementning
+qiymati va keyingi element. Ro'yxatning oxirgi elementida keyingi elementsiz
+faqat <code>Nil</code> deb nomlangan qiymatdan iborat bo'ladi. Cons list <code>cons</code>
+funksiyasini rekursiv chaqirish orqali hosil qilinadi. Rekursiyaning tubidagi
+holatini bildiruvchi qoidaga aylangan nom <code>Nil</code> hisoblanadi. E'tibor bering, bu
+6-bobdagi “null” yoki “nil” tushunchasi bilan bir xil emas, ya'ni noto'g'ri yoki
+yo'q qiymat.</p>
+<p>Cons list ma'lumotlar tuzilmasi Rust-da tez-tez ishlatilmaydi. Ko'pincha Rust-da
+sizga elementlar ro'yxati kerak bo'lsa, <code>Vec&lt;T&gt;</code> foydalanish uchun yaxshiroq
+tanlovdir. Boshqa, murakkabroq rekursiv <em>ma'lumot turlaridan</em> foyladanish bir
+qancha vaziyatlarda foydalidir, ammo ushbu bobdagi cons listdan boshlab, boxlar
+qanday qilib, rekursiv ma'lumot turini e'lon qilishga imkon berishini
+o'rganishimiz mumkin.</p>
+<p>Ro'yxat 15-2 cons list uchun enum ko'rinishini o'z ichiga oladi. E'tibor bering,
+ushbu kod hali kompilyatsiya qilinmaydi, chunki <code>List</code> turi ma'lum hajmga ega
+emas, biz buni tushuntiramiz.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">enum List {
     Cons(i32, List),
     Nil,
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre>
-<p><span class="caption">Listing 15-2: The first attempt at defining an enum to
-represent a cons list data structure of <code>i32</code> values</span></p>
+<p><span class="caption">Ro'yxat 15-2: <code>i32</code> qiymatlarining cons list ma'lumotlar
+tuzilmasida ifodalash uchun enumni e'lon qilishga birinchi urish</span></p>
 <blockquote>
-<p>Note: We’re implementing a cons list that holds only <code>i32</code> values for the
-purposes of this example. We could have implemented it using generics, as we
-discussed in Chapter 10, to define a cons list type that could store values of
-any type.</p>
+<p>Eslatma: Biz ushbu misol maqsadlari uchun faqat <code>i32</code> qiymatlarini o'z ichiga
+olgan cons listni amalga oshirmoqdamiz. Biz 10-bobda muhokama qilganimizdek,
+har qanday turdagi qiymatlarni saqlashi mumkin bo'lgan cons list turini
+generiklar yordamida e'lon qilishimiz mumkin edi.</p>
 </blockquote>
-<p>Using the <code>List</code> type to store the list <code>1, 2, 3</code> would look like the code in
-Listing 15-3:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><code>List</code> turidan foydalanib <code>1, 2, 3</code> roʻyxatini saqlash 15-3 ro'yxat kabi
+bo'ladi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">enum List {
 </span><span class="boring">    Cons(i32, List),
 </span><span class="boring">    Nil,
@@ -12248,13 +12258,14 @@ Listing 15-3:</p>
 fn main() {
     let list = Cons(1, Cons(2, Cons(3, Nil)));
 }</code></pre>
-<p><span class="caption">Listing 15-3: Using the <code>List</code> enum to store the list <code>1, 2, 3</code></span></p>
-<p>The first <code>Cons</code> value holds <code>1</code> and another <code>List</code> value. This <code>List</code> value is
-another <code>Cons</code> value that holds <code>2</code> and another <code>List</code> value. This <code>List</code> value
-is one more <code>Cons</code> value that holds <code>3</code> and a <code>List</code> value, which is finally
-<code>Nil</code>, the non-recursive variant that signals the end of the list.</p>
-<p>If we try to compile the code in Listing 15-3, we get the error shown in
-Listing 15-4:</p>
+<p><span class="caption">15-3 roʻyxat: <code>1, 2, 3</code> roʻyxatini saqlash uchun <code>List</code>
+enumidan foydalanish</span></p>
+<p>Birinchi <code>Cons</code> qiymati <code>1</code> va boshqa <code>List</code> qiymatiga ega. Bu <code>List</code> qiymati
+<code>2</code> va boshqa <code>List</code> qiymatiga ega bo'lgan boshqa <code>Cons</code> qiymatidir. Ushbu
+<code>List</code> qiymati <code>3</code> ni o'z ichiga olgan yana bitta <code>Cons</code> qiymati va <code>List</code>
+qiymati, nihoyat <code>Nil</code>, ro'yxat oxirini bildiruvchi rekursiv bo'lmagan variant.</p>
+<p>Agar biz 15-3 ro'yxatdagi kodni kompilyatsiya qilishga harakat qilsak, biz 15-4
+ro'yxatda ko'rsatilgan xatoni olamiz:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
 error[E0072]: recursive type `List` has infinite size
@@ -12273,16 +12284,17 @@ help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to break the cyc
 For more information about this error, try `rustc --explain E0072`.
 error: could not compile `cons-list` due to previous error
 </code></pre>
-<p><span class="caption">Listing 15-4: The error we get when attempting to define
-a recursive enum</span></p>
-<p>The error shows this type “has infinite size.” The reason is that we’ve defined
-<code>List</code> with a variant that is recursive: it holds another value of itself
-directly. As a result, Rust can’t figure out how much space it needs to store a
-<code>List</code> value. Let’s break down why we get this error. First, we’ll look at how
-Rust decides how much space it needs to store a value of a non-recursive type.</p>
-<h4 id="computing-the-size-of-a-non-recursive-type"><a class="header" href="#computing-the-size-of-a-non-recursive-type">Computing the Size of a Non-Recursive Type</a></h4>
-<p>Recall the <code>Message</code> enum we defined in Listing 6-2 when we discussed enum
-definitions in Chapter 6:</p>
+<p><span class="caption">Ro'yxat 15-4: Rekursiv enumni e'lon qilishga urinishda
+yuzaga keladigan xato</span></p>
+<p>Xato ushbu tur “cheksiz o'lchamga ega” ekanligini ko'rsatadi. Buning sababi
+shundaki, biz <code>List</code>ni rekursiv variant bilan e'lon qildik: u bevosita o'zining
+boshqa qiymatini saqlaydi. Natijada, Rust <code>List</code> qiymatini saqlash uchun qancha
+joy kerakligini aniqlay olmaydi. Keling, nima uchun bu xatoga duch kelganimizni
+qismlarga ajratamiz. Birinchidan, Rust rekursiv bo'lmagan turdagi qiymatni
+saqlash uchun qancha joy kerakligini qanday hal qilishini ko'rib chiqamiz.</p>
+<h4 id="rekursiv-bolmagan-turning-olchamini-hisoblash"><a class="header" href="#rekursiv-bolmagan-turning-olchamini-hisoblash">Rekursiv bo'lmagan turning o'lchamini hisoblash</a></h4>
+<p>6-bobda enum ta'riflarini muhokama qilganimizdagi 6-2 ro'yxatda e'lon qilingan
+<code>Xabar</code> enumini eslang:</p>
 <pre><pre class="playground"><code class="language-rust">enum Xabar {
     Chiqish,
     Kochirish { x: i32, y: i32 },
@@ -12291,26 +12303,29 @@ definitions in Chapter 6:</p>
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre></pre>
-<p>To determine how much space to allocate for a <code>Message</code> value, Rust goes
-through each of the variants to see which variant needs the most space. Rust
-sees that <code>Message::Quit</code> doesn’t need any space, <code>Message::Move</code> needs enough
-space to store two <code>i32</code> values, and so forth. Because only one variant will be
-used, the most space a <code>Message</code> value will need is the space it would take to
-store the largest of its variants.</p>
-<p>Contrast this with what happens when Rust tries to determine how much space a
-recursive type like the <code>List</code> enum in Listing 15-2 needs. The compiler starts
-by looking at the <code>Cons</code> variant, which holds a value of type <code>i32</code> and a value
-of type <code>List</code>. Therefore, <code>Cons</code> needs an amount of space equal to the size of
-an <code>i32</code> plus the size of a <code>List</code>. To figure out how much memory the <code>List</code>
-type needs, the compiler looks at the variants, starting with the <code>Cons</code>
-variant. The <code>Cons</code> variant holds a value of type <code>i32</code> and a value of type
-<code>List</code>, and this process continues infinitely, as shown in Figure 15-1.</p>
-<img alt="An infinite Cons list" src="img/trpl15-01.svg" class="center" style="width: 50%;" />
-<p><span class="caption">Figure 15-1: An infinite <code>List</code> consisting of infinite
-<code>Cons</code> variants</span></p>
-<h4 id="using-boxt-to-get-a-recursive-type-with-a-known-size"><a class="header" href="#using-boxt-to-get-a-recursive-type-with-a-known-size">Using <code>Box&lt;T&gt;</code> to Get a Recursive Type with a Known Size</a></h4>
-<p>Because Rust can’t figure out how much space to allocate for recursively
-defined types, the compiler gives an error with this helpful suggestion:</p>
+<p><code>Xabar</code> qiymati uchun qancha joy ajratish kerakligini aniqlash uchun Rust har
+bir variantni ko'rib chiqadi va qaysi variantga ko'proq joy kerakligini
+aniqlaydi. Rust <code>Xabar::Chiqish</code> uchun hech qanday joy kerak emasligini,
+<code>Xabar::Kochirish</code> ikkita <code>i32</code> qiymatini saqlash uchun yetarli joy kerakligini
+aniqlaydi va hokazo. Faqat bitta variant qo'llanilishi sababli, <code>Xabar</code>
+qiymatiga kerak bo'ladigan eng ko'p joy-bu uning eng katta variantini saqlash
+uchun zarur bo'lgan joy hisoblanadi.</p>
+<p>Rust 15-2 roʻyxatdagi <code>List</code> enum kabi rekursiv turga qancha boʻsh joy
+kerakligini aniqlashga harakat qilganda nima sodir boʻlishini bu bilan
+taqqoslang. Kompilyator <code>i32</code> turidagi qiymat va <code>List</code> turidagi qiymatga ega
+bo'lgan <code>Cons</code> variantini ko'rib chiqishdan boshlaydi. Shuning uchun, <code>Cons</code>
+uchun <code>i32</code> va <code>List</code> o'lchamiga teng bo'sh joy kerak bo'ladi. <code>List</code> turiga
+qancha xotira kerakligini aniqlash uchun kompilyator <code>Cons</code> variantidan boshlab
+variantlarni ko'rib chiqadi. <code>Cons</code> variantida <code>i32</code> turidagi qiymat va <code>List</code>
+turidagi qiymat mavjud va bu jarayon 15-1-rasmda ko'rsatilganidek, cheksiz davom
+etadi.</p>
+<img alt="Cheksiz Cons list" src="img/trpl15-01.svg" class="center" style="width: 50%;" />
+<p><span class="caption">15-1-rasm: Cheksiz <code>Cons</code> variantlaridan iborat cheksiz
+<code>List</code></span></p>
+<h4 id="olchami-malum-bolgan-rekursiv-turni-elon-qilish-uchun-boxt-dan-foydalanish"><a class="header" href="#olchami-malum-bolgan-rekursiv-turni-elon-qilish-uchun-boxt-dan-foydalanish">O'lchami ma'lum bo'lgan rekursiv turni e'lon qilish uchun <code>Box&lt;T&gt;</code> dan foydalanish</a></h4>
+<p>Rust rekursiv e'lon qilingan turlar uchun qancha joy ajratish kerakligini
+aniqlay olmaganligi sababli, kompilyator ushbu foydali taklif bilan xatolik
+beradi:</p>
 <!-- manual-regeneration
 after doing automatic regeneration, look at listings/ch15-smart-pointers/listing-15-03/output.txt and copy the relevant line
 -->
@@ -12319,20 +12334,24 @@ after doing automatic regeneration, look at listings/ch15-smart-pointers/listing
 2 |     Cons(i32, Box&lt;List&gt;),
   |               ++++    +
 </code></pre>
-<p>In this suggestion, “indirection” means that instead of storing a value
-directly, we should change the data structure to store the value indirectly by
-storing a pointer to the value instead.</p>
-<p>Because a <code>Box&lt;T&gt;</code> is a pointer, Rust always knows how much space a <code>Box&lt;T&gt;</code>
-needs: a pointer’s size doesn’t change based on the amount of data it’s
-pointing to. This means we can put a <code>Box&lt;T&gt;</code> inside the <code>Cons</code> variant instead
-of another <code>List</code> value directly. The <code>Box&lt;T&gt;</code> will point to the next <code>List</code>
-value that will be on the heap rather than inside the <code>Cons</code> variant.
-Conceptually, we still have a list, created with lists holding other lists, but
-this implementation is now more like placing the items next to one another
-rather than inside one another.</p>
-<p>We can change the definition of the <code>List</code> enum in Listing 15-2 and the usage
-of the <code>List</code> in Listing 15-3 to the code in Listing 15-5, which will compile:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Ushbu taklifda &quot;indirection&quot; qiymatni to'g'ridan-to'g'ri saqlash o'rniga, biz
+pointerni qiymatga saqlash orqali qiymatni bilvosita saqlash uchun ma'lumotlar
+strukturasini o'zgartirishimiz kerakligini anglatadi.</p>
+<p><code>Box&lt;T&gt;</code> pointer bo'lgani uchun Rust har doim <code>Box&lt;T&gt;</code> uchun qancha joy
+kerakligini biladi: pointerning o'lchami u ko'rsatayotgan ma'lumotlar miqdoriga
+qarab o'zgarmaydi. Bu shuni anglatadiki, biz to'g'ridan-to'g'ri boshqa <code>List</code>
+qiymati o'rniga <code>Cons</code> variantiga <code>Box&lt;T&gt;</code> qo'yishimiz mumkin. <code>Box&lt;T&gt;</code> keyingi
+<code>List</code> qiymatiga ishora qiladi, bu qiymat <code>Cons</code> varianti ichida emas, balki
+heapda bo'ladi. G'oyaga ko'ra, bizda hali ham boshqa ro'yxatlarni o'z ichiga
+olgan ro'yxatlar bilan yaratilgan ro'yxat mavjud, ammo bu amalga oshirish endi
+elementlarni bir-birining ichiga emas, balki bir-birining yoniga joylashtirishga
+o'xshaydi.</p>
+<p>We can change the definition of the <code>List</code> enum in Listing 15-2 and the usage of
+the <code>List</code> in Listing 15-3 to the code in Listing 15-5, which will compile:</p>
+<p>Biz 15-2 ro'yxatidagi <code>List</code> enumni va 15-3 ro'yxatidagi <code>List</code>ning
+qo'llanishini 15-5 ro'yxatidagi kodga o'zgartirishimiz mumkin, bu kompilyatsiya
+bo'ladi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">enum List {
     Cons(i32, Box&lt;List&gt;),
     Nil,
@@ -12343,31 +12362,32 @@ use crate::List::{Cons, Nil};
 fn main() {
     let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
 }</code></pre></pre>
-<p><span class="caption">Listing 15-5: Definition of <code>List</code> that uses <code>Box&lt;T&gt;</code> in
-order to have a known size</span></p>
-<p>The <code>Cons</code> variant needs the size of an <code>i32</code> plus the space to store the
-box’s pointer data. The <code>Nil</code> variant stores no values, so it needs less space
-than the <code>Cons</code> variant. We now know that any <code>List</code> value will take up the
-size of an <code>i32</code> plus the size of a box’s pointer data. By using a box, we’ve
-broken the infinite, recursive chain, so the compiler can figure out the size
-it needs to store a <code>List</code> value. Figure 15-2 shows what the <code>Cons</code> variant
-looks like now.</p>
-<img alt="A finite Cons list" src="img/trpl15-02.svg" class="center" />
-<p><span class="caption">Figure 15-2: A <code>List</code> that is not infinitely sized
-because <code>Cons</code> holds a <code>Box</code></span></p>
-<p>Boxes provide only the indirection and heap allocation; they don’t have any
-other special capabilities, like those we’ll see with the other smart pointer
-types. They also don’t have the performance overhead that these special
-capabilities incur, so they can be useful in cases like the cons list where the
-indirection is the only feature we need. We’ll look at more use cases for boxes
-in Chapter 17, too.</p>
-<p>The <code>Box&lt;T&gt;</code> type is a smart pointer because it implements the <code>Deref</code> trait,
-which allows <code>Box&lt;T&gt;</code> values to be treated like references. When a <code>Box&lt;T&gt;</code>
-value goes out of scope, the heap data that the box is pointing to is cleaned
-up as well because of the <code>Drop</code> trait implementation. These two traits will be
-even more important to the functionality provided by the other smart pointer
-types we’ll discuss in the rest of this chapter. Let’s explore these two traits
-in more detail.</p>
+<p><span class="caption">Ro'yxat 15-5: Maʼlum oʻlchamga ega boʻlish uchun <code>Box&lt;T&gt;</code>
+dan foydalanadigan <code>List</code>ni e'lon qilinishi</span></p>
+<p><code>Cons</code> variantiga <code>i32</code> o'lchamiga va boxdagi pointer ma'lumotlarini saqlash
+uchun bo'sh joy kerak. <code>Nil</code> varianti hech qanday qiymatlarni saqlamaydi,
+shuning uchun u <code>Cons</code> variantiga qaraganda kamroq joy talab qiladi. Endi
+bilamizki, har qanday <code>List</code> qiymati <code>i32</code> o‘lchamini va boxdagi pointer
+ma’lumotlari hajmini egallaydi. Boxdan foydalanib, biz cheksiz, rekursiv
+zanjirni buzdik, shuning uchun kompilyator <code>List</code> qiymatini saqlash uchun
+kerakli hajmni aniqlay oladi. 15-2-rasmda <code>Cons</code> varianti hozir qanday
+ko'rinishi ko'rsatilgan.</p>
+<img alt="Cheksiz bo'lmagan Cons list" src="img/trpl15-02.svg" class="center" />
+<p><span class="caption">15-2-rasm: Cheksiz o'lchamli bo'lmagan <code>List</code>, chunki
+<code>Cons</code> endi <code>Box</code> saqlaydi</span></p>
+<p>Boxlar faqat bilvosita va heapda joylashuvni ta'minlaydi; ularda biz boshqa
+smart pointerlarda ko'radigan boshqa maxsus imkoniyatlar yo'q. Ular, shuningdek,
+ushbu maxsus imkoniyatlarga ega bo'lgan ishlash xarajatlariga ega emaslar,
+shuning uchun ular bizga kerak bo'lgan yagona xususiyat bo'lgan cons list kabi
+holatlarda foydali bo'lishi mumkin. Biz 17-bobda boxlar uchun ko'proq
+foydalanish holatlarini ko'rib chiqamiz.</p>
+<p><code>Box&lt;T&gt;</code> turi smart pointerdir, chunki u <code>Deref</code> xususiyatini amalga oshiradi,
+bu esa <code>Box&lt;T&gt;</code> qiymatlariga reference kabi qarashga imkonini beradi. <code>Box&lt;T&gt;</code>
+qiymati scopedan chiqib ketganda, box ko'rsatayotgan heapdagi ma'lumotlar ham
+<code>Drop</code> xususiyatini amalga oshirish tufayli tozalanadi. Ushbu ikki xususiyat biz
+ushbu bobning qolgan qismida muhokama qiladigan boshqa smart pointer turlari
+tomonidan taqdim etilgan funksionallik uchun yanada muhimroq bo'ladi. Keling,
+ushbu ikki xususiyatni batafsil ko'rib chiqaylik.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="treating-smart-pointers-like-regular-references-with-the-deref-trait"><a class="header" href="#treating-smart-pointers-like-regular-references-with-the-deref-trait">Treating Smart Pointers Like Regular References with the <code>Deref</code> Trait</a></h2>
 <p>Implementing the <code>Deref</code> trait allows you to customize the behavior of the
 <em>dereference operator</em> <code>*</code> (not to be confused with the multiplication or glob
