@@ -14182,40 +14182,28 @@ fn main() {
     });
 
     for i in 1..5 {
-        println!(&quot;hi number {} from the main thread!&quot;, i);
+        println!(&quot;salom, main threaddan {}-raqam!&quot;, i);
         thread::sleep(Duration::from_millis(1));
     }
 }</code></pre></pre>
-<p><span class="caption">Listing 16-1: Creating a new thread to print one thing
-while the main thread prints something else</span></p>
-<p>Note that when the main thread of a Rust program completes, all spawned threads
-are shut down, whether or not they have finished running. The output from this
-program might be a little different every time, but it will look similar to the
-following:</p>
+<p><span class="caption">Ro'yxat 16-1: Bir narsani chop etish uchun yangi thread yaratish, main thread esa boshqa narsalarni chop etish</span></p>
+<p>Esda tutingki, Rust dasturining asosiy ishi tugagach, barcha ochilgan threadlar ishlashni tugatgan yoki tugatmaganidan qat'i nazar, o'chiriladi. Ushbu dasturning chiqishi har safar bir oz boshqacha bo'lishi mumkin, ammo u quyidagilarga o'xshaydi:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
-<pre><code class="language-text">hi number 1 from the main thread!
+<pre><code class="language-text">salom, main threaddan 1-raqam!
 hi number 1 from the spawned thread!
-hi number 2 from the main thread!
+salom, main threaddan 2-raqam!
 hi number 2 from the spawned thread!
-hi number 3 from the main thread!
+salom, main threaddan 3-raqam!
 hi number 3 from the spawned thread!
-hi number 4 from the main thread!
+salom, main threaddan 4-raqam!
 hi number 4 from the spawned thread!
 hi number 5 from the spawned thread!
 </code></pre>
-<p>The calls to <code>thread::sleep</code> force a thread to stop its execution for a short
-duration, allowing a different thread to run. The threads will probably take
-turns, but that isn’t guaranteed: it depends on how your operating system
-schedules the threads. In this run, the main thread printed first, even though
-the print statement from the spawned thread appears first in the code. And even
-though we told the spawned thread to print until <code>i</code> is 9, it only got to 5
-before the main thread shut down.</p>
-<p>If you run this code and only see output from the main thread, or don’t see any
-overlap, try increasing the numbers in the ranges to create more opportunities
-for the operating system to switch between the threads.</p>
-<h3 id="waiting-for-all-threads-to-finish-using-join-handles"><a class="header" href="#waiting-for-all-threads-to-finish-using-join-handles">Waiting for All Threads to Finish Using <code>join</code> Handles</a></h3>
+<p><code>thread::sleep</code>ga chaqiruvlar threadni qisqa muddatga uning bajarilishini to'xtatishga majbur qiladi, bu esa boshqa threadning ishlashiga imkon beradi. Ehtimol, threadlar navbatma-navbat bo'ladi, lekin bu kafolatlanmaydi: bu sizning operatsion tizimingiz threadlarni qanday rejalashtirishiga(schedule) bog'liq. Bu ishga tushirishda birinchi bo'lib main thread chop etiladi, garchi ishlab chiqarilgan threadning chop etish bayonoti kodda birinchi bo'lib paydo bo'lsa ham. Va biz paydo bo'lgan thredga <code>i</code> 9 bo'lguncha chop etishni aytgan bo'lsak ham, asosiy thread yopilishidan oldin u 5 ga yetdi.</p>
+<p>Agar siz ushbu kodni ishga tushirsangiz va faqat main threaddan olingan ma'lumotlarni ko'rsangiz yoki hech qanday o'xshashlikni ko'rmasangiz, operatsion tizimning threadlar o'rtasida almashishi uchun ko'proq imkoniyatlar yaratish uchun diapazonlardagi raqamlarni oshirib ko'ring.</p>
+<h3 id="join-handlerlari-yordamida-barcha-threadlar-tugashini-kutilmoqda"><a class="header" href="#join-handlerlari-yordamida-barcha-threadlar-tugashini-kutilmoqda"><code>join</code> handlerlari yordamida barcha threadlar tugashini kutilmoqda</a></h3>
 <p>The code in Listing 16-1 not only stops the spawned thread prematurely most of
 the time due to the main thread ending, but because there is no guarantee on
 the order in which threads run, we also can’t guarantee that the spawned thread
