@@ -182,39 +182,19 @@
 <p>Dasturlashdagi kanalni(channel) oqim yoki daryo kabi suvning yo'naltirilgan kanali kabi tasavvur qilishingiz mumkin. Agar siz daryoga rezina o'rdak kabi narsalarni qo'ysangiz, u suv yo'lining oxirigacha pastga tushadi.</p>
 <p>Kanalning ikkita yarmi bor: uzatuvchi(transmitte) va qabul qiluvchi(receiver). Transmitterning yarmi daryoga rezina o'rdak qo'yadigan yuqori oqim joyidir va qabul qiluvchining yarmi rezina o'rdak quyi oqimga tushadi. Kodingizning bir qismi siz yubormoqchi bo'lgan ma'lumotlarga ega bo'lgan transmitterdagi metodlarni chaqiradi, boshqa qismi esa kelgan xabarlarni qabul qiluvchi tomonni tekshiradi. Agar transmitter yoki receiverning yarmi tushib qolsa, kanal <em>closed(yopiq)</em> deyiladi.</p>
 <p>Bu yerda biz qiymatlarni yaratish va ularni kanalga yuborish uchun bitta threadga ega bo'lgan dasturni va qiymatlarni qabul qiladigan va ularni chop etadigan boshqa threadni ishlab chiqamiz. Featureni tasvirlash uchun kanal yordamida  threadlar orasidagi oddiy qiymatlarni yuboramiz. Texnika bilan tanishganingizdan so'ng, siz bir-biringiz bilan aloqa o'rnatishingiz kerak bo'lgan har qanday threadlar uchun kanallardan foydalanishingiz mumkin, masalan, chat tizimi yoki ko'p threadlar hisoblash qismlarini bajaradigan va qismlarni natijalarni jamlaydigan bitta threadga yuboradigan tizim.</p>
-<p>First, in Listing 16-6, we’ll create a channel but not do anything with it.
-Note that this won’t compile yet because Rust can’t tell what type of values we
-want to send over the channel.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Birinchidan, 16-6 ro'yxatda biz channel(kanal) yaratamiz, lekin u bilan hech narsa qilmaymiz.
+E'tibor bering, bu hali kompilyatsiya qilinmaydi, chunki Rust kanal orqali qanday turdagi qiymatlarni yuborishimizni ayta olmaydi.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
 
 fn main() {
     let (tx, rx) = mpsc::channel();
 }</code></pre>
-<p><span class="caption">Listing 16-6: Creating a channel and assigning the two
-halves to <code>tx</code> and <code>rx</code></span></p>
-<p>We create a new channel using the <code>mpsc::channel</code> function; <code>mpsc</code> stands for
-<em>multiple producer, single consumer</em>. In short, the way Rust’s standard library
-implements channels means a channel can have multiple <em>sending</em> ends that
-produce values but only one <em>receiving</em> end that consumes those values. Imagine
-multiple streams flowing together into one big river: everything sent down any
-of the streams will end up in one river at the end. We’ll start with a single
-producer for now, but we’ll add multiple producers when we get this example
-working.</p>
-<p>The <code>mpsc::channel</code> function returns a tuple, the first element of which is the
-sending end--the transmitter--and the second element is the receiving end--the
-receiver. The abbreviations <code>tx</code> and <code>rx</code> are traditionally used in many fields
-for <em>transmitter</em> and <em>receiver</em> respectively, so we name our variables as such
-to indicate each end. We’re using a <code>let</code> statement with a pattern that
-destructures the tuples; we’ll discuss the use of patterns in <code>let</code> statements
-and destructuring in Chapter 18. For now, know that using a <code>let</code> statement
-this way is a convenient approach to extract the pieces of the tuple returned
-by <code>mpsc::channel</code>.</p>
-<p>Let’s move the transmitting end into a spawned thread and have it send one
-string so the spawned thread is communicating with the main thread, as shown in
-Listing 16-7. This is like putting a rubber duck in the river upstream or
-sending a chat message from one thread to another.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Ro'yxat 16-6: Kanal yaratish va ikkita yarmini <code>tx</code> va <code>rx</code> ga belgilash</span></p>
+<p>Biz <code>mpsc::channel</code> funksiyasidan foydalanib yangi kanal yaratamiz; <code>mpsc</code> <em>multiple producer, single consumer</em> degan maʼnoni anglatadi. Qisqa qilib aytganda, Rustning standart kutubxonasi kanallarni implement qilish usuli kanalda qiymatlarni ishlab chiqaradigan bir nechta <em>sending(jo'natish)</em> uchlari bo'lishi mumkin, ammo bu qiymatlarni qabul qiladigan consumer faqat bitta <em>receiving(qabul qiluvchi)</em> end bo'lishi mumkinligini anglatadi. Tasavvur qiling-a, bir nechta daryolar birlashib, bitta katta daryoga quyiladi: har qanday oqim oxirida bitta daryoga tushadi. Hozircha biz bitta ishlab chiqaruvchidan(single producer) boshlaymiz, lekin biz ushbu misol ishlaganda bir nechta producerlarni(multiple producer) qo'shamiz.</p>
+<p><code>mpsc::channel</code> funksiyasi tupleni qaytaradi, uning birinchi elementi jo'natuvchi end - transmitter va ikkinchi element - receiver end - qabul qiluvchidir. <code>tx</code> va <code>rx</code> qisqartmalari an'anaviy ravishda ko'plab sohalarda mos ravishda <em>transmitter</em> va <em>receiver</em> uchun ishlatiladi, shuning uchun biz har bir endni ko'rsatish uchun o'zgaruvchilarimizni shunday nomlaymiz. Biz tuplelarni destruksiya pattern <code>let</code> statementdan foydalanmoqdamiz; Biz 18-bobda <code>let</code> statementlarida patternlardan foydalanish va destruksiyani muhokama qilamiz. Hozircha shuni bilingki, <code>let</code> statementdan shu tarzda foydalanish <code>mpsc::channel</code> tomonidan qaytarilgan tuple qismlarini ajratib olishning qulay usuli hisoblanadi.</p>
+<p>16-7 ro'yxatda ko'rsatilganidek, transmitter uchini ochilgan threadga o'tkazamiz va u bitta threadni yuborsin, shunda hosil qilingan thread main thread bilan bog'lanadi. Bu daryoning yuqori oqimiga rezina o'rdak qo'yish yoki bir threaddan ikkinchisiga chat xabarini yuborishga o'xshaydi.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::sync::mpsc;
 use std::thread;
 
@@ -222,25 +202,14 @@ fn main() {
     let (tx, rx) = mpsc::channel();
 
     thread::spawn(move || {
-        let val = String::from(&quot;hi&quot;);
+        let val = String::from(&quot;salom&quot;);
         tx.send(val).unwrap();
     });
 }</code></pre></pre>
-<p><span class="caption">Listing 16-7: Moving <code>tx</code> to a spawned thread and sending
-“hi”</span></p>
-<p>Again, we’re using <code>thread::spawn</code> to create a new thread and then using <code>move</code>
-to move <code>tx</code> into the closure so the spawned thread owns <code>tx</code>. The spawned
-thread needs to own the transmitter to be able to send messages through the
-channel. The transmitter has a <code>send</code> method that takes the value we want to
-send. The <code>send</code> method returns a <code>Result&lt;T, E&gt;</code> type, so if the receiver has
-already been dropped and there’s nowhere to send a value, the send operation
-will return an error. In this example, we’re calling <code>unwrap</code> to panic in case
-of an error. But in a real application, we would handle it properly: return to
-Chapter 9 to review strategies for proper error handling.</p>
-<p>In Listing 16-8, we’ll get the value from the receiver in the main thread. This
-is like retrieving the rubber duck from the water at the end of the river or
-receiving a chat message.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Roʻyxat 16-7: <code>tx</code> ni ochilgan threadga koʻchirish va <code>salom</code> yuborish</span></p>
+<p>Shunga qaramay, biz yangi thread yaratish uchun <code>thread::spawn</code> dan foydalanamiz va keyin <code>move</code> yordamida <code>tx</code> ni yopishga(close) o'tkazamiz, shunda hosil qilingan thread <code>tx</code>ga ega bo'ladi. Kanal orqali xabarlarni jo'natish uchun ochilgan thread transmitterga ega bo'lishi kerak. Transmitterda biz jo'natmoqchi bo'lgan qiymatni qabul qiluvchi <code>send</code> metodi mavjud. <code>send</code> metodi <code>Result&lt;T, E&gt;</code> typeni qaytaradi, shuning uchun agar qabul qiluvchi(receiver) allaqachon drop qilingan bo'lsa va qiymatni yuborish uchun joy bo'lmasa, yuborish operatsiyasi xatolikni qaytaradi. Ushbu misolda biz xatolik yuz berganda panic qo'yish uchun <code>unwrap</code> ni chaqiramiz. Ammo haqiqiy dasturda biz uni to'g'ri hal qilamiz: xatolarni to'g'ri hal qilish strategiyalarini ko'rib chiqish uchun 9-bobga qayting.</p>
+<p>16-8 ro'yxatda biz main threaddagi qabul qiluvchidan(receive) qiymatni olamiz. Bu daryoning oxiridagi suvdan rezina o'rdakni olish yoki suhbat xabarini olish kabi.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::sync::mpsc;
 use std::thread;
 
@@ -248,47 +217,27 @@ fn main() {
     let (tx, rx) = mpsc::channel();
 
     thread::spawn(move || {
-        let val = String::from(&quot;hi&quot;);
+        let val = String::from(&quot;salom&quot;);
         tx.send(val).unwrap();
     });
 
     let received = rx.recv().unwrap();
-    println!(&quot;Got: {}&quot;, received);
+    println!(&quot;Tushundim: {}&quot;, received);
 }</code></pre></pre>
-<p><span class="caption">Listing 16-8: Receiving the value “hi” in the main thread
-and printing it</span></p>
-<p>The receiver has two useful methods: <code>recv</code> and <code>try_recv</code>. We’re using <code>recv</code>,
-short for <em>receive</em>, which will block the main thread’s execution and wait
-until a value is sent down the channel. Once a value is sent, <code>recv</code> will
-return it in a <code>Result&lt;T, E&gt;</code>. When the transmitter closes, <code>recv</code> will return
-an error to signal that no more values will be coming.</p>
-<p>The <code>try_recv</code> method doesn’t block, but will instead return a <code>Result&lt;T, E&gt;</code>
-immediately: an <code>Ok</code> value holding a message if one is available and an <code>Err</code>
-value if there aren’t any messages this time. Using <code>try_recv</code> is useful if
-this thread has other work to do while waiting for messages: we could write a
-loop that calls <code>try_recv</code> every so often, handles a message if one is
-available, and otherwise does other work for a little while until checking
-again.</p>
-<p>We’ve used <code>recv</code> in this example for simplicity; we don’t have any other work
-for the main thread to do other than wait for messages, so blocking the main
-thread is appropriate.</p>
-<p>When we run the code in Listing 16-8, we’ll see the value printed from the main
-thread:</p>
+<p><span class="caption">Ro'yxat 16-8: main threadda <code>salom</code> qiymatini olish va uni chop etish</span></p>
+<p>Receiverda ikkita foydali metod mavjud: <code>recv</code> va <code>try_recv</code>. Biz <code>recv</code> dan foydalanmoqdamiz, bu <em>receive(qabul qilish)</em> ning qisqartmasi bo'lib, u main threadning bajarilishini bloklaydi va kanalga qiymat yuborilguncha kutadi. Qiymat yuborilgach, <code>recv</code> uni <code>Result&lt;T, E&gt;</code> shaklida qaytaradi. Transmitter yopilganda, <code>recv</code> boshqa qiymatlar kelmasligini bildirish uchun xatolikni qaytaradi.</p>
+<p><code>try_recv</code> metodi bloklanmaydi, aksincha darhol <code>Result&lt;T, E&gt;</code>ni qaytaradi: <code>Ok</code> qiymati, agar mavjud bo‘lsa, xabarni ushlab turadi va bu safar hech qanday xabar bo‘lmasa, <code>Err</code> qiymati. <code>try_recv</code> dan foydalanish, agar ushbu thread xabarlarni kutayotganda boshqa ishi boʻlsa foydali boʻladi: biz tez-tez <code>try_recv</code> ni chaqiradigan, agar mavjud bo'lsa, xabarni ko'rib chiqadigan va boshqasi qayta tekshirilgunga qadar biroz vaqt ishlaydigan sikl yozishimiz mumkin.</p>
+<p>Biz ushbu misolda soddalik uchun <code>recv</code> dan foydalandik; bizda main thread uchun xabarlarni kutishdan boshqa ishimiz yo'q, shuning uchun main threadi bloklash maqsadga muvofiqdir.</p>
+<p>Kodni 16-8 ro'yxatda ishga tushirganimizda, biz main threaddan chop etilgan qiymatni ko'ramiz:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
-<pre><code class="language-text">Got: hi
+<pre><code class="language-text">Tushundim: salom
 </code></pre>
-<p>Perfect!</p>
-<h3 id="channels-and-ownership-transference"><a class="header" href="#channels-and-ownership-transference">Channels and Ownership Transference</a></h3>
-<p>The ownership rules play a vital role in message sending because they help you
-write safe, concurrent code. Preventing errors in concurrent programming is the
-advantage of thinking about ownership throughout your Rust programs. Let’s do
-an experiment to show how channels and ownership work together to prevent
-problems: we’ll try to use a <code>val</code> value in the spawned thread <em>after</em> we’ve
-sent it down the channel. Try compiling the code in Listing 16-9 to see why
-this code isn’t allowed:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Mukammal! Perfect!</p>
+<h3 id="kanallar-va-ownershiplikegalkik-huquqini-otkazish"><a class="header" href="#kanallar-va-ownershiplikegalkik-huquqini-otkazish">Kanallar va ownershiplik(egalkik) huquqini o'tkazish</a></h3>
+<p>Ownershiplik qoidalari xabarlarni jo'natishda muhim rol o'ynaydi, chunki ular xavfsiz, bir vaqtda kod yozishga yordam beradi. Bir vaqtning o'zida dasturlashda(concurrent programming) xatolarning oldini olish Rust dasturlarida ownershiplik haqida o'ylashning afzalligi hisoblanadi. Muammolarning oldini olish uchun kanallar va ownershiplik qanday ishlashini ko‘rsatish uchun tajriba o‘tkazamiz: biz kanalga yuborganimizdan so‘ng <code>val</code> qiymatidan foydalanishga harakat qilamiz. Nima uchun bu kodga ruxsat berilmaganligini bilish uchun 16-9-raqamdagi kodni kompilyatsiya qilib ko'ring:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
 use std::thread;
 
@@ -296,22 +245,17 @@ fn main() {
     let (tx, rx) = mpsc::channel();
 
     thread::spawn(move || {
-        let val = String::from(&quot;hi&quot;);
+        let val = String::from(&quot;salom&quot;);
         tx.send(val).unwrap();
-        println!(&quot;val is {}&quot;, val);
+        println!(&quot;qandaysan {}&quot;, val);
     });
 
     let received = rx.recv().unwrap();
-    println!(&quot;Got: {}&quot;, received);
+    println!(&quot;Tushundim: {}&quot;, received);
 }</code></pre>
-<p><span class="caption">Listing 16-9: Attempting to use <code>val</code> after we’ve sent it
-down the channel</span></p>
-<p>Here, we try to print <code>val</code> after we’ve sent it down the channel via <code>tx.send</code>.
-Allowing this would be a bad idea: once the value has been sent to another
-thread, that thread could modify or drop it before we try to use the value
-again. Potentially, the other thread’s modifications could cause errors or
-unexpected results due to inconsistent or nonexistent data. However, Rust gives
-us an error if we try to compile the code in Listing 16-9:</p>
+<p><span class="caption">Roʻyxat 16-9: <code>val</code>ni kanalga yuborganimizdan keyin foydalanishga urinish</span></p>
+<p>Bu yerda biz <code>tx.send</code> orqali kanalga yuborganimizdan so‘ng <code>val</code>ni chop etishga harakat qilamiz.
+Bunga ruxsat berish noto'g'ri fikr bo'ladi: qiymat boshqa threadga yuborilgandan so'ng, biz qiymatni qayta ishlatishdan oldin uni o'zgartirishi yoki tashlab yuborishi(drop) mumkin. Potensial ravishda, boshqa threadning o'zgartirishlari nomuvofiq yoki mavjud bo'lmagan ma'lumotlar tufayli xatolar yoki kutilmagan natijalarga olib kelishi mumkin. Biroq, agar biz 16-9 ro'yxatdagi kodni kompilyatsiya qilmoqchi bo'lsak, Rust bizga xato qiladi:</p>
 <pre><code class="language-console">$ cargo run
    Compiling message-passing v0.1.0 (file:///projects/message-passing)
 error[E0382]: borrow of moved value: `val`
@@ -329,17 +273,10 @@ error[E0382]: borrow of moved value: `val`
 For more information about this error, try `rustc --explain E0382`.
 error: could not compile `message-passing` due to previous error
 </code></pre>
-<p>Our concurrency mistake has caused a compile time error. The <code>send</code> function
-takes ownership of its parameter, and when the value is moved, the receiver
-takes ownership of it. This stops us from accidentally using the value again
-after sending it; the ownership system checks that everything is okay.</p>
-<h3 id="sending-multiple-values-and-seeing-the-receiver-waiting"><a class="header" href="#sending-multiple-values-and-seeing-the-receiver-waiting">Sending Multiple Values and Seeing the Receiver Waiting</a></h3>
-<p>The code in Listing 16-8 compiled and ran, but it didn’t clearly show us that
-two separate threads were talking to each other over the channel. In Listing
-16-10 we’ve made some modifications that will prove the code in Listing 16-8 is
-running concurrently: the spawned thread will now send multiple messages and
-pause for a second between each message.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Bizning concurrency xatomiz kompilyatsiya vaqtida xatolikka olib keldi. <code>send</code> funksiyasi oʻz parametriga ownershiplik qiladi va qiymat koʻchirilganda qabul qiluvchi(receiver) unga ownershiplik qiladi. Bu bizni qiymatni yuborgandan keyin tasodifan qayta ishlatishdan to'xtatadi; ownershiplik tizimi hamma narsa yaxshi ekanligini tekshiradi.</p>
+<h3 id="bir-nechta-qiymatlarni-yuborish-va-qabul-qiluvchiningreceiver-kutayotganini-korish"><a class="header" href="#bir-nechta-qiymatlarni-yuborish-va-qabul-qiluvchiningreceiver-kutayotganini-korish">Bir nechta qiymatlarni yuborish va qabul qiluvchining(receiver) kutayotganini ko'rish</a></h3>
+<p>16-8 ro'yxatdagi kod kompilatsiya bo'ldi va ishga tushirildi, lekin u bizga ikkita alohida thread kanal orqali bir-biri bilan gaplashayotganini aniq ko'rsatmadi. 16-10-ro'yxatda biz 16-8-ro'yxatdagi kod bir vaqtda ishlayotganini tasdiqlovchi ba'zi o'zgartirishlar kiritdik: ochilgan thread endi bir nechta xabarlarni yuboradi va har bir xabar o'rtasida bir soniya pauza qiladi.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust noplayground">use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
@@ -349,10 +286,10 @@ fn main() {
 
     thread::spawn(move || {
         let vals = vec![
-            String::from(&quot;hi&quot;),
-            String::from(&quot;from&quot;),
-            String::from(&quot;the&quot;),
-            String::from(&quot;thread&quot;),
+            String::from(&quot;qandaysan&quot;),
+            String::from(&quot;otabek&quot;),
+            String::from(&quot;vodiyga&quot;),
+            String::from(&quot;ketti&quot;),
         ];
 
         for val in vals {
@@ -362,37 +299,25 @@ fn main() {
     });
 
     for received in rx {
-        println!(&quot;Got: {}&quot;, received);
+        println!(&quot;Tushundim: {}&quot;, received);
     }
 }</code></pre>
-<p><span class="caption">Listing 16-10: Sending multiple messages and pausing
-between each</span></p>
-<p>This time, the spawned thread has a vector of strings that we want to send to
-the main thread. We iterate over them, sending each individually, and pause
-between each by calling the <code>thread::sleep</code> function with a <code>Duration</code> value of
-1 second.</p>
-<p>In the main thread, we’re not calling the <code>recv</code> function explicitly anymore:
-instead, we’re treating <code>rx</code> as an iterator. For each value received, we’re
-printing it. When the channel is closed, iteration will end.</p>
-<p>When running the code in Listing 16-10, you should see the following output
-with a 1-second pause in between each line:</p>
+<p><span class="caption">Ro'yxat 16-10: Bir nechta xabarlarni yuborish va har biri o'rtasida pauza qilish</span></p>
+<p>Bu safar, ochilgan threadda biz main threadga yubormoqchi bo'lgan satrlar vektori mavjud. Biz ularni takrorlaymiz, har birini alohida yuboramiz va 1 soniyalik <code>Duration</code> qiymati bilan <code>thread::sleep</code> funksiyasini chaqirish orqali har biri o‘rtasida pauza qilamiz.</p>
+<p>Main threadda biz endi <code>recv</code> funksiyasini aniq chaqirmayapmiz: buning o'rniga biz <code>rx</code> ni iterator sifatida ko'rib chiqamiz. Qabul qilingan har bir qiymat uchun biz uni chop etamiz. Kanal yopilganda(close), iteratsiya tugaydi.</p>
+<p>16-10 ro'yxatdagi kodni ishga tushirganda, har bir satr orasida 1 soniyalik pauza bilan quyidagi chiqishni ko'rishingiz kerak:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
-<pre><code class="language-text">Got: hi
-Got: from
-Got: the
-Got: thread
+<pre><code class="language-text">Tushundim: qandaysan
+Tushundim: otabek
+Tushundim: vodiyga
+Tushundim: ketti
 </code></pre>
-<p>Because we don’t have any code that pauses or delays in the <code>for</code> loop in the
-main thread, we can tell that the main thread is waiting to receive values from
-the spawned thread.</p>
-<h3 id="creating-multiple-producers-by-cloning-the-transmitter"><a class="header" href="#creating-multiple-producers-by-cloning-the-transmitter">Creating Multiple Producers by Cloning the Transmitter</a></h3>
-<p>Earlier we mentioned that <code>mpsc</code> was an acronym for <em>multiple producer,
-single consumer</em>. Let’s put <code>mpsc</code> to use and expand the code in Listing 16-10
-to create multiple threads that all send values to the same receiver. We can do
-so by cloning the transmitter, as shown in Listing 16-11:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Bizda main threaddagi <code>for</code> siklida pauza yoki kechikishlar keltirib chiqaradigan kod yo‘qligi sababli, biz main thread hosil qilingan threaddan qiymatlarni olishni kutayotganini aytishimiz mumkin.</p>
+<h3 id="transmitterni-klonlash-orqali-bir-nechta-producerlarni-yaratish"><a class="header" href="#transmitterni-klonlash-orqali-bir-nechta-producerlarni-yaratish">Transmitterni klonlash orqali bir nechta producerlarni yaratish</a></h3>
+<p>Avvalroq <code>mpsc</code> <em>multiple producer, single consumer</em> degan qisqartma ekanligini eslatib o'tgan edik. Keling, 16-10 ro'yxatdagi kodni ishlatish va kengaytirish uchun <code>mpsc</code> ni qo'yaylik va barchasi bir xil qabul qiluvchiga(receiver) qiymatlarni yuboradigan bir nechta threadlarni yaratamiz. Biz buni 16-11 ro'yxatda ko'rsatilganidek, transmitterni klonlash orqali amalga oshirishimiz mumkin:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">use std::sync::mpsc;
 </span><span class="boring">use std::thread;
 </span><span class="boring">use std::time::Duration;
@@ -405,10 +330,10 @@ so by cloning the transmitter, as shown in Listing 16-11:</p>
     let tx1 = tx.clone();
     thread::spawn(move || {
         let vals = vec![
-            String::from(&quot;hi&quot;),
-            String::from(&quot;from&quot;),
-            String::from(&quot;the&quot;),
-            String::from(&quot;thread&quot;),
+            String::from(&quot;salom&quot;),
+            String::from(&quot;threaddan&quot;),
+            String::from(&quot;siz&quot;),
+            String::from(&quot;uchun&quot;),
         ];
 
         for val in vals {
@@ -419,10 +344,10 @@ so by cloning the transmitter, as shown in Listing 16-11:</p>
 
     thread::spawn(move || {
         let vals = vec![
-            String::from(&quot;more&quot;),
-            String::from(&quot;messages&quot;),
-            String::from(&quot;for&quot;),
-            String::from(&quot;you&quot;),
+            String::from(&quot;ko'plab&quot;),
+            String::from(&quot;habarlar&quot;),
+            String::from(&quot;hammasi&quot;),
+            String::from(&quot;ishlayapti&quot;),
         ];
 
         for val in vals {
@@ -432,36 +357,29 @@ so by cloning the transmitter, as shown in Listing 16-11:</p>
     });
 
     for received in rx {
-        println!(&quot;Got: {}&quot;, received);
+        println!(&quot;Tushundim: {}&quot;, received);
     }
 
     // --snip--
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listing 16-11: Sending multiple messages from multiple
-producers</span></p>
-<p>This time, before we create the first spawned thread, we call <code>clone</code> on the
-transmitter. This will give us a new transmitter we can pass to the first
-spawned thread. We pass the original transmitter to a second spawned thread.
-This gives us two threads, each sending different messages to the one receiver.</p>
-<p>When you run the code, your output should look something like this:</p>
+<p><span class="caption">Ro'yxat 16-11: Bir nechta producerlardan(multiple producer) bir nechta xabarlarni(multiple message) yuborish</span></p>
+<p>Bu safar, birinchi ochilgan threadni yaratishdan oldin, biz transmitterda <code>clone</code> deb nomlaymiz. Bu bizga yangi transmitterni beradi, biz birinchi ochilgan threadga o'tishimiz mumkin. Biz asl transmitterni ikkinchi ochilgan threadga o'tkazamiz.
+Bu bizga ikkita thread beradi, ularning har biri bitta qabul qiluvchiga(receiver) turli xabarlar yuboradi.</p>
+<p>Kodni ishga tushirganingizda, chiqishingiz quyidagicha ko'rinishi kerak:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
-<pre><code class="language-text">Got: hi
-Got: more
-Got: from
-Got: messages
-Got: for
-Got: the
-Got: thread
-Got: you
+<pre><code class="language-text">Tushundim: salom
+Tushundim: threaddan
+Tushundim: siz
+Tushundim: uchun
+Tushundim: ko'plab
+Tushundim: habarlar
+Tushundim: hammasi
+Tushundim: ishlayapti
 </code></pre>
-<p>You might see the values in another order, depending on your system. This is
-what makes concurrency interesting as well as difficult. If you experiment with
-<code>thread::sleep</code>, giving it various values in the different threads, each run
-will be more nondeterministic and create different output each time.</p>
-<p>Now that we’ve looked at how channels work, let’s look at a different method of
-concurrency.</p>
+<p>Tizimingizga qarab qiymatlarni boshqa tartibda ko'rishingiz mumkin. Bu concurrencyni qiziqarli va qiyin qiladi. Agar siz <code>thread::sleep</code> bilan tajriba o'tkazsangiz, unga turli threadlarda turli qiymatlar bersangiz, har bir ishga tushirish aniqroq bo'lmaydi va har safar har xil chiqish hosil qiladi.</p>
+<p>Endi biz kanallar qanday ishlashini ko'rib chiqdik, keling, boshqa concurrency usulini ko'rib chiqaylik.</p>
 
                     </main>
 
