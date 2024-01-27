@@ -292,7 +292,7 @@ fn funksiya2() -&gt; IoResult&lt;()&gt; {
 <p><span class="caption">Ro'yxat 7-16: <code>as</code> kalit so'zi bilan qamrovga kiritilgan tur nomini o'zgartirish</span></p>
 <p>Ikkinchi <code>use</code> statementida biz <code>std::io::Result</code> turi uchun yangi <code>IoResult</code> nomini tanladik, bu endi <code>std::fmt</code> dan <code>Result</code> turiga zid kelmaydi, u ham doiraga kiradi. 7-15 va 7-16 ro'yxatlar idiomatik hisoblanadi, shuning uchun tanlov sizga bog'liq!</p>
 <h3 id="pub-use-bilan-nomlarni-qayta-eksportre-eksport-qilish"><a class="header" href="#pub-use-bilan-nomlarni-qayta-eksportre-eksport-qilish"><code>pub use</code> bilan nomlarni qayta eksport(re-eksport) qilish</a></h3>
-<p><code>use</code> kalit so'zidan foydalanib, nomni qamrovga kiritganimizda, yangi doirada mavjud bo'lgan nom shaxsiy bo'ladi. Bizning kodimizni chaqiradigan kodni xuddi shu kod doirasida aniqlangandek ushbu nomga murojaat qilishini yoqish uchun biz <code>pub</code> va <code>use</code> ni birlashtira olamiz. Bu usul <em>re-eksport</em> deb nomlanadi, chunki biz obyektni qamrovga kiritmoqdamiz, lekin elementni boshqa qamrovlarga kiritish uchun ham mavjud qilamiz.</p>
+<p><code>use</code> kalit so'zidan foydalanib, nomni qamrovga kiritganimizda, yangi doirada mavjud bo'lgan nom private bo'ladi. Bizning kodimizni chaqiradigan kodni xuddi shu kod doirasida aniqlangandek ushbu nomga murojaat qilishini yoqish uchun biz <code>pub</code> va <code>use</code> ni birlashtira olamiz. Bu usul <em>re-eksport</em> deb nomlanadi, chunki biz obyektni qamrovga kiritmoqdamiz, lekin elementni boshqa qamrovlarga kiritish uchun ham mavjud qilamiz.</p>
 <p>7-17 ro'yxatda 7-11 ro'yxatdagi kod ko'rsatilgan, ildiz modulidagi <code>use</code> <code>pub use</code> ga o'zgartirilgan.</p>
 <p><span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground test_harness">mod uyning_oldi {
@@ -430,7 +430,7 @@ use std::io::Write;</code></pre>
 </span><span class="boring">fn main() {
 </span>use std::collections::*;
 <span class="boring">}</span></code></pre></pre>
-<p>Ushbu <code>use</code> statementi <code>std::collections</code> da aniqlangan barcha ommaviy elementlarni joriy doiraga olib keladi. Glob operatoridan foydalanganda ehtiyot bo'ling! Glob qaysi nomlar qamrovda ekanligini va dasturingizda ishlatiladigan nom qayerda aniqlanganligini aniqlashni qiyinlashtirishi mumkin.</p>
+<p>Ushbu <code>use</code> statementi <code>std::collections</code> da aniqlangan barcha public elementlarni joriy doiraga olib keladi. Glob operatoridan foydalanganda ehtiyot bo'ling! Glob qaysi nomlar qamrovda ekanligini va dasturingizda ishlatiladigan nom qayerda aniqlanganligini aniqlashni qiyinlashtirishi mumkin.</p>
 <p>Glob operatori ko'pincha sinovdan o'tgan hamma narsani <code>tests</code> moduliga kiritish uchun test paytida ishlatiladi; biz bu haqda 11-bobdagi <a href="ch11-01-writing-tests.html#how-to-write-tests">&quot;Testlarni qanday yozish kerak&quot;</a><!-- ignore --> bo'limida gaplashamiz. Glob operatori ba'zan prelude patterning bir qismi sifatida ham qo'llaniladi: ushbu pattern haqida qo'shimcha ma'lumot olish uchun <a href="../std/prelude/index.html#other-preludes">standart kutubxona texnik hujjatlariga</a><!-- ignore --> qarang.</p>
 
                     </main>
