@@ -176,11 +176,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="running-code-on-cleanup-with-the-drop-trait"><a class="header" href="#running-code-on-cleanup-with-the-drop-trait">Running Code on Cleanup with the <code>Drop</code> Trait</a></h2>
-<p>The second trait important to the smart pointer pattern is <code>Drop</code>, which lets
-you customize what happens when a value is about to go out of scope. You can
-provide an implementation for the <code>Drop</code> trait on any type, and that code can
-be used to release resources like files or network connections.</p>
+                        <h2 id="drop-trait-bilan-tozalash-uchun-ishlaydigan-kod"><a class="header" href="#drop-trait-bilan-tozalash-uchun-ishlaydigan-kod"><code>Drop</code> Trait bilan tozalash uchun ishlaydigan kod</a></h2>
+<p>Agar qiymat o‘z doirasidan chiqqanda uni o‘zgartirish imkonini beradigan ikkinchi muhim sanalgan smart pointer namunasidan biri bu <code>Drop</code>dir. Siz <code>Drop</code> traitini implementatsiya qilish uchun xohlagan turdan foydalanishingiz mumkin, va kodni fayl yoki tarmoqlarni ulash resurslarini yaratish uchun ham ishlatilishi mumkin </p>
 <p>We’re introducing <code>Drop</code> in the context of smart pointers because the
 functionality of the <code>Drop</code> trait is almost always used when implementing a
 smart pointer. For example, when a <code>Box&lt;T&gt;</code> is dropped it will deallocate the
