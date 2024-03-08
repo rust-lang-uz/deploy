@@ -12743,24 +12743,11 @@ initial immutable reference is the only immutable reference to that data, but
 the borrowing rules don’t guarantee that. Therefore, Rust can’t make the
 assumption that converting an immutable reference to a mutable reference is
 possible.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="drop-trait-bilan-tozalash-uchun-ishlaydigan-kod"><a class="header" href="#drop-trait-bilan-tozalash-uchun-ishlaydigan-kod"><code>Drop</code> Trait bilan tozalash uchun ishlaydigan kod</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="drop-trait-bilan-tozalash-uchun-kodni-yuritish"><a class="header" href="#drop-trait-bilan-tozalash-uchun-kodni-yuritish"><code>Drop</code> Trait bilan tozalash uchun kodni yuritish</a></h2>
 <p>Agar qiymat o‘z doirasidan chiqqanda uni o‘zgartirish imkonini beradigan ikkinchi muhim sanalgan smart pointer namunasidan biri bu <code>Drop</code>dir. Siz <code>Drop</code> traitini implementatsiya qilish uchun xohlagan turdan foydalanishingiz mumkin, va kodni fayl yoki tarmoqlarni ulash resurslarini yaratish uchun ham ishlatilishi mumkin </p>
-<p>We’re introducing <code>Drop</code> in the context of smart pointers because the
-functionality of the <code>Drop</code> trait is almost always used when implementing a
-smart pointer. For example, when a <code>Box&lt;T&gt;</code> is dropped it will deallocate the
-space on the heap that the box points to.</p>
-<p>In some languages, for some types, the programmer must call code to free memory
-or resources every time they finish using an instance of those types. Examples
-include file handles, sockets, or locks. If they forget, the system might
-become overloaded and crash. In Rust, you can specify that a particular bit of
-code be run whenever a value goes out of scope, and the compiler will insert
-this code automatically. As a result, you don’t need to be careful about
-placing cleanup code everywhere in a program that an instance of a particular
-type is finished with—you still won’t leak resources!</p>
-<p>You specify the code to run when a value goes out of scope by implementing the
-<code>Drop</code> trait. The <code>Drop</code> trait requires you to implement one method named
-<code>drop</code> that takes a mutable reference to <code>self</code>. To see when Rust calls <code>drop</code>,
-let’s implement <code>drop</code> with <code>println!</code> statements for now.</p>
+<p><code>Drop</code>ni smart pointerlar kontekstida ishlatishimizning sababi <code>Drop</code> traiti smart pointerni implementatsiyasida deyarli har doim ishlatiladi. Masalan, qachonki <code>Box&lt;T&gt;</code> tashlab yuborilganda u quti ko‘rsatayotgan heapdan joy ajratadi.</p>
+<p>Ayrim dasturlash tillarida ayrim turlar uchun dasturchi xotirani bo‘shatish uchun yoki har safar  resurslar o‘sha tur instancedan ishlatib bo‘lmagungacha kodni chaqirishi kerak. Fayl handlelari, soketlar va locklar bunga misol bo‘la oladi. Agar ular kodni chaqirishni unitsalar, tizimda haddan tashqari yuklanish yuzaga keladi va tizim ishdan chiqadi. Rustda agar qiymat o‘z doirasidan chiqqanda siz kodning ma’lum bir qismi ishga tushirishni belgilashingiz mumkin, kompilyator avtomatik ravishda kodni kiritadi. Natijada, ma’lum bir turdagi instance tugagan dasturning hamma joyiga tozalovchi kodni joylashtirishdan xavotir olmasangiz ham bo‘ladi va siz resurslarni sizib ketishini oldini olgan bo‘lasiz!</p>
+<p>Siz <code>Drop</code> traiti implementatsiyasi yordamida agar qiymat doirasidan chiqqan holda kodni run qilish uchun belgilashingiz mumkin. <code>Drop</code> traiti sizdan <code>self</code>dan referens oluvchi <code>drop</code> nomli metodni implementatsiya qilishni talab qiladi. Rustda <code>drop</code> qachon chaqirilishini ko‘rish uchun, <code>drop</code>ni <code>println!</code> yordamida implementatsiya qilib ko‘raylik.</p>
 <p>Listing 15-14 shows a <code>CustomSmartPointer</code> struct whose only custom
 functionality is that it will print <code>Dropping CustomSmartPointer!</code> when the
 instance goes out of scope, to show when Rust runs the <code>drop</code> function.</p>
