@@ -12748,10 +12748,8 @@ possible.</p>
 <p><code>Drop</code>ni smart pointerlar kontekstida ishlatishimizning sababi <code>Drop</code> traiti smart pointerni implementatsiyasida deyarli har doim ishlatiladi. Masalan, qachonki <code>Box&lt;T&gt;</code> tashlab yuborilganda u quti ko‘rsatayotgan heapdan joy ajratadi.</p>
 <p>Ayrim dasturlash tillarida ayrim turlar uchun dasturchi xotirani bo‘shatish uchun yoki har safar  resurslar o‘sha tur instancedan ishlatib bo‘lmagungacha kodni chaqirishi kerak. Fayl handlelari, soketlar va locklar bunga misol bo‘la oladi. Agar ular kodni chaqirishni unitsalar, tizimda haddan tashqari yuklanish yuzaga keladi va tizim ishdan chiqadi. Rustda agar qiymat o‘z doirasidan chiqqanda siz kodning ma’lum bir qismi ishga tushirishni belgilashingiz mumkin, kompilyator avtomatik ravishda kodni kiritadi. Natijada, ma’lum bir turdagi instance tugagan dasturning hamma joyiga tozalovchi kodni joylashtirishdan xavotir olmasangiz ham bo‘ladi va siz resurslarni sizib ketishini oldini olgan bo‘lasiz!</p>
 <p>Siz <code>Drop</code> traiti implementatsiyasi yordamida agar qiymat doirasidan chiqqan holda kodni run qilish uchun belgilashingiz mumkin. <code>Drop</code> traiti sizdan <code>self</code>dan referens oluvchi <code>drop</code> nomli metodni implementatsiya qilishni talab qiladi. Rustda <code>drop</code> qachon chaqirilishini ko‘rish uchun, <code>drop</code>ni <code>println!</code> yordamida implementatsiya qilib ko‘raylik.</p>
-<p>Listing 15-14 shows a <code>CustomSmartPointer</code> struct whose only custom
-functionality is that it will print <code>Dropping CustomSmartPointer!</code> when the
-instance goes out of scope, to show when Rust runs the <code>drop</code> function.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>15-14 ni ko‘rib chiqadigan bo‘lsak, Rustda qachon <code>drop</code> funksiyasi ishlashini ko‘rish uchun faqat o‘ziga tegishli bo‘lgan<code>CustomSmartPointer</code> structi faqat agar instance o‘z doirasidan chiqqanda <code>Dropping CustomSmartPointer!</code> ni print qiladi.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">struct CustomSmartPointer {
     data: String,
 }
@@ -12771,8 +12769,7 @@ fn main() {
     };
     println!(&quot;CustomSmartPointers created.&quot;);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-14: A <code>CustomSmartPointer</code> struct that
-implements the <code>Drop</code> trait where we would put our cleanup code</span></p>
+<p><span class="caption">15-14ni ko'rib chiqish: <code>CustomSmartPointer</code> structi biz tozalash uchun qo’ygan kodda <code>Drop</code> traitining implementatsiyasi</span></p>
 <p>The <code>Drop</code> trait is included in the prelude, so we don’t need to bring it into
 scope. We implement the <code>Drop</code> trait on <code>CustomSmartPointer</code> and provide an
 implementation for the <code>drop</code> method that calls <code>println!</code>. The body of the
