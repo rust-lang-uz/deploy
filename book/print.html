@@ -12770,18 +12770,9 @@ fn main() {
     println!(&quot;CustomSmartPointers created.&quot;);
 }</code></pre></pre>
 <p><span class="caption">15-14ni ko'rib chiqish: <code>CustomSmartPointer</code> structi biz tozalash uchun qo’ygan kodda <code>Drop</code> traitining implementatsiyasi</span></p>
-<p>The <code>Drop</code> trait is included in the prelude, so we don’t need to bring it into
-scope. We implement the <code>Drop</code> trait on <code>CustomSmartPointer</code> and provide an
-implementation for the <code>drop</code> method that calls <code>println!</code>. The body of the
-<code>drop</code> function is where you would place any logic that you wanted to run when
-an instance of your type goes out of scope. We’re printing some text here to
-demonstrate visually when Rust will call <code>drop</code>.</p>
-<p>In <code>main</code>, we create two instances of <code>CustomSmartPointer</code> and then print
-<code>CustomSmartPointers created</code>. At the end of <code>main</code>, our instances of
-<code>CustomSmartPointer</code> will go out of scope, and Rust will call the code we put
-in the <code>drop</code> method, printing our final message. Note that we didn’t need to
-call the <code>drop</code> method explicitly.</p>
-<p>When we run this program, we’ll see the following output:</p>
+<p><code>Drop</code> traiti o‘z ichiga preludeni oladi, shuning uchun biz uni scopeni ichiga olishimiz shart emas. Biz <code>CustomSmartPointer</code>da <code>Drop</code>ni implementatsiya qilamiz va <code>drop</code> metodi implementatisyasi uchun <code>println!</code>ni chaqiramiz. <code>drop</code> funksiyasining tana (body) qismi bu sizning turdagi instance o‘z doirasidan (scope) chiqib ketgandagi ayrim bir logikaga ega koddir. Rustda qachon <code>drop</code> chaqirilishini ko‘rish uchun biz ozgina tekstni print qilamiz.</p>
+<p><code>main</code>da biz 2ta <code>CustomSmartPointer</code> instancelarini yaratamiz va keyin <code>CustomSmartPointers yaratildi</code>ni print qilamiz. <code>main</code>ning oxirida <code>CustomSmartPointer</code> doiradan (scope) chiqib ketadi va Rust yakuniy xabarni print qilib, biz kodga qo‘ygan <code>drop</code> metodini chaqiradi. E’tibor bering biz <code>drop</code> metodini to‘g‘ridan-to‘g‘ri chaqririshimiz shart emas.</p>
+<p>Agar biz dasturni run qilsak, quyidagi outputni ko‘ramiz:</p>
 <pre><code class="language-console">$ cargo run
    Compiling drop-example v0.1.0 (file:///projects/drop-example)
     Finished dev [unoptimized + debuginfo] target(s) in 0.60s
@@ -12790,26 +12781,11 @@ CustomSmartPointers created.
 Dropping CustomSmartPointer with data `other stuff`!
 Dropping CustomSmartPointer with data `my stuff`!
 </code></pre>
-<p>Rust automatically called <code>drop</code> for us when our instances went out of scope,
-calling the code we specified. Variables are dropped in the reverse order of
-their creation, so <code>d</code> was dropped before <code>c</code>. This example’s purpose is to
-give you a visual guide to how the <code>drop</code> method works; usually you would
-specify the cleanup code that your type needs to run rather than a print
-message.</p>
-<h3 id="dropping-a-value-early-with-stdmemdrop"><a class="header" href="#dropping-a-value-early-with-stdmemdrop">Dropping a Value Early with <code>std::mem::drop</code></a></h3>
-<p>Unfortunately, it’s not straightforward to disable the automatic <code>drop</code>
-functionality. Disabling <code>drop</code> isn’t usually necessary; the whole point of the
-<code>Drop</code> trait is that it’s taken care of automatically. Occasionally, however,
-you might want to clean up a value early. One example is when using smart
-pointers that manage locks: you might want to force the <code>drop</code> method that
-releases the lock so that other code in the same scope can acquire the lock.
-Rust doesn’t let you call the <code>Drop</code> trait’s <code>drop</code> method manually; instead
-you have to call the <code>std::mem::drop</code> function provided by the standard library
-if you want to force a value to be dropped before the end of its scope.</p>
-<p>If we try to call the <code>Drop</code> trait’s <code>drop</code> method manually by modifying the
-<code>main</code> function from Listing 15-14, as shown in Listing 15-15, we’ll get a
-compiler error:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Rust avtomatik ravishda bizning o‘rnimizga biz ko‘rsatgan kodni instance doiradan (scope) chiqqanda <code>drop</code>ni chaqirdi. O‘zgaruvchilar yaratilish paytida teskari tartibda tushib qoldiriladi (drop qilinadi), shuning uchun <code>d</code> <code>c</code>dan oldin tushib qoldirildi (drop qilindi). Ushbu misolning maqsadi sizga <code>drop</code> metodining qanday ishlashining vizual ko‘rinishini berishdir; odatda xabarni print qilishning o‘rniga siz sizning turingizni ishga tushirish (run qilish) uchun tozalash kodini ko‘rsatasiz. </p>
+<h3 id="stdmemdrop-yordamida-qiymatni-erta-drop-qilish"><a class="header" href="#stdmemdrop-yordamida-qiymatni-erta-drop-qilish"><code>std::mem::drop</code> yordamida Qiymatni Erta Drop qilish</a></h3>
+<p>Afsuski, avtomatik <code>drop</code> funksiyasini o‘chirish oson emas.  Odatda <code>drop</code>ni o‘chirish zarur emas; <code>Drop</code>ning asosiy mohiyati uning avtomatik ravishda hal qilishidir. Ba’zi paytlarda siz qiymatni erta tozalashga duch kelishingiz mumkin. Lockalarni boshqaruvchi smart pointerlarni ishlatishga bir misol bo‘la oladi:  bir doirada (scope)da boshqa kodni olish uchun siz lockni chaqiradigan <code>drop</code> metodini majburiy ravishda ishlatishingiz mumkin. Rust sizga <code>Drop</code> traitidagi <code>drop</code> metodini qo‘lda tushurishga qo‘ymaydi; agar siz qiymatni o‘z doirani (scope) tugashidan oldin majburiy drop bo‘lishini xohlasangiz. uning uchun siz standart kutubxona tomonidan taqdim etilgan <code>std::mem::drop</code>ni ishlatishingiz mumkin.</p>
+<p>Agar biz 15-14dagi ilovaga qo‘lda <code>Drop</code> traitining <code>drop</code> metodi yordamida <code>main</code>ga o‘zgaritirish kiratigan bo‘lsak, 15-15 ilovada ko‘rsatilgan kompilyator xatosini ko‘ramiz:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">struct CustomSmartPointer {
 </span><span class="boring">    data: String,
 </span><span class="boring">}
