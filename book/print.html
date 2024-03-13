@@ -12756,18 +12756,18 @@ possible.</p>
 
 impl Drop for CustomSmartPointer {
     fn drop(&amp;mut self) {
-        println!(&quot;Dropping CustomSmartPointer with data `{}`!&quot;, self.data);
+        println!(&quot;CustomSmartPointerni `{}` ma'lumot bilan Drop qilish!&quot;, self.data);
     }
 }
 
 fn main() {
     let c = CustomSmartPointer {
-        data: String::from(&quot;my stuff&quot;),
+        data: String::from(&quot;menga tegishli&quot;),
     };
     let d = CustomSmartPointer {
-        data: String::from(&quot;other stuff&quot;),
+        data: String::from(&quot;boshqaga tegishli&quot;),
     };
-    println!(&quot;CustomSmartPointers created.&quot;);
+    println!(&quot;CustomSmartPointerlar yaratildi.&quot;);
 }</code></pre></pre>
 <p><span class="caption">15-14ni ko'rib chiqish: <code>CustomSmartPointer</code> structi biz tozalash uchun qo’ygan kodda <code>Drop</code> traitining implementatsiyasi</span></p>
 <p><code>Drop</code> traiti o‘z ichiga preludeni oladi, shuning uchun biz uni scopeni ichiga olishimiz shart emas. Biz <code>CustomSmartPointer</code>da <code>Drop</code>ni implementatsiya qilamiz va <code>drop</code> metodi implementatisyasi uchun <code>println!</code>ni chaqiramiz. <code>drop</code> funksiyasining tana (body) qismi bu sizning turdagi instance o‘z doirasidan (scope) chiqib ketgandagi ayrim bir logikaga ega koddir. Rustda qachon <code>drop</code> chaqirilishini ko‘rish uchun biz ozgina tekstni print qilamiz.</p>
@@ -12792,21 +12792,20 @@ Dropping CustomSmartPointer with data `my stuff`!
 </span><span class="boring">
 </span><span class="boring">impl Drop for CustomSmartPointer {
 </span><span class="boring">    fn drop(&amp;mut self) {
-</span><span class="boring">        println!(&quot;Dropping CustomSmartPointer with data `{}`!&quot;, self.data);
+</span><span class="boring">        println!(&quot;CustomSmartPointerni `{}` ma'lumot bilan Drop qilish!&quot;, self.data);
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
 </span>fn main() {
     let c = CustomSmartPointer {
-        data: String::from(&quot;some data&quot;),
+        data: String::from(&quot;ma'lumot&quot;),
     };
-    println!(&quot;CustomSmartPointer created.&quot;);
+    println!(&quot;CustomSmartPointer yaratildi.&quot;);
     c.drop();
-    println!(&quot;CustomSmartPointer dropped before the end of main.&quot;);
+    println!(&quot;main tugashidan oldin CustomSmartPointer drop qilindi.&quot;);
 }</code></pre>
-<p><span class="caption">Listing 15-15: Attempting to call the <code>drop</code> method from
-the <code>Drop</code> trait manually to clean up early</span></p>
-<p>When we try to compile this code, we’ll get this error:</p>
+<p><span class="caption"> 15-15 ro'yxat: <code>Drop</code> traitidagi <code>drop</code> metodi orqali qo'lda erta tozalashga harakat qilish</span></p>
+<p>Ushbu kodni komplilyatsiya qilganimizda quyidagi xatolikni ko‘ramiz:</p>
 <pre><code class="language-console">$ cargo run
    Compiling drop-example v0.1.0 (file:///projects/drop-example)
 error[E0040]: explicit use of destructor method
@@ -12821,44 +12820,31 @@ error[E0040]: explicit use of destructor method
 For more information about this error, try `rustc --explain E0040`.
 error: could not compile `drop-example` due to previous error
 </code></pre>
-<p>This error message states that we’re not allowed to explicitly call <code>drop</code>. The
-error message uses the term <em>destructor</em>, which is the general programming term
-for a function that cleans up an instance. A <em>destructor</em> is analogous to a
-<em>constructor</em>, which creates an instance. The <code>drop</code> function in Rust is one
-particular destructor.</p>
-<p>Rust doesn’t let us call <code>drop</code> explicitly because Rust would still
-automatically call <code>drop</code> on the value at the end of <code>main</code>. This would cause a
-<em>double free</em> error because Rust would be trying to clean up the same value
-twice.</p>
-<p>We can’t disable the automatic insertion of <code>drop</code> when a value goes out of
-scope, and we can’t call the <code>drop</code> method explicitly. So, if we need to force
-a value to be cleaned up early, we use the <code>std::mem::drop</code> function.</p>
-<p>The <code>std::mem::drop</code> function is different from the <code>drop</code> method in the <code>Drop</code>
-trait. We call it by passing as an argument the value we want to force drop.
-The function is in the prelude, so we can modify <code>main</code> in Listing 15-15 to
-call the <code>drop</code> function, as shown in Listing 15-16:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Ushbu xatolikdagi xabarda <code>drop</code>ni to‘g‘ridan-to‘g‘ri chaqira olmasligizni ko‘rsatadi. Xatolikdagi xabar instanceni tozalovchi umumiy dasturlash atamasi bo‘lgan funksiya, ya’ni <code>destructor</code>ni ishlatadi. <code>destructor</code> <code>constructor</code>ga o‘xshash bo‘lib, instancelarni yaratadi. Rustda <code>drop</code> funksiyasi alohida bir destructordir. </p>
+<p>Rust bizga <code>drop</code>ni to‘g‘ridan-to‘g‘ri chaqrishga qo‘ymaydi chunki Rust qiymatni avtomatik ravishda baribir <code>main</code>ni oxirida <code>drop</code>ni chaqiradi. Ushbu holat <em>double free</em> xatoligini keltirib chiqarishi mumkin chunki Rust bitta qiymatni ikki marta tozalashga xarakat qiladi.</p>
+<p>Agar qiymat o‘z doirasidan (scope) chiqqanda biz <code>drop</code>ni avtomatik kiritishini o‘chirib qo‘ya olmaymiz va <code>drop</code> metodini to‘g‘ridan-to‘g‘ri chaqira olmaymiz. Shuning uchun agar bizga majburiy ravishda qiymat tozalanishini xoxlasak, biz <code>std::mem::drop</code>funksiyasini ishlatamiz</p>
+<p><code>std::mem::drop</code> funksiyasi <code>Drop</code> traitidagi <code>drop</code> metodidan farq qiladi. Biz buni majburan tozalash (drop) qilishni xohlagan qiymatni argument sifatida berish deb ataymiz. Funksiya preludeda, va 15-16 ro'yxatda ko‘rsatilgandek biz 15-15 ro'yxatdagi <code>main</code>da <code>drop</code> funkisyasini chaqirish uchun o‘zgartirish kiritishimiz mumkin:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">struct CustomSmartPointer {
 </span><span class="boring">    data: String,
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">impl Drop for CustomSmartPointer {
 </span><span class="boring">    fn drop(&amp;mut self) {
-</span><span class="boring">        println!(&quot;Dropping CustomSmartPointer with data `{}`!&quot;, self.data);
+</span><span class="boring">        println!(&quot;CustomSmartPointerni `{}` ma'lumot bilan Drop qilish!&quot;, self.data);
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
 </span>fn main() {
     let c = CustomSmartPointer {
-        data: String::from(&quot;some data&quot;),
+        data: String::from(&quot;ma'lumot&quot;),
     };
-    println!(&quot;CustomSmartPointer created.&quot;);
+    println!(&quot;CustomSmartPointer yaratildi.&quot;);
     drop(c);
-    println!(&quot;CustomSmartPointer dropped before the end of main.&quot;);
+    println!(&quot;main tugashidan oldin CustomSmartPointer drop qilindi.&quot;);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-16: Calling <code>std::mem::drop</code> to explicitly
-drop a value before it goes out of scope</span></p>
-<p>Running this code will print the following:</p>
+<p><span class="caption"> 15-16 ro'yxat: qiymat o'z doirasidan (scope) chiqqanda to'g'ridan-to'g'ri <code>std::mem::drop</code>ni chaqirish </span></p>
+<p>Run qilingan kod quyidagini print qiladi:</p>
 <pre><code class="language-console">$ cargo run
    Compiling drop-example v0.1.0 (file:///projects/drop-example)
     Finished dev [unoptimized + debuginfo] target(s) in 0.73s
@@ -12867,20 +12853,10 @@ CustomSmartPointer created.
 Dropping CustomSmartPointer with data `some data`!
 CustomSmartPointer dropped before the end of main.
 </code></pre>
-<p>The text <code>Dropping CustomSmartPointer with data `some data`!</code> is printed
-between the <code>CustomSmartPointer created.</code> and <code>CustomSmartPointer dropped before the end of main.</code> text, showing that the <code>drop</code> method code is called to
-drop <code>c</code> at that point.</p>
-<p>You can use code specified in a <code>Drop</code> trait implementation in many ways to
-make cleanup convenient and safe: for instance, you could use it to create your
-own memory allocator! With the <code>Drop</code> trait and Rust’s ownership system, you
-don’t have to remember to clean up because Rust does it automatically.</p>
-<p>You also don’t have to worry about problems resulting from accidentally
-cleaning up values still in use: the ownership system that makes sure
-references are always valid also ensures that <code>drop</code> gets called only once when
-the value is no longer being used.</p>
-<p>Now that we’ve examined <code>Box&lt;T&gt;</code> and some of the characteristics of smart
-pointers, let’s look at a few other smart pointers defined in the standard
-library.</p>
+<p><code>c</code> nuqtasida tozalash (drop qilish) uchun <code>drop</code> metodi kodini chaqirishini ko‘rsatish uchun<code>CustomSmartPointerdagi ma’lumot bilan tozalash (drop qilish)</code> <code>CustomSmartPointer yaratildi</code> va <code>CustomSmartPointer main tugashidan oldin tozalandi (drop qilindi)</code> matnlari orasida print qilindi.</p>
+<p>Siz <code>Drop</code> traiti implementatsiyasida ko‘rsatilgan koddan har xil turda tozalashni qulay va xavfsiz qilishingiz mumkin: masalan, siz uni o‘zingizning xotira taqsimlagichni yaratish uchun ishlatsangiz bo‘ladi. <code>Drop</code> traiti va Rustning ownership tizimi bilan tozalash uchun bosh qotirmasangiz ham bo‘ladi chunki Rust buni avtomatik ravishda qiladi.</p>
+<p>Siz ishlatilib turgan qiymatlarni bexosdan tozalanib ketish muammolaridan xavotir olmasangiz bo‘ladi: ownership tizimi referencelarni doim to‘g‘riligiga hamda <code>drop</code> qiymat bir marta chaqrilib boshqa ishlatilmasligini ta’minlaydi.</p>
+<p>Hozirda biz <code>Box&lt;T&gt;</code>ni va smart pointerlarni ba’zi bir xususiyatlarini tekshirib oldik, keling standart kutubxonada keltirilgan boshqa smart pointerlarni ham ko‘rib chiqaylik.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="rct-the-reference-counted-smart-pointer"><a class="header" href="#rct-the-reference-counted-smart-pointer"><code>Rc&lt;T&gt;</code>, the Reference Counted Smart Pointer</a></h2>
 <p>In the majority of cases, ownership is clear: you know exactly which variable
 owns a given value. However, there are cases when a single value might have
