@@ -12857,7 +12857,7 @@ CustomSmartPointer dropped before the end of main.
 <p>Siz <code>Drop</code> traiti implementatsiyasida ko‘rsatilgan koddan har xil turda tozalashni qulay va xavfsiz qilishingiz mumkin: masalan, siz uni o‘zingizning xotira taqsimlagichni yaratish uchun ishlatsangiz bo‘ladi. <code>Drop</code> traiti va Rustning ownership tizimi bilan tozalash uchun bosh qotirmasangiz ham bo‘ladi chunki Rust buni avtomatik ravishda qiladi.</p>
 <p>Siz ishlatilib turgan qiymatlarni bexosdan tozalanib ketish muammolaridan xavotir olmasangiz bo‘ladi: ownership tizimi referencelarni doim to‘g‘riligiga hamda <code>drop</code> qiymat bir marta chaqrilib boshqa ishlatilmasligini ta’minlaydi.</p>
 <p>Hozirda biz <code>Box&lt;T&gt;</code>ni va smart pointerlarni ba’zi bir xususiyatlarini tekshirib oldik, keling standart kutubxonada keltirilgan boshqa smart pointerlarni ham ko‘rib chiqaylik.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="rct-the-reference-counted-smart-pointer"><a class="header" href="#rct-the-reference-counted-smart-pointer"><code>Rc&lt;T&gt;</code>, the Reference Counted Smart Pointer</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="rct-reference-hisoblangan-smart-pointer"><a class="header" href="#rct-reference-hisoblangan-smart-pointer"><code>Rc&lt;T&gt;</code>, reference hisoblangan Smart Pointer</a></h2>
 <p>In the majority of cases, ownership is clear: you know exactly which variable
 owns a given value. However, there are cases when a single value might have
 multiple owners. For example, in graph data structures, multiple edges might
