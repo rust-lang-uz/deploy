@@ -12416,7 +12416,7 @@ kamroq ahamiyatga ega.</p>
 qiymatga o'q kabi tasavvur qilishning bir usuli. 15-6 ro'yxatda biz <code>i32</code>
 qiymatiga havola yaratamiz va keyin qiymatga havolani bog'lash uchun dereference
 operatoridan foydalanamiz:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let x = 5;
     let y = &amp;x;
@@ -12424,16 +12424,17 @@ operatoridan foydalanamiz:</p>
     assert_eq!(5, x);
     assert_eq!(5, *y);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-6: Using the dereference operator to follow a
-reference to an <code>i32</code> value</span></p>
-<p>The variable <code>x</code> holds an <code>i32</code> value <code>5</code>. We set <code>y</code> equal to a reference to
-<code>x</code>. We can assert that <code>x</code> is equal to <code>5</code>. However, if we want to make an
-assertion about the value in <code>y</code>, we have to use <code>*y</code> to follow the reference
-to the value it’s pointing to (hence <em>dereference</em>) so the compiler can compare
-the actual value. Once we dereference <code>y</code>, we have access to the integer value
-<code>y</code> is pointing to that we can compare with <code>5</code>.</p>
-<p>If we tried to write <code>assert_eq!(5, y);</code> instead, we would get this compilation
-error:</p>
+<p><span class="caption">Ro'yxat 15-6: <code>i32</code> qiymatiga havola orqali murojat qilish
+uchun dereference operatoridan foydalanish</span></p>
+<p><code>x</code> o'zgaruvchisi <code>i32</code> turidagi <code>5</code> qiymatiga ega. Biz <code>y</code> ni <code>x</code> ning
+havolasiga tenglashtiramiz. Biz <code>x</code> <code>5</code> ga teng ekanligini solishtirishimiz
+mumkin. Ammo, agar biz <code>y</code> dagi qiymatni solishtirmoqchi bo'lsak, kompilyator
+haqiqiy qiymatni solishtirishi uchun <code>*y</code> dan foydalanib, u havola qilgan
+qiymatga (ya'ni, <em>dereference</em>) murojaat qilishimiz kerak. <code>y</code> da dereference
+qo'llaganimizdan so'ng, <code>y</code> ishora qilib turgan butun son qiymatiga kirish
+imkoniga ega bo'lamiz, bu <code>5</code> bilan solishtirishimizga imkon beradi.</p>
+<p>Agar <code>assert_eq!(5, y);</code> yozishga harakat qilganimizda, ushbu kompilyatsiya
+xatoligini olgan bo'lar edik:</p>
 <pre><code class="language-console">$ cargo run
    Compiling deref-example v0.1.0 (file:///projects/deref-example)
 error[E0277]: can't compare `{integer}` with `&amp;{integer}`
@@ -12458,15 +12459,15 @@ error[E0277]: can't compare `{integer}` with `&amp;{integer}`
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `deref-example` due to previous error
 </code></pre>
-<p>Comparing a number and a reference to a number isn’t allowed because they’re
-different types. We must use the dereference operator to follow the reference
-to the value it’s pointing to.</p>
-<h3 id="using-boxt-like-a-reference"><a class="header" href="#using-boxt-like-a-reference">Using <code>Box&lt;T&gt;</code> Like a Reference</a></h3>
-<p>We can rewrite the code in Listing 15-6 to use a <code>Box&lt;T&gt;</code> instead of a
-reference; the dereference operator used on the <code>Box&lt;T&gt;</code> in Listing 15-7
-functions in the same way as the dereference operator used on the reference in
-Listing 15-6:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Raqam va raqamga havola bilan solishtirishga yo'l qo'yilmaydi, chunki ular har
+xil turlar. Biz havola qilingan qiymatga murojaat qilish uchun dereference
+operatoridan foydalanishimiz kerak.</p>
+<h3 id="boxt-ni-havola-kabi-ishlatish"><a class="header" href="#boxt-ni-havola-kabi-ishlatish"><code>Box&lt;T&gt;</code> ni Havola Kabi Ishlatish</a></h3>
+<p>15-6 ro'yxatdagi kodni havola o'rniga <code>Box&lt;T&gt;</code> ishlatgan holda qayta yozishimiz
+mumkin; 15-7 ro'yxatdagi funksiyalarida <code>Box&lt;T&gt;</code> da ishlatiladigan dereference
+operatori 15-6 ro'yxatidagi havolada ishlatilgan dereference operatori
+bilan bir xil tarzda ishlatiladi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let x = 5;
     let y = Box::new(x);
@@ -12474,24 +12475,25 @@ Listing 15-6:</p>
     assert_eq!(5, x);
     assert_eq!(5, *y);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-7: Using the dereference operator on a
-<code>Box&lt;i32&gt;</code></span></p>
-<p>The main difference between Listing 15-7 and Listing 15-6 is that here we set
-<code>y</code> to be an instance of a <code>Box&lt;T&gt;</code> pointing to a copied value of <code>x</code> rather
-than a reference pointing to the value of <code>x</code>. In the last assertion, we can
-use the dereference operator to follow the pointer of the <code>Box&lt;T&gt;</code> in the same
-way that we did when <code>y</code> was a reference. Next, we’ll explore what is special
-about <code>Box&lt;T&gt;</code> that enables us to use the dereference operator by defining our
-own type.</p>
-<h3 id="defining-our-own-smart-pointer"><a class="header" href="#defining-our-own-smart-pointer">Defining Our Own Smart Pointer</a></h3>
-<p>Let’s build a smart pointer similar to the <code>Box&lt;T&gt;</code> type provided by the
-standard library to experience how smart pointers behave differently from
-references by default. Then we’ll look at how to add the ability to use the
-dereference operator.</p>
-<p>The <code>Box&lt;T&gt;</code> type is ultimately defined as a tuple struct with one element, so
-Listing 15-8 defines a <code>MyBox&lt;T&gt;</code> type in the same way. We’ll also define a
-<code>new</code> function to match the <code>new</code> function defined on <code>Box&lt;T&gt;</code>.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Ro'yxat 15-7: <code>Box&lt;i32&gt;</code> da dereference operatorini
+ishlatish</span></p>
+<p>15-7 va 15-6 ro'yxat o'rtasidagi asosiy farq shundaki, biz bu yerda <code>y</code> ni <code>x</code>
+qiymatiga havola emas, balki <code>x</code> ning ko'chirilgan qiymatiga ishora qiluvchi
+<code>Box&lt;T&gt;</code> ning misoli qilib belgiladik. Oxirgi solishtiruvda biz dereference
+operatoridan <code>Box&lt;T&gt;</code> ko'rsatgichiga murojat qilish uchun xuddi <code>y</code> havola
+bo'lganida qilganimizdek bajarishimiz mumkin. Keyin biz <code>Box&lt;T&gt;</code> ning o'ziga xos
+xususiyatlarini o'rganamiz, bu bizga o'z turimizni e'lon qilish orqali
+dereference operatoridan foydalanishga imkon beradi. </p>
+<h3 id="ozimizning-aqlli-korsatgichimizni-elon-qilish"><a class="header" href="#ozimizning-aqlli-korsatgichimizni-elon-qilish">O'zimizning Aqlli Ko'rsatgichimizni E'lon Qilish</a></h3>
+<p>Keling, aqlli ko'rsatgichlar havolalardan qanday farq qilishini bilish uchun
+standart kutubxona tomonidan taqdim etilgan <code>Box&lt;T&gt;</code> turiga o'xshash aqlli
+ko'rsatgichni yarataylik. Keyin biz dereference operatoridan foydalanish
+qobiliyatini qanday qo'shishni ko'rib chiqamiz.</p>
+<p><code>Box&lt;T&gt;</code> turi oxir-oqibat bitta elementga ega bo'lgan tuple struct sifatida
+aniqlanadi, 15-8 ro'yxatda xuddi shu tarzda <code>MyBox&lt;T&gt;</code> turini belgilaydi.
+Shuningdek, <code>Box&lt;T&gt;</code> da belgilangan <code>new</code> funksiyaga mos keladigan <code>new</code>
+funksiyani aniqlaymiz.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">struct MyBox&lt;T&gt;(T);
 
 impl&lt;T&gt; MyBox&lt;T&gt; {
@@ -12501,16 +12503,17 @@ impl&lt;T&gt; MyBox&lt;T&gt; {
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre></pre>
-<p><span class="caption">Listing 15-8: Defining a <code>MyBox&lt;T&gt;</code> type</span></p>
-<p>We define a struct named <code>MyBox</code> and declare a generic parameter <code>T</code>, because
-we want our type to hold values of any type. The <code>MyBox</code> type is a tuple struct
-with one element of type <code>T</code>. The <code>MyBox::new</code> function takes one parameter of
-type <code>T</code> and returns a <code>MyBox</code> instance that holds the value passed in.</p>
-<p>Let’s try adding the <code>main</code> function in Listing 15-7 to Listing 15-8 and
-changing it to use the <code>MyBox&lt;T&gt;</code> type we’ve defined instead of <code>Box&lt;T&gt;</code>. The
-code in Listing 15-9 won’t compile because Rust doesn’t know how to dereference
-<code>MyBox</code>.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Ro'yxat 15-8: <code>MyBox&lt;T&gt;</code> turini aniqlash</span></p>
+<p>Biz <code>MyBox</code> nomli structni aniqlaymiz va <code>T</code> generic parametrini e'lon qilamiz,
+chunki biz turimiz istalgan turdagi qiymatlarni ushlab turishini xohlaymiz.
+<code>MyBox</code> turi <code>T</code> turidagi bitta elementga ega bo'lgan tuple structdir.
+<code>MyBox::new</code> funksiyasi <code>T</code> turidagi bitta parametrni oladi va berilgan qiymatni
+ushlab turuvchi <code>MyBox</code> misolini qaytaradi.</p>
+<p>15-7 ro'yxatdagi <code>main</code> funksiyasini 15-8 ro'yxatiga qo'shib, <code>Box&lt;T&gt;</code> o'rniga
+biz belgilagan <code>MyBox&lt;T&gt;</code>turidan foydalanish uchun o'zgartirishga harakat
+qilaylik. 15-9 ro'yxatdagi kod kompilyatsiya qilinmaydi, chunki Rust <code>MyBox</code> ni
+qanday qilib dereference qilishni bilmaydi.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">struct MyBox&lt;T&gt;(T);
 </span><span class="boring">
 </span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
@@ -12526,9 +12529,9 @@ code in Listing 15-9 won’t compile because Rust doesn’t know how to derefere
     assert_eq!(5, x);
     assert_eq!(5, *y);
 }</code></pre>
-<p><span class="caption">Listing 15-9: Attempting to use <code>MyBox&lt;T&gt;</code> in the same
-way we used references and <code>Box&lt;T&gt;</code></span></p>
-<p>Here’s the resulting compilation error:</p>
+<p><span class="caption">Ro'yxat 15-9: <code>MyBox&lt;T&gt;</code> dan xuddi havolalar va <code>Box&lt;T&gt;</code>
+dan foydalanganimiz kabi foydalanishga urinish</span></p>
+<p>Natijada kompilyatsiya xatosi:</p>
 <pre><code class="language-console">$ cargo run
    Compiling deref-example v0.1.0 (file:///projects/deref-example)
 error[E0614]: type `MyBox&lt;{integer}&gt;` cannot be dereferenced
@@ -12540,17 +12543,19 @@ error[E0614]: type `MyBox&lt;{integer}&gt;` cannot be dereferenced
 For more information about this error, try `rustc --explain E0614`.
 error: could not compile `deref-example` due to previous error
 </code></pre>
-<p>Our <code>MyBox&lt;T&gt;</code> type can’t be dereferenced because we haven’t implemented that
-ability on our type. To enable dereferencing with the <code>*</code> operator, we
-implement the <code>Deref</code> trait.</p>
-<h3 id="treating-a-type-like-a-reference-by-implementing-the-deref-trait"><a class="header" href="#treating-a-type-like-a-reference-by-implementing-the-deref-trait">Treating a Type Like a Reference by Implementing the <code>Deref</code> Trait</a></h3>
-<p>As discussed in the <a href="ch10-02-traits.html#implementing-a-trait-on-a-type">“Implementing a Trait on a Type”</a><!-- ignore
---> section of Chapter 10, to implement a trait, we need to provide
-implementations for the trait’s required methods. The <code>Deref</code> trait, provided
-by the standard library, requires us to implement one method named <code>deref</code> that
-borrows <code>self</code> and returns a reference to the inner data. Listing 15-10
-contains an implementation of <code>Deref</code> to add to the definition of <code>MyBox</code>:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Bizning <code>MyBox&lt;T&gt;</code> turini dereference qilib bo'lmaydi, chunki biz bu qobiliyatni
+o'z turimizda qo'llamaganmiz. <code>*</code> operatori yordamida dereference qilishni
+yoqish uchun biz <code>Deref</code> traitini qo`llaymiz.</p>
+<h3 id="deref-traitni-amalga-oshirish-orqali-turga-havola-kabi-munosabatda-bolish"><a class="header" href="#deref-traitni-amalga-oshirish-orqali-turga-havola-kabi-munosabatda-bolish"><code>Deref</code> Traitni Amalga Oshirish Orqali Turga Havola Kabi Munosabatda Bo'lish</a></h3>
+<p>10-bobning <a href="ch10-02-traits.html#turga-xos-traitni-amalga-oshirish">“Turga xos Traitni amalga
+oshirish”</a><!-- ignore --> boʻlimida muhokama
+qilinganidek, traitni amalga oshirish uchun biz traitning talab qilinadigan
+usullarini amalga oshirishimiz kerak. Standart kutubxona tomonidan taqdim
+etilgan <code>Deref</code> xususiyati bizdan <code>self</code> qarz oladigan va ichki ma'lumotlarga
+havolani qaytaradigan <code>deref</code> nomli metodni qo'llashimizni talab qiladi. 15-10
+ro'yxat <code>MyBox</code> ta'rifiga qo'shish uchun <code>Deref</code> amalga oshirilishini o'z ichiga
+oladi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::ops::Deref;
 
 impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
@@ -12576,70 +12581,74 @@ impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
 </span><span class="boring">    assert_eq!(5, x);
 </span><span class="boring">    assert_eq!(5, *y);
 </span><span class="boring">}</span></code></pre></pre>
-<p><span class="caption">Listing 15-10: Implementing <code>Deref</code> on <code>MyBox&lt;T&gt;</code></span></p>
-<p>The <code>type Target = T;</code> syntax defines an associated type for the <code>Deref</code>
-trait to use. Associated types are a slightly different way of declaring a
-generic parameter, but you don’t need to worry about them for now; we’ll cover
-them in more detail in Chapter 19.</p>
-<p>We fill in the body of the <code>deref</code> method with <code>&amp;self.0</code> so <code>deref</code> returns a
-reference to the value we want to access with the <code>*</code> operator; recall from the
-<a href="ch05-01-defining-structs.html#using-tuple-structs-without-named-fields-to-create-different-types">“Using Tuple Structs without Named Fields to Create Different
-Types”</a><!-- ignore --> section of Chapter 5 that <code>.0</code> accesses
-the first value in a tuple struct. The <code>main</code> function in Listing 15-9 that
-calls <code>*</code> on the <code>MyBox&lt;T&gt;</code> value now compiles, and the assertions pass!</p>
-<p>Without the <code>Deref</code> trait, the compiler can only dereference <code>&amp;</code> references.
-The <code>deref</code> method gives the compiler the ability to take a value of any type
-that implements <code>Deref</code> and call the <code>deref</code> method to get a <code>&amp;</code> reference that
-it knows how to dereference.</p>
-<p>When we entered <code>*y</code> in Listing 15-9, behind the scenes Rust actually ran this
-code:</p>
+<p><span class="caption">Ro'yxat 15-10: <code>MyBox&lt;T&gt;</code> uchun <code>Deref</code> ni amalga
+oshirish</span></p>
+<p><code>Type Target = T;</code> sintaksisi foydalanish uchun <code>Deref</code> xususiyati uchun
+bog`langan turni belgilaydi. Bog'langan turlar generic parametrni e'lon
+qilishning biroz boshqacha usulidir, ammo hozircha ular haqida
+tashvishlanishingiz shart emas; biz ularni 19-bobda batafsil yoritamiz.</p>
+<p>Biz <code>deref</code> metodining tanasini <code>&amp;self.0</code> bilan to'ldiramiz, shuning uchun
+<code>deref</code> biz <code>*</code> operatori bilan kirmoqchi bo'lgan qiymatga havolani qaytaradi;
+5-bobning <a href="ch05-01-defining-structs.html#har-xil-turlarni-yaratish-uchun-nomli-maydonlarsiz-tuplelardan-foydalanish">“Har xil turlarni yaratish uchun nomli maydonlarsiz tuplelardan
+foydalanish”</a><!-- ignore --> boʻlimidan <code>.0</code> tuple structidagi
+birinchi qiymatga kirishini esga oling. <code>MyBox&lt;T&gt;</code> qiymatida <code>*</code> ni chaqiruvchi
+15-9 ro'yxatdagi <code>main</code> funksiya endi kompilyatsiya qilinadi va solishtiruvlar
+o`tadi!</p>
+<p><code>Deref</code> traitisiz kompilyator faqat <code>&amp;</code> havolalarini dereference qilishi mumkin.
+<code>deref</code> metodi kompilyatorga <code>Deref</code> ni qo'llaydigan har qanday turdagi qiymatni
+olish va <code>deref</code> usulini chaqirish va <code>&amp;</code> havolasini olish imkoniyatini beradi.</p>
+<p>15-9 ro'yxatda <code>*y</code> ga kirganimizda, Rust sahna ortida ushbu kodni ishga
+tushirdi:</p>
 <pre><code class="language-rust ignore">*(y.deref())</code></pre>
-<p>Rust substitutes the <code>*</code> operator with a call to the <code>deref</code> method and then a
-plain dereference so we don’t have to think about whether or not we need to
-call the <code>deref</code> method. This Rust feature lets us write code that functions
-identically whether we have a regular reference or a type that implements
-<code>Deref</code>.</p>
-<p>The reason the <code>deref</code> method returns a reference to a value, and that the
-plain dereference outside the parentheses in <code>*(y.deref())</code> is still necessary,
-is to do with the ownership system. If the <code>deref</code> method returned the value
-directly instead of a reference to the value, the value would be moved out of
-<code>self</code>. We don’t want to take ownership of the inner value inside <code>MyBox&lt;T&gt;</code> in
-this case or in most cases where we use the dereference operator.</p>
-<p>Note that the <code>*</code> operator is replaced with a call to the <code>deref</code> method and
-then a call to the <code>*</code> operator just once, each time we use a <code>*</code> in our code.
-Because the substitution of the <code>*</code> operator does not recurse infinitely, we
-end up with data of type <code>i32</code>, which matches the <code>5</code> in <code>assert_eq!</code> in
-Listing 15-9.</p>
-<h3 id="implicit-deref-coercions-with-functions-and-methods"><a class="header" href="#implicit-deref-coercions-with-functions-and-methods">Implicit Deref Coercions with Functions and Methods</a></h3>
-<p><em>Deref coercion</em> converts a reference to a type that implements the <code>Deref</code>
-trait into a reference to another type. For example, deref coercion can convert
-<code>&amp;String</code> to <code>&amp;str</code> because <code>String</code> implements the <code>Deref</code> trait such that it
-returns <code>&amp;str</code>. Deref coercion is a convenience Rust performs on arguments to
-functions and methods, and works only on types that implement the <code>Deref</code>
-trait. It happens automatically when we pass a reference to a particular type’s
-value as an argument to a function or method that doesn’t match the parameter
-type in the function or method definition. A sequence of calls to the <code>deref</code>
-method converts the type we provided into the type the parameter needs.</p>
-<p>Deref coercion was added to Rust so that programmers writing function and
-method calls don’t need to add as many explicit references and dereferences
-with <code>&amp;</code> and <code>*</code>. The deref coercion feature also lets us write more code that
-can work for either references or smart pointers.</p>
-<p>To see deref coercion in action, let’s use the <code>MyBox&lt;T&gt;</code> type we defined in
-Listing 15-8 as well as the implementation of <code>Deref</code> that we added in Listing
-15-10. Listing 15-11 shows the definition of a function that has a string slice
-parameter:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
-<pre><pre class="playground"><code class="language-rust">fn hello(name: &amp;str) {
-    println!(&quot;Hello, {name}!&quot;);
+<p>Rust <code>*</code> operatorini <code>deref</code> metodini chaqirish va keyin oddiy dereference bilan
+almashtiradi, shuning uchun <code>deref</code> metodini chaqirish kerakligi haqida
+o'ylamasligimiz kerak. Ushbu Rust xususiyati bizga oddiy havola yoki <code>Deref</code> ni
+qo'llaydigan turga ega bo'ladimi, bir xil ishlaydigan kod yozish imkonini
+beradi.</p>
+<p><code>deref</code> metodi qiymatga havolani qaytarishining sababi va <code>*(y.deref())</code> qavslar
+tashqarisidagi oddiy dereference hali ham zarur bo'lishi ownership tizimi bilan
+bog'liq. Agar <code>deref</code> usuli qiymatga havola o'rniga to'g'ridan-to'g'ri qiymatni
+qaytargan bo'lsa, qiymat <code>o'zidan</code> o'chiriladi. Biz <code>MyBox&lt;T&gt;</code> ichidagi ichki
+qiymatga egalik qilishni istamaymiz, bu holatda yoki ko'p hollarda biz
+dereference operatoridan foydalanamiz.</p>
+<p>Esda tutingki, <code>*</code> operatori <code>deref</code> metodini chaqirish va keyin <code>*</code> operatorini
+faqat bir marta chaqirish bilan almashtiriladi, har safar kodimizda <code>*</code> dan
+foydalanamiz. <code>*</code> operatorini almashtirish cheksiz takrorlanmasligi sababli, biz
+15-9 ro'yxatdagi <code>assert_eq!</code> dagi <code>5</code> ga mos keladigan <code>i32</code> turidagi
+ma'lumotlarga ega bo`lamiz.</p>
+<h3 id="funksiya-va-metodlar-bilan-yashirin-deref-coercionlar"><a class="header" href="#funksiya-va-metodlar-bilan-yashirin-deref-coercionlar">Funksiya va Metodlar bilan Yashirin Deref Coercion'lar</a></h3>
+<p><em>Deref coercion</em> havolani <code>Deref</code> xususiyatini boshqa turga havolada amalga
+oshiradigan turga aylantiradi. Masalan, deref coercion <code>&amp;String</code> ni <code>&amp;str</code> ga
+aylantirishi mumkin, chunki <code>String</code> <code>Deref</code> traitini amalga oshiradi va u
+<code>&amp;str</code> ni qaytaradi. Deref coercion - bu Rust funksiyalar va metodlarga
+argumentlar bo'yicha bajaradigan qulaylik va faqat <code>Deref</code> traitini amalga
+oshiradigan turlarda ishlaydi. Bu funksiya yoki metod ta'rifidagi parametr turiga
+mos kelmaydigan funksiya yoki metodga argument sifatida ma'lum bir turdagi
+qiymatga havolani uzatganimizda avtomatik ravishda sodir boʻladi. <code>Deref</code>
+metodiga chaqiruvlar ketma-ketligi biz taqdim etgan turni parametr kerak
+bo'lgan turga aylantiradi.</p>
+<p>Rustga deref coercion qo'shildi, shuning uchun dasturchilar funktsiya va metod
+chaqiruvlarini yozish uchun <code>&amp;</code> va <code>*</code> bilan ko'p aniq havolalar va
+dereferencelarni qo'shishlari shart emas. Deref coercion xususiyati bizga
+havolalar yoki aqlli ko'rsatkichlar uchun ishlashi mumkin bo'lgan ko'proq kod
+yozish imkonini beradi. </p>
+<p>Deref coercionni amalda ko'rish uchun biz 15-8 ro'yxatda belgilagan <code>MyBox&lt;T&gt;</code>
+turini hamda 15-10 ro'yxatiga qo'shgan <code>Deref</code> ni amalga oshirishdan
+foydalanamiz. Ro'yxat 15-11 string slice parametriga ega bo'lgan funksiyaning
+ta'rifini ko'rsatadi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn salom(nom: &amp;str) {
+    println!(&quot;Salom, {nom}!&quot;);
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre></pre>
-<p><span class="caption">Listing 15-11: A <code>hello</code> function that has the parameter
-<code>name</code> of type <code>&amp;str</code></span></p>
-<p>We can call the <code>hello</code> function with a string slice as an argument, such as
-<code>hello(&quot;Rust&quot;);</code> for example. Deref coercion makes it possible to call <code>hello</code>
-with a reference to a value of type <code>MyBox&lt;String&gt;</code>, as shown in Listing 15-12:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Ro'yxat 15-11: <code>&amp;str</code> tipidagi <code>nom</code> parametriga ega
+<code>salom</code> funksiyasi</span></p>
+<p>Biz <code>salom</code> funksiyasini argument sifatida string slice bilan chaqirishimiz
+mumkin, masalan, <code>salom(&quot;Rust&quot;);</code>. Deref coercion 15-12 ro'yxatda
+ko'rsatilganidek, <code>MyBox&lt;String&gt;</code> turidagi qiymatga havola bilan <code>salom</code> ni
+chaqirish imkonini beradi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::ops::Deref;
 </span><span class="boring">
 </span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
@@ -12658,27 +12667,27 @@ with a reference to a value of type <code>MyBox&lt;String&gt;</code>, as shown i
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn hello(name: &amp;str) {
-</span><span class="boring">    println!(&quot;Hello, {name}!&quot;);
+</span><span class="boring">fn salom(nom: &amp;str) {
+</span><span class="boring">    println!(&quot;Salom, {nom}!&quot;);
 </span><span class="boring">}
 </span><span class="boring">
 </span>fn main() {
     let m = MyBox::new(String::from(&quot;Rust&quot;));
-    hello(&amp;m);
+    salom(&amp;m);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-12: Calling <code>hello</code> with a reference to a
-<code>MyBox&lt;String&gt;</code> value, which works because of deref coercion</span></p>
-<p>Here we’re calling the <code>hello</code> function with the argument <code>&amp;m</code>, which is a
-reference to a <code>MyBox&lt;String&gt;</code> value. Because we implemented the <code>Deref</code> trait
-on <code>MyBox&lt;T&gt;</code> in Listing 15-10, Rust can turn <code>&amp;MyBox&lt;String&gt;</code> into <code>&amp;String</code>
-by calling <code>deref</code>. The standard library provides an implementation of <code>Deref</code>
-on <code>String</code> that returns a string slice, and this is in the API documentation
-for <code>Deref</code>. Rust calls <code>deref</code> again to turn the <code>&amp;String</code> into <code>&amp;str</code>, which
-matches the <code>hello</code> function’s definition.</p>
-<p>If Rust didn’t implement deref coercion, we would have to write the code in
-Listing 15-13 instead of the code in Listing 15-12 to call <code>hello</code> with a value
-of type <code>&amp;MyBox&lt;String&gt;</code>.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Ro'yxat 15-12: <code>MyBox&lt;String&gt;</code> qiymatiga havola bilan
+<code>salom</code> deb chaqirish, bu deref coercion tufayli ishlaydi</span></p>
+<p>Bu yerda biz <code>&amp;m</code> argumenti bilan <code>salom</code> funksiyasini chaqiramiz, bu
+<code>MyBox&lt;String&gt;</code> qiymatiga havola. Biz <code>Deref</code> traitini <code>MyBox&lt;T&gt;</code> uchun
+15-10 ro'yxatda amalga oshirganimiz uchun Rust <code>deref</code> ni chaqirish orqali
+<code>&amp;MyBox&lt;String&gt;</code> ni <code>&amp;String</code> ga aylantirishi mumkin. Standart kutubxona <code>String</code>
+da <code>Deref</code> ning amalga oshirilishini ta'minlaydi, bu string slice qaytaradi va
+bu <code>Deref</code> uchun API hujjatlarida. Rust <code>&amp;String</code> ni <code>&amp;str</code> ga aylantirish uchun
+yana <code>deref</code> ni chaqiradi, bu <code>salom</code> funksiyasi ta`rifiga mos keladi.</p>
+<p>Agar Rust deref coercionni amalga oshirmagan bo'lganida, biz <code>&amp;MyBox&lt;String&gt;</code>
+tipidagi qiymat bilan <code>salom</code> ni chaqirish uchun 15-12 ro'yxatdagi kod
+o'rniga 15-13 ro'yxatdagi kodini yozishimiz kerak edi.</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::ops::Deref;
 </span><span class="boring">
 </span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
@@ -12697,52 +12706,53 @@ of type <code>&amp;MyBox&lt;String&gt;</code>.</p>
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn hello(name: &amp;str) {
-</span><span class="boring">    println!(&quot;Hello, {name}!&quot;);
+</span><span class="boring">fn salom(nom: &amp;str) {
+</span><span class="boring">    println!(&quot;Salom, {nom}!&quot;);
 </span><span class="boring">}
 </span><span class="boring">
 </span>fn main() {
     let m = MyBox::new(String::from(&quot;Rust&quot;));
-    hello(&amp;(*m)[..]);
+    salom(&amp;(*m)[..]);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-13: The code we would have to write if Rust
-didn’t have deref coercion</span></p>
-<p>The <code>(*m)</code> dereferences the <code>MyBox&lt;String&gt;</code> into a <code>String</code>. Then the <code>&amp;</code> and
-<code>[..]</code> take a string slice of the <code>String</code> that is equal to the whole string to
-match the signature of <code>hello</code>. This code without deref coercions is harder to
-read, write, and understand with all of these symbols involved. Deref coercion
-allows Rust to handle these conversions for us automatically.</p>
-<p>When the <code>Deref</code> trait is defined for the types involved, Rust will analyze the
-types and use <code>Deref::deref</code> as many times as necessary to get a reference to
-match the parameter’s type. The number of times that <code>Deref::deref</code> needs to be
-inserted is resolved at compile time, so there is no runtime penalty for taking
-advantage of deref coercion!</p>
-<h3 id="how-deref-coercion-interacts-with-mutability"><a class="header" href="#how-deref-coercion-interacts-with-mutability">How Deref Coercion Interacts with Mutability</a></h3>
-<p>Similar to how you use the <code>Deref</code> trait to override the <code>*</code> operator on
-immutable references, you can use the <code>DerefMut</code> trait to override the <code>*</code>
-operator on mutable references.</p>
-<p>Rust does deref coercion when it finds types and trait implementations in three
-cases:</p>
+<p><span class="caption">Ro'yxat 15-13: Agar Rustda deref coercion bo'lmaganida,
+biz yozishimiz kerak bo'lgan kod</span></p>
+<p><code>(*m)</code> <code>MyBox&lt;String&gt;</code> ni <code>String</code> ga yo'naltiradi. Keyin <code>&amp;</code> va <code>[..]</code> <code>salom</code>
+belgisiga mos kelishi uchun butun stringga teng bo'lgan <code>String</code> string sliceni
+oladi. Deref coercionsiz ushbu kodni o'qish, yozish va tushunish ushbu belgilar
+bilan qiyinroq. Deref coercion Rustga ushbu konversiyalarni biz uchun avtomatik
+tarzda boshqarishga imkon beradi.</p>
+<p>&quot;Deref&quot; traiti jalb qilingan turlar uchun aniqlanganda, Rust turlarni tahlil
+qiladi va parametr turiga mos keladigan havolani olish uchun kerak bo'lganda
+<code>Deref::deref</code> dan foydalanadi. <code>Deref::deref</code> qo'shilishi kerak bo'lgan vaqtlar
+soni kompilyatsiya vaqtida hal qilinadi, shuning uchun deref coerciondan
+foydalanganlik uchun ishga tushirish vaqtida jarima yo'q!</p>
+<h3 id="deref-coercion-ozgaruvchanlik-bilan-qanday-ozaro-tasir-qilishi"><a class="header" href="#deref-coercion-ozgaruvchanlik-bilan-qanday-ozaro-tasir-qilishi">Deref Coercion O'zgaruvchanlik bilan Qanday O'zaro Ta'sir Qilishi</a></h3>
+<p>O'zgarmas havolalarda <code>*</code> operatorini rad qilish uchun <code>Deref</code> traitidan
+foydalanishga o'xshab, o'zgaruvchan havolalarda <code>*</code> operatorini rad
+qilish uchun <code>DerefMut</code> traitidan foydalanishingiz mumkin.</p>
+<p>Rust ushbu uchta holatda tur va traitni amalga oshirishlarni topsa, deref
+coercionni amalga oshiradi</p>
 <ul>
-<li>From <code>&amp;T</code> to <code>&amp;U</code> when <code>T: Deref&lt;Target=U&gt;</code></li>
-<li>From <code>&amp;mut T</code> to <code>&amp;mut U</code> when <code>T: DerefMut&lt;Target=U&gt;</code></li>
-<li>From <code>&amp;mut T</code> to <code>&amp;U</code> when <code>T: Deref&lt;Target=U&gt;</code></li>
+<li><code>&amp;T</code> dan <code>&amp;U</code> gacha, <code>T: Deref&lt;Target=U&gt;</code></li>
+<li><code>&amp;mut T</code> dan <code>&amp;mut U</code> gacha <code>T: DerefMut&lt;Target=U&gt;</code></li>
+<li><code>&amp;mut T</code> dan <code>&amp;U</code> gacha <code>T: Deref&lt;Target=U&gt;</code></li>
 </ul>
-<p>The first two cases are the same as each other except that the second
-implements mutability. The first case states that if you have a <code>&amp;T</code>, and <code>T</code>
-implements <code>Deref</code> to some type <code>U</code>, you can get a <code>&amp;U</code> transparently. The
-second case states that the same deref coercion happens for mutable references.</p>
-<p>The third case is trickier: Rust will also coerce a mutable reference to an
-immutable one. But the reverse is <em>not</em> possible: immutable references will
-never coerce to mutable references. Because of the borrowing rules, if you have
-a mutable reference, that mutable reference must be the only reference to that
-data (otherwise, the program wouldn’t compile). Converting one mutable
-reference to one immutable reference will never break the borrowing rules.
-Converting an immutable reference to a mutable reference would require that the
-initial immutable reference is the only immutable reference to that data, but
-the borrowing rules don’t guarantee that. Therefore, Rust can’t make the
-assumption that converting an immutable reference to a mutable reference is
-possible.</p>
+<p>Birinchi ikkita holat bir-biri bilan bir xil, faqat ikkinchisi o'zgaruvchanlikni
+amalga oshiradi. Birinchi holatda aytilishicha, agar sizda <code>&amp;T</code> bo'lsa va <code>T</code>
+<code>Deref</code> ni <code>U</code> turiga qo'llasa, shaffof tarzda <code>&amp;U</code> ni olishingiz mumkin.
+Ikkinchi holatda aytilishicha, xuddi shunday deref coercion o'zgaruvchan
+havolalar uchun sodir bo'ladi.</p>
+<p>Uchinchi holat qiyinroq: Rust o'zgarmasga o'zgaruvchan havolani ham majbur
+qiladi. Ammo buning teskarisi <em>mumkin emas</em>: o'zgarmas havolalar hech qachon
+o'zgaruvchan havolalarga majburlamaydi. Qarz olish qoidalari tufayli, agar sizda
+o'zgaruvchan havola bo'lsa, bu o'zgaruvchan havola ma'lumot uchun yagona havola
+bo'lishi kerak (aks holda dastur kompilyatsiya qilinmaydi). Bitta o'zgaruvchan
+havolani bitta o'zgarmas havolaga aylantirish hech qachon qarz olish qoidalarini
+buzmaydi. O'zgarmas havolani o'zgaruvchan havolaga aylantirish uchun dastlabki
+o'zgarmas havola ushbu ma'lumotga yagona o'zgarmas havola bo'lishini talab
+qiladi, ammo qarz olish qoidalari bunga kafolat bermaydi. Shu sababli, Rust
+o'zgarmas havolani o'zgaruvchan havolaga aylantirish mumkin deb taxmin qila
+olmaydi.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="drop-trait-bilan-tozalash-uchun-kodni-yuritish"><a class="header" href="#drop-trait-bilan-tozalash-uchun-kodni-yuritish"><code>Drop</code> Trait bilan tozalash uchun kodni yuritish</a></h2>
 <p>Agar qiymat o‘z doirasidan chiqqanda uni o‘zgartirish imkonini beradigan ikkinchi muhim sanalgan smart pointer namunasidan biri bu <code>Drop</code>dir. Siz <code>Drop</code> traitini implementatsiya qilish uchun xohlagan turdan foydalanishingiz mumkin, va kodni fayl yoki tarmoqlarni ulash resurslarini yaratish uchun ham ishlatilishi mumkin </p>
 <p><code>Drop</code>ni smart pointerlar kontekstida ishlatishimizning sababi <code>Drop</code> traiti smart pointerni implementatsiyasida deyarli har doim ishlatiladi. Masalan, qachonki <code>Box&lt;T&gt;</code> tashlab yuborilganda u quti ko‘rsatayotgan heapdan joy ajratadi.</p>
@@ -14534,61 +14544,34 @@ Tushundim: ishlayapti
 <p>Xotirani almashish(sharing memory) orqali muloqot(comminication) qanday ko'rinishga ega bo'lar edi? Bundan tashqari, nima uchun message-passing enthusiastlar memory sharingdan foydalanmaslik haqida ogohlantiradilar?</p>
 <p>Qaysidir ma'noda, har qanday dasturlash tilidagi kanallar bitta ownershiplik huquqiga o'xshaydi, chunki qiymatni kanalga o'tkazganingizdan so'ng, siz boshqa qiymatdan foydalanmasligingiz kerak. Shared memory concurrencyda bir nechta ownershiplik huquqiga o'xshaydi: concurrencyda bir nechta threadlar bir xil xotira joyiga(memory location) kirishi mumkin. 15-bobda ko'rganingizdek, smart pointerlar bir nechta ownershiplik qilish imkoniyatini yaratdi, bir nechta(multiple) ownershiplik murakkablikni oshirishi mumkin, chunki bu turli ownerlarni boshqarish kerak. Rust type tizimi va ownershiplik qoidalari ushbu boshqaruvni to'g'ri bajarishga katta yordam beradi. Misol uchun, shared memory uchun eng keng tarqalgan concurrency primitivlaridan biri bo'lgan mutexlarni ko'rib chiqaylik.</p>
 <h3 id="bir-vaqtning-ozida-bitta-threaddan-malumotlarga-kirishga-ruxsat-berish-uchun-mutexlardan-foydalanish"><a class="header" href="#bir-vaqtning-ozida-bitta-threaddan-malumotlarga-kirishga-ruxsat-berish-uchun-mutexlardan-foydalanish">Bir vaqtning o'zida bitta threaddan ma'lumotlarga kirishga ruxsat berish uchun mutexlardan foydalanish</a></h3>
-<p><em>Mutex</em> is an abbreviation for <em>mutual exclusion</em>, as in, a mutex allows only
-one thread to access some data at any given time. To access the data in a
-mutex, a thread must first signal that it wants access by asking to acquire the
-mutex’s <em>lock</em>. The lock is a data structure that is part of the mutex that
-keeps track of who currently has exclusive access to the data. Therefore, the
-mutex is described as <em>guarding</em> the data it holds via the locking system.</p>
-<p>Mutexes have a reputation for being difficult to use because you have to
-remember two rules:</p>
+<p><em>Mutex</em> bu <em>mutual exclusion</em> ning qisqartmasi boʻlib, mutex istalgan vaqtda baʼzi maʼlumotlarga faqat bitta threadga kirish imkonini beradi. Mutexdagi ma'lumotlarga kirish uchun thread birinchi navbatda mutexning *lock(qulf)*ni olishni so'rab kirishni xohlashini bildirishi kerak. Lock(qulf) - bu mutexning bir qismi bo'lgan ma'lumotlar tuzilmasi bo'lib, u hozirda ma'lumotlarga kimning eksklyuziv kirish huquqiga ega ekanligini kuzatib boradi. Shuning uchun, mutex qulflash tizimi(locking system) orqali o'zida mavjud bo'lgan ma'lumotlarni <em>himoya qilish(guarding)</em> sifatida tavsiflanadi.</p>
+<p>Mutexlardan foydalanish qiyinligi bilan mashhur, chunki siz ikkita qoidani eslab qolishingiz kerak:</p>
 <ul>
-<li>You must attempt to acquire the lock before using the data.</li>
-<li>When you’re done with the data that the mutex guards, you must unlock the
-data so other threads can acquire the lock.</li>
+<li>Ma'lumotlardan foydalanishdan oldin siz qulfni olishga harakat qilishingiz kerak.</li>
+<li>Mutex himoya qiladigan ma'lumotlar bilan ishlashni tugatgandan so'ng, boshqa threadlar qulfni(lock) olishi uchun ma'lumotlarni qulfdan chiqarishingiz(unlock) kerak.</li>
 </ul>
-<p>For a real-world metaphor for a mutex, imagine a panel discussion at a
-conference with only one microphone. Before a panelist can speak, they have to
-ask or signal that they want to use the microphone. When they get the
-microphone, they can talk for as long as they want to and then hand the
-microphone to the next panelist who requests to speak. If a panelist forgets to
-hand the microphone off when they’re finished with it, no one else is able to
-speak. If management of the shared microphone goes wrong, the panel won’t work
-as planned!</p>
-<p>Management of mutexes can be incredibly tricky to get right, which is why so
-many people are enthusiastic about channels. However, thanks to Rust’s type
-system and ownership rules, you can’t get locking and unlocking wrong.</p>
-<h4 id="the-api-of-mutext"><a class="header" href="#the-api-of-mutext">The API of <code>Mutex&lt;T&gt;</code></a></h4>
-<p>As an example of how to use a mutex, let’s start by using a mutex in a
-single-threaded context, as shown in Listing 16-12:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Mutexni tushunish uchun bitta mikrofon bilan konferensiyada guruh muhokamasining haqiqiy hayotiy misolini tasavvur qiling. Panel ishtirokchisi gapirishdan oldin mikrofondan foydalanishni xohlashini so'rashi yoki signal berishi kerak. Mikrofonni olishganda, ular xohlagancha gaplashishi mumkin va keyin mikrofonni gapirishni so'ragan keyingi ishtirokchiga beradi. Agar panel ishtirokchisi mikrofon bilan ishlashni tugatgandan so'ng uni o'chirishni unutib qo'ysa, boshqa hech kim gapira olmaydi. Agar umumiy mikrofonni boshqarish noto'g'ri bo'lsa, panel rejalashtirilganidek ishlamaydi!</p>
+<p>Mutexlarni boshqarish juda qiyin bo'lishi mumkin, shuning uchun ko'p odamlar kanallarga(channel) ishtiyoq bilan qarashadi. Biroq, Rust type tizimi va ownershiplik qoidalari tufayli siz qulflash(locking) va qulfni noto'g'ri ochishingiz(unlocking) mumkin emas.</p>
+<h4 id="mutext-api"><a class="header" href="#mutext-api"><code>Mutex&lt;T&gt;</code> API</a></h4>
+<p>Mutexdan qanday foydalanishga misol sifatida, keling, 16-12 ro'yxatda ko'rsatilganidek, bitta threadli kontekstda mutexdan foydalanishdan boshlaylik:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::sync::Mutex;
 
 fn main() {
     let m = Mutex::new(5);
 
     {
-        let mut num = m.lock().unwrap();
-        *num = 6;
+        let mut raqam = m.lock().unwrap();
+        *raqam = 6;
     }
 
     println!(&quot;m = {:?}&quot;, m);
 }</code></pre></pre>
-<p><span class="caption">Listing 16-12: Exploring the API of <code>Mutex&lt;T&gt;</code> in a
-single-threaded context for simplicity</span></p>
-<p>As with many types, we create a <code>Mutex&lt;T&gt;</code> using the associated function <code>new</code>.
-To access the data inside the mutex, we use the <code>lock</code> method to acquire the
-lock. This call will block the current thread so it can’t do any work until
-it’s our turn to have the lock.</p>
-<p>The call to <code>lock</code> would fail if another thread holding the lock panicked. In
-that case, no one would ever be able to get the lock, so we’ve chosen to
-<code>unwrap</code> and have this thread panic if we’re in that situation.</p>
-<p>After we’ve acquired the lock, we can treat the return value, named <code>num</code> in
-this case, as a mutable reference to the data inside. The type system ensures
-that we acquire a lock before using the value in <code>m</code>. The type of <code>m</code> is
-<code>Mutex&lt;i32&gt;</code>, not <code>i32</code>, so we <em>must</em> call <code>lock</code> to be able to use the <code>i32</code>
-value. We can’t forget; the type system won’t let us access the inner <code>i32</code>
-otherwise.</p>
+<p><span class="caption">Ro'yxat 16-12: <code>Mutex&lt;T&gt;</code> API-ni soddaligi uchun single-threadli kontekstda oʻrganish</span></p>
+<p>Ko'pgina turlarda(type) bo'lgani kabi, biz bog'langan <code>new</code> funksiyasidan foydalangan holda <code>Mutex&lt;T&gt;</code> ni yaratamiz.
+Mutex ichidagi ma'lumotlarga kirish uchun biz qulfni olish uchun <code>lock</code> metodidan foydalanamiz. Bu chaqiruv joriy threadni bloklaydi, shuning uchun u bizni qulflash navbati kelmaguncha hech qanday ishni bajara olmaydi.</p>
+<p>Qulfni ushlab turgan boshqa thread panic qo'zg'atsa, <code>lock</code> chaqiruvi muvaffaqiyatsiz bo'ladi. Bunday holda, hech kim qulfni qo'lga kirita olmaydi, shuning uchun biz  <code>unwrap</code>ni tanladik va agar shunday vaziyatda bo'lsak, bu threadni panic qo'yishni tanladik.</p>
+<p>Qulfni qo'lga kiritganimizdan so'ng, biz bu holatda <code>num</code> deb nomlangan return qiymatini ichidagi ma'lumotlarga o'zgaruvchan reference sifatida ko'rib chiqishimiz mumkin. Tur(type) tizimi <code>m</code> dagi qiymatni ishlatishdan oldin qulfni olishimizni ta'minlaydi. <code>m</code> turi <code>i32</code> emas, <code>Mutex&lt;i32&gt;</code>, shuning uchun biz <code>i32</code> qiymatidan foydalanish uchun <code>lock</code>ni chaqirishimiz kerak. Biz unuta olmaymiz; aks holda turdagi tizim bizga ichki <code>i32</code> ga kirishga ruxsat bermaydi.</p>
 <p>As you might suspect, <code>Mutex&lt;T&gt;</code> is a smart pointer. More accurately, the call
 to <code>lock</code> <em>returns</em> a smart pointer called <code>MutexGuard</code>, wrapped in a
 <code>LockResult</code> that we handled with the call to <code>unwrap</code>. The <code>MutexGuard</code> smart
@@ -14606,7 +14589,7 @@ We’ll spin up 10 threads and have them each increment a counter value by 1, so
 the counter goes from 0 to 10. The next example in Listing 16-13 will have
 a compiler error, and we’ll use that error to learn more about using
 <code>Mutex&lt;T&gt;</code> and how Rust helps us use it correctly.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use std::sync::Mutex;
 use std::thread;
 
@@ -14668,7 +14651,7 @@ multiple-ownership method we discussed in Chapter 15.</p>
 <code>Rc&lt;T&gt;</code> to create a reference counted value. Let’s do the same here and see
 what happens. We’ll wrap the <code>Mutex&lt;T&gt;</code> in <code>Rc&lt;T&gt;</code> in Listing 16-14 and clone
 the <code>Rc&lt;T&gt;</code> before moving ownership to the thread.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use std::rc::Rc;
 use std::sync::Mutex;
 use std::thread;
@@ -14758,7 +14741,7 @@ guarantees atomics provide.</p>
 <p>Let’s return to our example: <code>Arc&lt;T&gt;</code> and <code>Rc&lt;T&gt;</code> have the same API, so we fix
 our program by changing the <code>use</code> line, the call to <code>new</code>, and the call to
 <code>clone</code>. The code in Listing 16-15 will finally compile and run:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::sync::{Arc, Mutex};
 use std::thread;
 
