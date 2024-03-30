@@ -12877,10 +12877,7 @@ CustomSmartPointer dropped before the end of main.
 <p>Keling kamchiligi bor bo‘lgan 15-5 ro‘yxat misolimizga qaytaylik. Esingizda bo‘lsa biz <code>Box&lt;T&gt;</code>ni ishlatishni ko‘rsatib o‘tgan edik. Bu safar, biz 2ta ro‘yxat ham egalikni (ownership) 3-ro‘yxat bilan ulashadigan ro‘yxat yaratamiz. Aniq qilib aytadigan bo‘lsak, 15-3 shaklga o‘xshashdir:</p>
 <img alt="Two lists that share ownership of a third list" src="img/trpl15-03.svg" class="center" />
 <p><span class="caption">15-3-shakl: Ikkita ro'yxatlar, ya'ni <code>b</code> va <code>c</code> egalikni uchinchi ro'yxat, ya'ni <code>a</code>ga ulashishi</span></p>
-<p>We’ll create list <code>a</code> that contains 5 and then 10. Then we’ll make two more
-lists: <code>b</code> that starts with 3 and <code>c</code> that starts with 4. Both <code>b</code> and <code>c</code>
-lists will then continue on to the first <code>a</code> list containing 5 and 10. In other
-words, both lists will share the first list containing 5 and 10.</p>
+<p>Biz 5 va 10 dan iborat bo‘lgan <code>a</code> ro‘yxatni yaratamiz. Keyin yana ikkita ro‘yxatni ham yaratamiz, ya’ni 3dan boshlanadigan <code>b</code> va 4dan boshlanadigan <code>c</code>. <code>b</code> va <code>c</code> ro‘yxatlari 5 va 10dan iborat bo‘lgan <code>a</code> ro‘yxatda davom etadi. Boshqacha qilib aytganda, ro‘yxatlar birinchi 5 va 10dan iborat bo‘lgan birinchi ro‘yxat bilan ulashishadi.</p>
 <p>Trying to implement this scenario using our definition of <code>List</code> with <code>Box&lt;T&gt;</code>
 won’t work, as shown in Listing 15-17:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
