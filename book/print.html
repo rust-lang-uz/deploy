@@ -12878,9 +12878,8 @@ CustomSmartPointer dropped before the end of main.
 <img alt="Two lists that share ownership of a third list" src="img/trpl15-03.svg" class="center" />
 <p><span class="caption">15-3-shakl: Ikkita ro'yxatlar, ya'ni <code>b</code> va <code>c</code> egalikni uchinchi ro'yxat, ya'ni <code>a</code>ga ulashishi</span></p>
 <p>Biz 5 va 10 dan iborat bo‘lgan <code>a</code> ro‘yxatni yaratamiz. Keyin yana ikkita ro‘yxatni ham yaratamiz, ya’ni 3dan boshlanadigan <code>b</code> va 4dan boshlanadigan <code>c</code>. <code>b</code> va <code>c</code> ro‘yxatlari 5 va 10dan iborat bo‘lgan <code>a</code> ro‘yxatda davom etadi. Boshqacha qilib aytganda, ro‘yxatlar birinchi 5 va 10dan iborat bo‘lgan birinchi ro‘yxat bilan ulashishadi.</p>
-<p>Trying to implement this scenario using our definition of <code>List</code> with <code>Box&lt;T&gt;</code>
-won’t work, as shown in Listing 15-17:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>15-17-ro‘yxatda ko‘rsatilgandek, bizning ssenariy bo‘yicha <code>Box&lt;T&gt;</code> bilan <code>List</code>dagi ta’rifimiz yordamida implement qilishga urunsak ishga tushmaydi:</p>
+<p><span class="filename">Fayl-nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">enum List {
     Cons(i32, Box&lt;List&gt;),
     Nil,
@@ -12893,9 +12892,8 @@ fn main() {
     let b = Cons(3, Box::new(a));
     let c = Cons(4, Box::new(a));
 }</code></pre>
-<p><span class="caption">Listing 15-17: Demonstrating we’re not allowed to have
-two lists using <code>Box&lt;T&gt;</code> that try to share ownership of a third list</span></p>
-<p>When we compile this code, we get this error:</p>
+<p><span class="caption">15-17-ro'yxat: Ko'rib turganimizdek, <code>Box&lt;T&gt;</code> yordamida uchunchi ro'yxatga ikkita ro'yxatni egaligini (ownership) ulashib bo'lmaydi </T></span></p>
+<p>When we compile this code, we get this error: Ushbu kodni kompilyatsiya qilsak, biz yuqoridagi xatolikni ko'ramiz:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
 error[E0382]: use of moved value: `a`
