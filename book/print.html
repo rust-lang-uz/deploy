@@ -12893,7 +12893,7 @@ fn main() {
     let c = Cons(4, Box::new(a));
 }</code></pre>
 <p><span class="caption">15-17-ro'yxat: Ko'rib turganimizdek, <code>Box&lt;T&gt;</code> yordamida uchunchi ro'yxatga ikkita ro'yxatni egaligini (ownership) ulashib bo'lmaydi </T></span></p>
-<p>When we compile this code, we get this error: Ushbu kodni kompilyatsiya qilsak, biz yuqoridagi xatolikni ko'ramiz:</p>
+<p>Ushbu kodni kompilyatsiya qilsak, biz yuqoridagi xatolikni ko'ramiz:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
 error[E0382]: use of moved value: `a`
