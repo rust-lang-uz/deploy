@@ -218,9 +218,7 @@ error[E0382]: use of moved value: `a`
 For more information about this error, try `rustc --explain E0382`.
 error: could not compile `cons-list` due to previous error
 </code></pre>
-<p>The <code>Cons</code> variants own the data they hold, so when we create the <code>b</code> list, <code>a</code>
-is moved into <code>b</code> and <code>b</code> owns <code>a</code>. Then, when we try to use <code>a</code> again when
-creating <code>c</code>, we’re not allowed to because <code>a</code> has been moved.</p>
+<p><code>Cons</code> variantlari o'zlariga tegishli bo'lgan ma'lumotlargagina egalik (own) qila oladi, shuninguchun biz <code>b</code> ro'yxatini yaratganimizda, <code>a</code> <code>b</code>ga o'tadi va <code>b</code> <code>a</code>ga egalik qiladi.Undan keyin, <code>c</code> ni yaratish uchun <code>a</code>dan foydalanmoqchi bo'lganizmizda bizga ruxsat bermaydi chunki <code>a</code> ko'chib ketganligi uchun.</p>
 <p>We could change the definition of <code>Cons</code> to hold references instead, but then
 we would have to specify lifetime parameters. By specifying lifetime
 parameters, we would be specifying that every element in the list will live at
