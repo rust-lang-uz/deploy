@@ -219,21 +219,8 @@ For more information about this error, try `rustc --explain E0382`.
 error: could not compile `cons-list` due to previous error
 </code></pre>
 <p><code>Cons</code> variantlari o'zlariga tegishli bo'lgan ma'lumotlargagina egalik (own) qila oladi, shuninguchun biz <code>b</code> ro'yxatini yaratganimizda, <code>a</code> <code>b</code>ga o'tadi va <code>b</code> <code>a</code>ga egalik qiladi.Undan keyin, <code>c</code> ni yaratish uchun <code>a</code>dan foydalanmoqchi bo'lganizmizda bizga ruxsat bermaydi chunki <code>a</code> ko'chib ketganligi uchun.</p>
-<p>We could change the definition of <code>Cons</code> to hold references instead, but then
-we would have to specify lifetime parameters. By specifying lifetime
-parameters, we would be specifying that every element in the list will live at
-least as long as the entire list. This is the case for the elements and lists
-in Listing 15-17, but not in every scenario.</p>
-<p>Instead, we’ll change our definition of <code>List</code> to use <code>Rc&lt;T&gt;</code> in place of
-<code>Box&lt;T&gt;</code>, as shown in Listing 15-18. Each <code>Cons</code> variant will now hold a value
-and an <code>Rc&lt;T&gt;</code> pointing to a <code>List</code>. When we create <code>b</code>, instead of taking
-ownership of <code>a</code>, we’ll clone the <code>Rc&lt;List&gt;</code> that <code>a</code> is holding, thereby
-increasing the number of references from one to two and letting <code>a</code> and <code>b</code>
-share ownership of the data in that <code>Rc&lt;List&gt;</code>. We’ll also clone <code>a</code> when
-creating <code>c</code>, increasing the number of references from two to three. Every time
-we call <code>Rc::clone</code>, the reference count to the data within the <code>Rc&lt;List&gt;</code> will
-increase, and the data won’t be cleaned up unless there are zero references to
-it.</p>
+<p>Buning o'rniga havolalarni ushlab turish uchun <code>Cons</code> ta'rifini o'zgartirishimiz mumkin, lekin keyin biz layvtaym parametrlarini ko'rsatishimiz kerak bo'ladi. Layvtaym parametrlarini belgilash orqali, biz ro'yxatdagi har bir elementning yashashini ko'rsatamiz. 15-17 ro'yxatda ko'rsatilganidek bu elementlar va ro'yxatlarga tegishli, lekin har doim gam emas.</p>
+<p>15-18-ro'yxatda ko'rsatilganidek, <code>Box&lt;T&gt;</code>ning o'rniga<code>Rc&lt;T&gt;</code>ni ishlatish uchun biz bizning <code>Ro'yxat</code>imizning mazmunini o'zgartiramiz. Har bir <code>Cons</code> varianti qiymatni o'zida ushlab turadi va <code>Rc&lt;T&gt;</code> <code>Ro'yxat</code>ni ko'rsatadi. <code>a</code>ning egaligini olishning o'rniga <code>b</code>ni yaratganimizda, <code>a</code> ni ushlab  turgan <code>Rc&lt;List&gt;</code>ni klonlaymiz, shu bilan birga referenslar sonini birdan ikkiga ko'paytiramiz va <code>Rc&lt;List&gt;</code>dagi ma'lumotlarning egaligini ulashish uchun <code>a</code> va <code>b</code>ga ruxsat beramiz. referenslar sonini ikkidan uchga ko'paytirgan holda, <code>c</code>ni yaratayotganimizda <code>a</code>ni ham klonlaymiz. <code>Rc::clone</code>ni har safar chaqirganimizda, <code>Rc&lt;List&gt;</code> tarkibidagi ma'lumotlarining referenslari soni oshiriladi, zero referenslar paydo bo'lmagungacha ma'lumotlar tozalanmaydi.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">enum List {
     Cons(i32, Rc&lt;List&gt;),
