@@ -240,22 +240,13 @@ fn main() {
 <p>Biz scopeni ichiga <code>Rc&lt;T&gt;</code>ni kiritsh uchun <code>use</code> statementini qo'shishimiz kerak
 chunki u muqaddimani ichida bo'lmagani uchun. <code>main</code>ni ichida 5 va 10ni saqlovch ro'yxatni
 yaratamiz va uni <code>a</code>ga tegishli yangi <code>Rc&lt;List&gt;</code>ga joylashtiramiz. Keyin esa <code>b</code> va <code>c</code> yaratganimizda, <code>Rc::clone</code> funksiyasini chaqiramiz va argument sifatida <code>a</code>ga tegishli bo'lgan <code>Rc&lt;List&gt;</code>ga o'tkazib yuboramiz.</p>
-<p>We could have called <code>a.clone()</code> rather than <code>Rc::clone(&amp;a)</code>, but Rust’s
-convention is to use <code>Rc::clone</code> in this case. The implementation of
-<code>Rc::clone</code> doesn’t make a deep copy of all the data like most types’
-implementations of <code>clone</code> do. The call to <code>Rc::clone</code> only increments the
-reference count, which doesn’t take much time. Deep copies of data can take a
-lot of time. By using <code>Rc::clone</code> for reference counting, we can visually
-distinguish between the deep-copy kinds of clones and the kinds of clones that
-increase the reference count. When looking for performance problems in the
-code, we only need to consider the deep-copy clones and can disregard calls to
-<code>Rc::clone</code>.</p>
-<h3 id="cloning-an-rct-increases-the-reference-count"><a class="header" href="#cloning-an-rct-increases-the-reference-count">Cloning an <code>Rc&lt;T&gt;</code> Increases the Reference Count</a></h3>
-<p>Let’s change our working example in Listing 15-18 so we can see the reference
-counts changing as we create and drop references to the <code>Rc&lt;List&gt;</code> in <code>a</code>.</p>
-<p>In Listing 15-19, we’ll change <code>main</code> so it has an inner scope around list <code>c</code>;
-then we can see how the reference count changes when <code>c</code> goes out of scope.</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><code>Rc::clone(&amp;a)</code>ning o'rniga biz <code>a.clone()</code> chaqirishimiz mumkin edi, lekin Rust 
+qoidalariga muofiq ushbu holatda <code>Rc::clone</code> ishlatgan ma'qul. <code>Rc::clone</code>ning implementatsiyasi <code>clone</code>ning ko'p implementatsiya turiga o'xshab ma'lumotlarni to'liq 
+nusxa olmaydi. <code>Rc::clone</code>ning chaqirilishi referenslarning sonini ko'paytiradi, va shuning uchun ham ko'p vaqt olmaydi. Ma'lumotlarni to'liq nusxalash esa ko'p vaqt talab etadi. Referenslarni hisoblash uchun <code>Rc::clone</code>ni ishlatsak, biz to'liq nusxalangan bilan referenslar soni ortgan nusxalar orasidagi farqni tasavvur qilishimiz mumkin. Kodning unumdorlik muammolarini qidirayotganimizda, bizga faqat to'liq nusxalangan nusxalarga e'tibor qaratib, <code>Rc::clone</code>ning chaqirilishini e'tiborga olmasak ham bo'ladi.</p>
+<h3 id="rctni-nusxalash-referenslar-hisobini-orttiradi"><a class="header" href="#rctni-nusxalash-referenslar-hisobini-orttiradi"><code>Rc&lt;T&gt;</code>ni nusxalash Referenslar hisobini orttiradi</a></h3>
+<p><code>a</code>da referenslarni yaratib va uni <code>Rc&lt;List&gt;</code>ga drop qilib referenslar sonini ortayotganligini keling bizning ishlab turgan 15-18-ro'yxatimizdagi misolga o'zgartirish kiritib ko'raylik, </p>
+<p>15-19-ro'yxatda, <code>main</code>ni o'zgartirib ko'raylik chunki uning ichki scope(doirasi) <code>c</code>ro'yxatining atrofida shundan so'ng biz <code>c</code> scope(doirasida) chiqqanda qanday qilib referenslar soni ortayotganini ko'ramiz.</p>
+<p><span class="filename">Fayl-nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">enum List {
 </span><span class="boring">    Cons(i32, Rc&lt;List&gt;),
 </span><span class="boring">    Nil,
@@ -275,7 +266,7 @@ then we can see how the reference count changes when <code>c</code> goes out of 
     }
     println!(&quot;count after c goes out of scope = {}&quot;, Rc::strong_count(&amp;a));
 }</code></pre></pre>
-<p><span class="caption">Listing 15-19: Printing the reference count</span></p>
+<p><span class="caption">15-19-ro'yxat: Referens soni ortayotganligini print qilish</span></p>
 <p>At each point in the program where the reference count changes, we print the
 reference count, which we get by calling the <code>Rc::strong_count</code> function. This
 function is named <code>strong_count</code> rather than <code>count</code> because the <code>Rc&lt;T&gt;</code> type
