@@ -267,13 +267,8 @@ nusxa olmaydi. <code>Rc::clone</code>ning chaqirilishi referenslarning sonini ko
     println!(&quot;count after c goes out of scope = {}&quot;, Rc::strong_count(&amp;a));
 }</code></pre></pre>
 <p><span class="caption">15-19-ro'yxat: Referens soni ortayotganligini print qilish</span></p>
-<p>At each point in the program where the reference count changes, we print the
-reference count, which we get by calling the <code>Rc::strong_count</code> function. This
-function is named <code>strong_count</code> rather than <code>count</code> because the <code>Rc&lt;T&gt;</code> type
-also has a <code>weak_count</code>; we’ll see what <code>weak_count</code> is used for in the
-<a href="ch15-06-reference-cycles.html#preventing-reference-cycles-turning-an-rct-into-a-weakt">“Preventing Reference Cycles: Turning an <code>Rc&lt;T&gt;</code> into a
-<code>Weak&lt;T&gt;</code>”</a><!-- ignore --> section.</p>
-<p>This code prints the following:</p>
+<p>Dasturda referens soni o'zgargan har bir nuqtada, <code>Rc::strong_count</code> funksiyasini chaqirish yordamida biz referens sonini print qilamiz. Ushbu funksiyani nomi<code>count</code>deb emas <code>strong_count</code> deb nomlanadi, chunki <code>Rc&lt;T&gt;</code> turida  <code>weak_count</code> ham bor; biz <code>weak_count</code>ni <a href="ch15-06-reference-cycles.html#preventing-reference-cycles-turning-an-rct-into-a-weakt">&quot;Referenslar siklini oldini olish: <code>Rc&lt;T&gt;</code>ni <code>Weak&lt;T&gt;</code>ga aylantirish&quot;</a> bo'limida ko'ramiz.</p>
+<p>Ushbu kod quyidagini print qiladi:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
     Finished dev [unoptimized + debuginfo] target(s) in 0.45s
@@ -283,25 +278,9 @@ count after creating b = 2
 count after creating c = 3
 count after c goes out of scope = 2
 </code></pre>
-<p>We can see that the <code>Rc&lt;List&gt;</code> in <code>a</code> has an initial reference count of 1; then
-each time we call <code>clone</code>, the count goes up by 1. When <code>c</code> goes out of scope,
-the count goes down by 1. We don’t have to call a function to decrease the
-reference count like we have to call <code>Rc::clone</code> to increase the reference
-count: the implementation of the <code>Drop</code> trait decreases the reference count
-automatically when an <code>Rc&lt;T&gt;</code> value goes out of scope.</p>
-<p>What we can’t see in this example is that when <code>b</code> and then <code>a</code> go out of scope
-at the end of <code>main</code>, the count is then 0, and the <code>Rc&lt;List&gt;</code> is cleaned up
-completely. Using <code>Rc&lt;T&gt;</code> allows a single value to have multiple owners, and
-the count ensures that the value remains valid as long as any of the owners
-still exist.</p>
-<p>Via immutable references, <code>Rc&lt;T&gt;</code> allows you to share data between multiple
-parts of your program for reading only. If <code>Rc&lt;T&gt;</code> allowed you to have multiple
-mutable references too, you might violate one of the borrowing rules discussed
-in Chapter 4: multiple mutable borrows to the same place can cause data races
-and inconsistencies. But being able to mutate data is very useful! In the next
-section, we’ll discuss the interior mutability pattern and the <code>RefCell&lt;T&gt;</code>
-type that you can use in conjunction with an <code>Rc&lt;T&gt;</code> to work with this
-immutability restriction.</p>
+<p><code>a</code>da <code>Rc&lt;List&gt;</code>ning referens soni 1 ekanligini ko'rishimiz mumkin; keyinchalik har safar biz <code>clone</code> ni chaqirganimizda, son 1ga ortib boraveradi. <code>c</code> o'z scope(doirasi)dan chiqib ketganida,referens soni 1ga kamayadi. <code>Rc::clone</code> funksiyasi yordamida referens sonini ortirish uchun chaqirganimizdek referens soni kamaytirish uchun hech qanday funksiyasini chaqirishimiz kerak bo'lmaydi, chunki <code>Drop</code> traitining implementatsiyasi <code>Rc&lt;T&gt;</code> qiymati o'z scope(doirasi)dan chiqqanda avtomatik ravishda referens sonini kamaytiradi. </p>
+<p><code>main</code> oxirida <code>b</code> va keyin <code>a</code>larning scope(doirasidan) chiqib, son/hisob 0ga tenglashib, <code>Rc&lt;List&gt;</code> to'liq tozalanganligini biz ushbu misolda ko'ra olmaymiz. <code>Rc&lt;T&gt;</code>ni ishlatish yordamida bitta qiymat ko'p egalarga ega bo'lishi mumkin, hamda son/hisob qiymat egalaridan biri bor bo'lgunga qadar yaroqliligini tekshirib turadi.</p>
+<p>O'zgarmas o'zgaruvchilar yordamida, <code>Rc&lt;T&gt;</code> o'qish uchun ma'lumotlarni dasturning ko'p joylari orasida ulashish imkonini beradi. Agar <code>Rc&lt;T&gt;</code> ko'p o'zgaruvchan referenslarga ega bo'lish imkonini bergan bo'lsa, siz 4-Bo'limda ko'rsatilganidek borrowing qoidalarini birini buzishingiz mumkin: ko'p o'zgaruchilar bir xil joyga borrow qilib data race va nomuvofiqliklarga sabab bo'lishi mumkin. Lekin ma'lumotni o'zrgatira olish foydalidir! keyingi bo'limda, biz ichki o'zgaruvchanlik shakli(pattern) va <code>RefCell&lt;T&gt;</code> turi bilan <code>Rc&lt;T&gt;</code> yordamida o'zgarmaslik cheklovi bilan ishlash ko'rib chiqamiz.</p>
 
                     </main>
 
