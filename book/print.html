@@ -12972,20 +12972,10 @@ count after c goes out of scope = 2
 <p><code>a</code>da <code>Rc&lt;List&gt;</code>ning referens soni 1 ekanligini ko'rishimiz mumkin; keyinchalik har safar biz <code>clone</code> ni chaqirganimizda, son 1ga ortib boraveradi. <code>c</code> o'z scope(doirasi)dan chiqib ketganida,referens soni 1ga kamayadi. <code>Rc::clone</code> funksiyasi yordamida referens sonini ortirish uchun chaqirganimizdek referens soni kamaytirish uchun hech qanday funksiyasini chaqirishimiz kerak bo'lmaydi, chunki <code>Drop</code> traitining implementatsiyasi <code>Rc&lt;T&gt;</code> qiymati o'z scope(doirasi)dan chiqqanda avtomatik ravishda referens sonini kamaytiradi. </p>
 <p><code>main</code> oxirida <code>b</code> va keyin <code>a</code>larning scope(doirasidan) chiqib, son/hisob 0ga tenglashib, <code>Rc&lt;List&gt;</code> to'liq tozalanganligini biz ushbu misolda ko'ra olmaymiz. <code>Rc&lt;T&gt;</code>ni ishlatish yordamida bitta qiymat ko'p egalarga ega bo'lishi mumkin, hamda son/hisob qiymat egalaridan biri bor bo'lgunga qadar yaroqliligini tekshirib turadi.</p>
 <p>O'zgarmas o'zgaruvchilar yordamida, <code>Rc&lt;T&gt;</code> o'qish uchun ma'lumotlarni dasturning ko'p joylari orasida ulashish imkonini beradi. Agar <code>Rc&lt;T&gt;</code> ko'p o'zgaruvchan referenslarga ega bo'lish imkonini bergan bo'lsa, siz 4-Bo'limda ko'rsatilganidek borrowing qoidalarini birini buzishingiz mumkin: ko'p o'zgaruchilar bir xil joyga borrow qilib data race va nomuvofiqliklarga sabab bo'lishi mumkin. Lekin ma'lumotni o'zrgatira olish foydalidir! keyingi bo'limda, biz ichki o'zgaruvchanlik shakli(pattern) va <code>RefCell&lt;T&gt;</code> turi bilan <code>Rc&lt;T&gt;</code> yordamida o'zgarmaslik cheklovi bilan ishlash ko'rib chiqamiz.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="refcellt-and-the-interior-mutability-pattern"><a class="header" href="#refcellt-and-the-interior-mutability-pattern"><code>RefCell&lt;T&gt;</code> and the Interior Mutability Pattern</a></h2>
-<p><em>Interior mutability</em> is a design pattern in Rust that allows you to mutate
-data even when there are immutable references to that data; normally, this
-action is disallowed by the borrowing rules. To mutate data, the pattern uses
-<code>unsafe</code> code inside a data structure to bend Rust’s usual rules that govern
-mutation and borrowing. Unsafe code indicates to the compiler that we’re
-checking the rules manually instead of relying on the compiler to check them
-for us; we will discuss unsafe code more in Chapter 19.</p>
-<p>We can use types that use the interior mutability pattern only when we can
-ensure that the borrowing rules will be followed at runtime, even though the
-compiler can’t guarantee that. The <code>unsafe</code> code involved is then wrapped in a
-safe API, and the outer type is still immutable.</p>
-<p>Let’s explore this concept by looking at the <code>RefCell&lt;T&gt;</code> type that follows the
-interior mutability pattern.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="refcellt-va-ichki-ozgaruvchanlik-shaklipattern"><a class="header" href="#refcellt-va-ichki-ozgaruvchanlik-shaklipattern"><code>RefCell&lt;T&gt;</code> va Ichki O'zgaruvchanlik Shakli(pattern)</a></h2>
+<p><em>Ichki o'zgaruvchanlik</em> bu Rustda ma'lumotlarga o'zgarmas referenslar mavjud bo'lganda ham ma'lumotni o'zgartirish imkonini beruvchi (dizayn) shakli/patternidir: odatda bu borrowing qoidalari bo'yicha esa taqiqlangan. Ma'lumotni o'zgaruvchan qilish uchun shakl/pattern Rustning o'zgaruvchanlik va borrowingni boshqaruchi oddiy qoidalarini chetlab o'tish uchun ma'lumotlar strukturasi ichiga <code>unsafe</code> kod ishlatiladi. Xavfsiz bo'lmagan kod bizning o'rnimizga kompilyatorga qoidalarni kompliyator yordamisiz tekshirayotganimizni ko'rsatadi; xavfsiz bo'lmagan kod haqida 19-bo'limda o'rganib chiqamiz.</p>
+<p>Biz ichki o'zgaruvchanlik shakli/patterni ishlatadigan turlardan faqatgina borrowing qoidalari runtimeda amal qilingaligi paytida ishlatishimiz mumkin, kompilyator bunga kafolat bera olmaydi. Keyin <code>unsafe</code> kod xavfsiz APIga ulanadi va tashqi tur o'zgarmasligicha qoladi.</p>
+<p>Keling ushbu tushunchani ichki o'zgaruvchanlik shakliga amal qiluvchi quyidagi <code>RefCell&lt;T&gt;</code> turiga qarab ko'rib chiqaylik.</p>
 <h3 id="enforcing-borrowing-rules-at-runtime-with-refcellt"><a class="header" href="#enforcing-borrowing-rules-at-runtime-with-refcellt">Enforcing Borrowing Rules at Runtime with <code>RefCell&lt;T&gt;</code></a></h3>
 <p>Unlike <code>Rc&lt;T&gt;</code>, the <code>RefCell&lt;T&gt;</code> type represents single ownership over the data
 it holds. So, what makes <code>RefCell&lt;T&gt;</code> different from a type like <code>Box&lt;T&gt;</code>?
