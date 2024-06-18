@@ -12976,14 +12976,11 @@ count after c goes out of scope = 2
 <p><em>Ichki o'zgaruvchanlik</em> bu Rustda ma'lumotlarga o'zgarmas referenslar mavjud bo'lganda ham ma'lumotni o'zgartirish imkonini beruvchi (dizayn) shakli/patternidir: odatda bu borrowing qoidalari bo'yicha esa taqiqlangan. Ma'lumotni o'zgaruvchan qilish uchun shakl/pattern Rustning o'zgaruvchanlik va borrowingni boshqaruchi oddiy qoidalarini chetlab o'tish uchun ma'lumotlar strukturasi ichiga <code>unsafe</code> kod ishlatiladi. Xavfsiz bo'lmagan kod bizning o'rnimizga kompilyatorga qoidalarni kompliyator yordamisiz tekshirayotganimizni ko'rsatadi; xavfsiz bo'lmagan kod haqida 19-bo'limda o'rganib chiqamiz.</p>
 <p>Biz ichki o'zgaruvchanlik shakli/patterni ishlatadigan turlardan faqatgina borrowing qoidalari runtimeda amal qilingaligi paytida ishlatishimiz mumkin, kompilyator bunga kafolat bera olmaydi. Keyin <code>unsafe</code> kod xavfsiz APIga ulanadi va tashqi tur o'zgarmasligicha qoladi.</p>
 <p>Keling ushbu tushunchani ichki o'zgaruvchanlik shakliga amal qiluvchi quyidagi <code>RefCell&lt;T&gt;</code> turiga qarab ko'rib chiqaylik.</p>
-<h3 id="enforcing-borrowing-rules-at-runtime-with-refcellt"><a class="header" href="#enforcing-borrowing-rules-at-runtime-with-refcellt">Enforcing Borrowing Rules at Runtime with <code>RefCell&lt;T&gt;</code></a></h3>
-<p>Unlike <code>Rc&lt;T&gt;</code>, the <code>RefCell&lt;T&gt;</code> type represents single ownership over the data
-it holds. So, what makes <code>RefCell&lt;T&gt;</code> different from a type like <code>Box&lt;T&gt;</code>?
-Recall the borrowing rules you learned in Chapter 4:</p>
+<h3 id="enforcing-borrowing-rules-at-runtime-with-refcellt-yordamida-borrowing-qoidalarini-runtime-vaqtida-kuch-bilan-ishlatish"><a class="header" href="#enforcing-borrowing-rules-at-runtime-with-refcellt-yordamida-borrowing-qoidalarini-runtime-vaqtida-kuch-bilan-ishlatish">Enforcing Borrowing Rules at Runtime with <code>RefCell&lt;T&gt;</code> yordamida Borrowing qoidalarini Runtime vaqtida kuch bilan ishlatish</a></h3>
+<p><code>Rc&lt;T&gt;</code>lidan faqrli o'laroq, <code>RefCell&lt;T&gt;</code> turi o'zi egalik qilib turgan ma'lumotda yagona egalikni namoyish etadi. Xo'sh, <code>RefCell&lt;T&gt;</code> turi <code>Box&lt;T&gt;</code> turidan nimasi bilan farq qiladi? 4-bo'limda o'tilgan borrowing qoidalarini esga olaylik: </p>
 <ul>
-<li>At any given time, you can have <em>either</em> (but not both) one mutable reference
-or any number of immutable references.</li>
-<li>References must always be valid.</li>
+<li>Xohlagan belgilangan vaqtda, siz <em>yoki</em> (ikkalasini bir vaqtda ega bo'lish mumkin emas)bitta        o'zgaruvchan referens yoki xohlagan sondagi o'zgarmas referenslarga ega bo'lishingiz mumkin. </li>
+<li>Referenslar har doim yaroqli bo'lishi shart</li>
 </ul>
 <p>With references and <code>Box&lt;T&gt;</code>, the borrowing rules’ invariants are enforced at
 compile time. With <code>RefCell&lt;T&gt;</code>, these invariants are enforced <em>at runtime</em>.
