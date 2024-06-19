@@ -1,1 +1,1 @@
-# deploy
+# Deployed version of resources
