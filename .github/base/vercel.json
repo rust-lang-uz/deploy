@@ -1,0 +1,22 @@
+{
+    "version": 2,
+    "name": "rust-docs",
+    "public": true,
+    "redirects": [
+        {
+            "source": "/",
+            "destination": "https://rust-lang.uz",
+            "permanent": false
+        },
+        {
+            "source": "/book",
+            "destination": "https://doc.rust-lang.uz/book/",
+            "permanent": false
+        },
+        {
+            "source": "/rust-by-example",
+            "destination": "https://doc.rust-lang.uz/rust-by-example/",
+            "permanent": false
+        }
+    ]
+}
