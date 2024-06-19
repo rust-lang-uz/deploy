@@ -186,10 +186,7 @@
 <li>Xohlagan belgilangan vaqtda, siz <em>yoki</em> (ikkalasini bir vaqtda ega bo'lish mumkin emas)bitta        o'zgaruvchan referens yoki xohlagan sondagi o'zgarmas referenslarga ega bo'lishingiz mumkin. </li>
 <li>Referenslar har doim yaroqli bo'lishi shart</li>
 </ul>
-<p>With references and <code>Box&lt;T&gt;</code>, the borrowing rules’ invariants are enforced at
-compile time. With <code>RefCell&lt;T&gt;</code>, these invariants are enforced <em>at runtime</em>.
-With references, if you break these rules, you’ll get a compiler error. With
-<code>RefCell&lt;T&gt;</code>, if you break these rules, your program will panic and exit.</p>
+<p>Referenslar va <code>Box&lt;T&gt;</code> bilan, borrowing qoidalarining kompilyatsiya vaqtida o'zgarmaslar kuchga kiradi. <code>RefCell&lt;T&gt;</code> bilan esa ushbu o'zgarmaslar <em>runtime paytida</em> kuchga kiradi. Referenslar bilan, agar siz ushbu qoidalarni buzsangiz, sizda kompilyator xatoligi yuzaga keladi. <code>RefCell&lt;T&gt;</code> bilan suhbu qoidalarni buzganingizda, sizning dasturingizda panic vujudga kelib, dastur chiqib ketadi.</p>
 <p>The advantages of checking the borrowing rules at compile time are that errors
 will be caught sooner in the development process, and there is no impact on
 runtime performance because all the analysis is completed beforehand. For those
