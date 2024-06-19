@@ -66,6 +66,12 @@ jobs:
           rm -rf rust-example
           rm -rf .tools
   
+      - name: Copy files from base
+        run: |
+          ls -la .github/base
+          cp -r .github/base/* .
+          ls -la .
+
       - name: Setup git credentials
         run: |
           # Use github actions default username and email
