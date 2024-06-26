@@ -198,14 +198,13 @@ majority of cases, which is why this is Rust’s default.</p>
 <p><code>RefCell&lt;T&gt;</code> <code>Rc&lt;T&gt;</code>ga o'xshab bitta potokli (oqimli) ssenariylarda ishlatilinadi va agar siz ko'p potokli (oqimli) holatda ishlatsangiz kompilyatsiya vaqtidagi xatolikni yuzaga keltiradi. Biz <code>RefCell&lt;T&gt;</code>ni ko'p potokli (oqimli) dasturda qanday qilib funksionalligini olishni 16-bo'limda ko'rib chiqamiz.</p>
 <p>Quyida takrorlash uchun <code>Box&lt;T&gt;</code>, <code>Rc&lt;T&gt;</code>, yoki <code>RefCell&lt;T&gt;</code>ni tanlash sabablari:</p>
 <ul>
-<li><code>Rc&lt;T&gt;</code> enables multiple owners of the same data; <code>Box&lt;T&gt;</code> and <code>RefCell&lt;T&gt;</code>
-have single owners.</li>
-<li><code>Box&lt;T&gt;</code> allows immutable or mutable borrows checked at compile time; <code>Rc&lt;T&gt;</code>
-allows only immutable borrows checked at compile time; <code>RefCell&lt;T&gt;</code> allows
-immutable or mutable borrows checked at runtime.</li>
-<li>Because <code>RefCell&lt;T&gt;</code> allows mutable borrows checked at runtime, you can
-mutate the value inside the <code>RefCell&lt;T&gt;</code> even when the <code>RefCell&lt;T&gt;</code> is
-immutable.</li>
+<li><code>Rc&lt;T&gt;</code> bitta ma'lumotga ko'p egalarga ega bo'lish imkonini beradi; <code>Box&lt;T&gt;</code> va <code>RefCell&lt;T&gt;</code>
+esa yagona egaga egadirlar;</li>
+<li><code>Box&lt;T&gt;</code> kompilyatsiya vaqtida o'zgaruvchan va o'zgarmas borrowlarni tekshrilishini ta'minlaydi;
+<code>Rc&lt;T&gt;</code> kompilyatsiya vaqtida faqat o'zgarmas borrowlarni tekshrilishini ta'minlaydi; 
+<code>RefCell&lt;T&gt;</code> runtimeda o'zgaruvchan va o'zgarmas borrowlarni tekshrilishini ta'minlaydi.</li>
+<li>Because <code>RefCell&lt;T&gt;</code> runtimeda o'zgaruvchan borrowlar tekshirilishi ta'minlaydi, agar
+<code>RefCell&lt;T&gt;</code> o'zgarmas bo'lsada <code>RefCell&lt;T&gt;</code> ichida qiymatni o'zgaruvchan qilishingiz mumkin.</li>
 </ul>
 <p>Mutating the value inside an immutable value is the <em>interior mutability</em>
 pattern. Let’s look at a situation in which interior mutability is useful and
