@@ -13048,14 +13048,14 @@ obyektlar kabi ish bajaruvchi struct yaratishingiz mumkin. </p>
 kutubxona yaratamiz va joriy qiymat maksimal qiymatga qanchalik yaqinligiga qarab bizga
 xabar jo'natib turadi. Ushbu kutubxona foydalanuvchi uchun ruxsat etilgan API 'call'lar sonini
 kuzatib borish uchun ishlatilishi mumkin, bu ishlatish mumkin bo'lgan bir misol.</p>
-<p>Our library will only provide the functionality of tracking how close to the
-maximum a value is and what the messages should be at what times. Applications
-that use our library will be expected to provide the mechanism for sending the
-messages: the application could put a message in the application, send an
-email, send a text message, or something else. The library doesn’t need to know
-that detail. All it needs is something that implements a trait we’ll provide
-called <code>Messenger</code>. Listing 15-20 shows the library code:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p>Bizning kutubxonamiz faqatgina qiymatni maksimal qiymatga qanchalik yaqin ekanligi
+va qaysi vaqtda qaysi xabar jo'natilishini kuzatib turish imkonini beredi. Bizning
+kutubxonamizdan foydalanadigan ilovalar xabar jo'natish mexanizmini ta'minlashini
+talab qiladi, ya'ni ilova xabarni ilova ichida, email orqali, matnli xabar ko'rinishida
+yoki boshqa ko'rinishda yuborishi mumkin. Kutubxona ushbu tafsilotlarni bilishi talab etilmaydi.
+Kutubxona uchun biz tomonimizdan qo'llaniladigan <code>Messenger</code> traitini implementatsiya qiladigan
+narsa kerak xolos.</p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub trait Messenger {
     fn send(&amp;self, msg: &amp;str);
 }
@@ -13094,25 +13094,23 @@ where
         }
     }
 }</code></pre>
-<p><span class="caption">Listing 15-20: A library to keep track of how close a
-value is to a maximum value and warn when the value is at certain levels</span></p>
-<p>One important part of this code is that the <code>Messenger</code> trait has one method
-called <code>send</code> that takes an immutable reference to <code>self</code> and the text of the
-message. This trait is the interface our mock object needs to implement so that
-the mock can be used in the same way a real object is. The other important part
-is that we want to test the behavior of the <code>set_value</code> method on the
-<code>LimitTracker</code>. We can change what we pass in for the <code>value</code> parameter, but
-<code>set_value</code> doesn’t return anything for us to make assertions on. We want to be
-able to say that if we create a <code>LimitTracker</code> with something that implements
-the <code>Messenger</code> trait and a particular value for <code>max</code>, when we pass different
-numbers for <code>value</code>, the messenger is told to send the appropriate messages.</p>
-<p>We need a mock object that, instead of sending an email or text message when we
-call <code>send</code>, will only keep track of the messages it’s told to send. We can
-create a new instance of the mock object, create a <code>LimitTracker</code> that uses the
-mock object, call the <code>set_value</code> method on <code>LimitTracker</code>, and then check that
-the mock object has the messages we expect. Listing 15-21 shows an attempt to
-implement a mock object to do just that, but the borrow checker won’t allow it:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">15-20-ro'yxat: Qiymatni qanchalik maksimal qiymatga yaqinligini kuzatish va kerakli darajaga 
+yetganda ogohlantiruvchi kutubxona</span></p>
+<p>Ushbu kodning e'tiborli tomoni shundaki <code>Messenger</code> traitining <code>send</code> nomli metodi 
+xabarning matni hamda<code>self</code>ga o'zgarmas referensni oladi. Ushbu trait bizning soxta 
+obyektimizning implementatisiyasi uchun kerak bo'lgan interfeys hisoblanadi, shu 
+holatda soxta obyekt haqiqiy obyektga o'xshab ishlatilishi mumkin. Yana bir muhim 
+tomoni shundaki, biz <code>set_value</code>ni ko'rinishini <code>LimitTracker</code> orqali ko'rishimiz mumkin.<br />
+Biz xohlaganimizcha o'tkazayotganimizni <code>value</code> parametri uchun o'zgartirishimiz mumkin, 
+lekin <code>set_value</code> biz da'vo qilishimiz mumkin bo'lgan narsani return qilmaydi. Agar biz 
+<code>Messenger</code> traitini implementatisiya qiladigan va ma'lum bir qiymatga ega bo'lgan <code>LimitTracker</code> 
+yaratsak, <code>value</code> uchun turli raqamlar berganimizda, xabar kerakli xabar ko'rinishida jo'natildi 
+deya olishni xohlaymiz.</p>
+<p>Pochta orqali yoki matn xabar orqali xabar jo'natish o'rniga biz <code>send</code> ni ishga tushurib yuborilishi kerak bo'lgan xabarni 
+kuzatish uchun soxta obyekt kerak bo'ladi. Obyektning yangi namunasini yaratishimiz mumkin, soxta obyektdan foydalanadigan 
+<code>LimitTracker</code> yaratib, <code>LimitTracker</code>da <code>set_value</code> metodini qo'llashimiz va soxta obyekt biz kutgan xabar bor yoki yo'qligin 
+tekshirib ko'ramiz. 15-21-ro'yxat soxta obyekt implementatsiya qilishga urinishi, lekin borrow tekshiruvchi ruxsat bermasligi ko'rsatilgan: </p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">pub trait Messenger {
 </span><span class="boring">    fn send(&amp;self, msg: &amp;str);
 </span><span class="boring">}
@@ -13184,25 +13182,10 @@ mod tests {
         assert_eq!(mock_messenger.sent_messages.len(), 1);
     }
 }</code></pre>
-<p><span class="caption">Listing 15-21: An attempt to implement a <code>MockMessenger</code>
-that isn’t allowed by the borrow checker</span></p>
-<p>This test code defines a <code>MockMessenger</code> struct that has a <code>sent_messages</code>
-field with a <code>Vec</code> of <code>String</code> values to keep track of the messages it’s told
-to send. We also define an associated function <code>new</code> to make it convenient to
-create new <code>MockMessenger</code> values that start with an empty list of messages. We
-then implement the <code>Messenger</code> trait for <code>MockMessenger</code> so we can give a
-<code>MockMessenger</code> to a <code>LimitTracker</code>. In the definition of the <code>send</code> method, we
-take the message passed in as a parameter and store it in the <code>MockMessenger</code>
-list of <code>sent_messages</code>.</p>
-<p>In the test, we’re testing what happens when the <code>LimitTracker</code> is told to set
-<code>value</code> to something that is more than 75 percent of the <code>max</code> value. First, we
-create a new <code>MockMessenger</code>, which will start with an empty list of messages.
-Then we create a new <code>LimitTracker</code> and give it a reference to the new
-<code>MockMessenger</code> and a <code>max</code> value of 100. We call the <code>set_value</code> method on the
-<code>LimitTracker</code> with a value of 80, which is more than 75 percent of 100. Then
-we assert that the list of messages that the <code>MockMessenger</code> is keeping track
-of should now have one message in it.</p>
-<p>However, there’s one problem with this test, as shown here:</p>
+<p><span class="caption">15-21-ro'yxat: <code>MockMessenger</code>ning implementatsiya qilishga urinishi, ammo borrow checker bunga ruxsat bermayotgaligi ko'rsatilgan</span></p>
+<p>Ushbu test kodimiz <code>Sent_messages</code> maydoniga ega boʻlgan <code>MockMessenger</code> strukturasini belgilaydi va u <code>Vec</code>ga ega bo'lgan <code>String</code> qiymatlari bilan joʻnatilishi kerak boʻlgan xabarlarni kuzatib boradi. Shuningdek, biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi <code>MockMessenger</code> qiymatlarini yaratishni qulay qilish uchun <code>yangi</code> funksiyasini aniqlaymiz. Biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi MockMessenger qiymatlarini yaratamiz. Keyin biz <code>LimitTracker</code> ga <code>MockMessenger</code>ni berishimiz uchun <code>MockMessenger</code> uchun “Messenger” xususiyatini amalga oshiramiz. <code>send</code> usulining taʼrifida biz uzatilgan xabarni parametr sifatida qabul qilamiz va uni <code>sent_messages</code>ning <code>MockMessenger</code> roʻyxatida saqlaymiz. </p>
+<p>Sinovda biz <code>LimitTracker</code>ga <code>value</code>ni <code>max</code> qiymatining 75 foizidan ko‘prog‘iga o‘rnatish buyurilganda nima sodir bo‘lishini sinab ko‘ramiz. Birinchidan, biz yangi <code>MockMessenger</code> ni yaratamiz, u xabarlarning bo'sh ro'yxati bilan boshlanadi. Keyin biz yangi <code>LimitTracker</code> yaratamiz va unga yangi <code>MockMessenger</code> va <code>max</code> qiymati 100 ga teng reference beramiz. 100dan 75dan katta bo'lgan, 80ga teng bo'lgan qiymatli <code>LimitTracker</code>dagi <code>set_value</code> metodini ishga tushiramiz. Keyin biz <code>MockMessenger</code> kuzatayotgan xabarlar roʻyxatida bitta xabar boʻlishi kerakligini taʼkidlaymiz.</p>
+<p>Biroq, bu testda ko'rsatilganidek, bitta muammo bor:</p>
 <pre><code class="language-console">$ cargo test
    Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
 error[E0596]: cannot borrow `self.sent_messages` as mutable, as it is behind a `&amp;` reference
@@ -13218,16 +13201,9 @@ For more information about this error, try `rustc --explain E0596`.
 error: could not compile `limit-tracker` due to previous error
 warning: build failed, waiting for other jobs to finish...
 </code></pre>
-<p>We can’t modify the <code>MockMessenger</code> to keep track of the messages, because the
-<code>send</code> method takes an immutable reference to <code>self</code>. We also can’t take the
-suggestion from the error text to use <code>&amp;mut self</code> instead, because then the
-signature of <code>send</code> wouldn’t match the signature in the <code>Messenger</code> trait
-definition (feel free to try and see what error message you get).</p>
-<p>This is a situation in which interior mutability can help! We’ll store the
-<code>sent_messages</code> within a <code>RefCell&lt;T&gt;</code>, and then the <code>send</code> method will be
-able to modify <code>sent_messages</code> to store the messages we’ve seen. Listing 15-22
-shows what that looks like:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p>Biz <code>MockMessenger</code>ni xabarlarni kuzatib borish uchun o‘zgartira olmaymiz, chunki <code>send</code> metodi <code>self</code>ga o'zgarmas refernce oladi. Shuningdek, xato matnidagi <code>&amp;mut self</code> dan foydalanish taklifini ham qabul qila olmaymiz, chunki <code>send</code> signaturasi <code>Messenger</code> traiti taʼrifidagi imzoga toʻgʻri kelmas edi (urunib ko'rganingizda qanaqa xatolik (error message) bo'lishini ko'rishingiz mumkin).</p>
+<p>Ushbu holatda bizga ichgi o'zgaruvchanlik yordam berishi mumkin! Biz <code>RefCell&lt;T&gt;</code> orqali <code>sent_messages</code>ni joylyamiz, va keyin biz ko'rgan xabarlarni joylashtirish uchun <code>send</code> metodi <code>sent_messages</code>ni o'zgartira oladi. 15-22-ro'yxat bu qanday ko'rinishda bo'lishini ko'rsatadi:</p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Messenger {
 </span><span class="boring">    fn send(&amp;self, msg: &amp;str);
 </span><span class="boring">}
@@ -13301,41 +13277,18 @@ mod tests {
         assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
     }
 }</code></pre>
-<p><span class="caption">Listing 15-22: Using <code>RefCell&lt;T&gt;</code> to mutate an inner
-value while the outer value is considered immutable</span></p>
-<p>The <code>sent_messages</code> field is now of type <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> instead of
-<code>Vec&lt;String&gt;</code>. In the <code>new</code> function, we create a new <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>
-instance around the empty vector.</p>
-<p>For the implementation of the <code>send</code> method, the first parameter is still an
-immutable borrow of <code>self</code>, which matches the trait definition. We call
-<code>borrow_mut</code> on the <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> in <code>self.sent_messages</code> to get a
-mutable reference to the value inside the <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>, which is the
-vector. Then we can call <code>push</code> on the mutable reference to the vector to keep
-track of the messages sent during the test.</p>
-<p>The last change we have to make is in the assertion: to see how many items are
-in the inner vector, we call <code>borrow</code> on the <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> to get an
-immutable reference to the vector.</p>
-<p>Now that you’ve seen how to use <code>RefCell&lt;T&gt;</code>, let’s dig into how it works!</p>
-<h4 id="keeping-track-of-borrows-at-runtime-with-refcellt"><a class="header" href="#keeping-track-of-borrows-at-runtime-with-refcellt">Keeping Track of Borrows at Runtime with <code>RefCell&lt;T&gt;</code></a></h4>
-<p>When creating immutable and mutable references, we use the <code>&amp;</code> and <code>&amp;mut</code>
-syntax, respectively. With <code>RefCell&lt;T&gt;</code>, we use the <code>borrow</code> and <code>borrow_mut</code>
-methods, which are part of the safe API that belongs to <code>RefCell&lt;T&gt;</code>. The
-<code>borrow</code> method returns the smart pointer type <code>Ref&lt;T&gt;</code>, and <code>borrow_mut</code>
-returns the smart pointer type <code>RefMut&lt;T&gt;</code>. Both types implement <code>Deref</code>, so we
-can treat them like regular references.</p>
-<p>The <code>RefCell&lt;T&gt;</code> keeps track of how many <code>Ref&lt;T&gt;</code> and <code>RefMut&lt;T&gt;</code> smart
-pointers are currently active. Every time we call <code>borrow</code>, the <code>RefCell&lt;T&gt;</code>
-increases its count of how many immutable borrows are active. When a <code>Ref&lt;T&gt;</code>
-value goes out of scope, the count of immutable borrows goes down by one. Just
-like the compile-time borrowing rules, <code>RefCell&lt;T&gt;</code> lets us have many immutable
-borrows or one mutable borrow at any point in time.</p>
-<p>If we try to violate these rules, rather than getting a compiler error as we
-would with references, the implementation of <code>RefCell&lt;T&gt;</code> will panic at
-runtime. Listing 15-23 shows a modification of the implementation of <code>send</code> in
-Listing 15-22. We’re deliberately trying to create two mutable borrows active
-for the same scope to illustrate that <code>RefCell&lt;T&gt;</code> prevents us from doing this
-at runtime.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">15-22-ro'yxat: tashqi qiymat o'zgarmas bo'lganida <code>RefCell&lt;T&gt;</code> yordamida ichki qiymatni o'zgaruvchan qilish</span></p>
+<p><code>sent_messages</code> maydoni endi <code>Vec&lt;String&gt;</code> oʻrniga <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> turiga ega. 
+<code>new</code> funksiyada biz yangisini yaratamiz <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> bo'sh vektor atrofidagi misol.
+<code>new</code> funksiyasida biz yangi <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> instancesini bo'sh vektor atrofida yaratib olamiz.</p>
+<p><code>send</code> metodini ishga tushirishda, traitning ma'no/tarifiga o'xshash bo'lgan birinchi parametr <code>self</code>ning o'zgarmas borrowi bo'lib qolaveradi. Vvektor hisoblangan <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>ninig ichidagi qiymatga o'zgaruvchan reference olish uchun <code>self.sent_messages</code>ning <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>dagi <code>borrow_mut</code>ni ishga tushuramiz. Keyin test paytida yuborilgan xabarlarni kuzatib borish uchun vektorga o'zgaruvchan referenceda <code>push</code> ni ishga tushirishimiz mumkin.</p>
+<p>Tasdiqlash uchun biz qilishimiz kerak bo'lgan oxirgi o'zgarish bu: ichki vektor ichida qancha itemlar borligini ko'rish uchun, vektorga o'zgarmas refrence olish uchun<code>RefCell&lt;Vec&lt;String&gt;&gt;</code>dagi <code>borrow</code>ni ishga tushiramiz.</p>
+<p><code>RefCell&lt;T&gt;</code>dan qanday ishlatish mumkiniligi bilan tanishdik, keling qanday ishlashi haqida o'raganib chiqaylik.</p>
+<h4 id="runtime-vaqtidan-refcellt-yordamida-borrowlarni-kuzatish"><a class="header" href="#runtime-vaqtidan-refcellt-yordamida-borrowlarni-kuzatish">Runtime vaqtidan <code>RefCell&lt;T&gt;</code> yordamida Borrowlarni kuzatish</a></h4>
+<p>O'zgarmas va o'zgaruvchan referencelarni yaratishda biz mos ravishda <code>&amp;</code> va <code>&amp;mut</code> sintaksisidan foydalanamiz. <code>RefCell&lt;T&gt;</code> bilan biz <code>RefCell&lt;T&gt;</code>ga tegishli xavfsiz API tarkibiga kiruvchi <code>borrow</code> va <code>borrow_mut</code> usullaridan foydalanamiz. <code>borrow</code> metodi <code>Ref&lt;T&gt;</code> smart pointer turini, <code>borrow_mut</code> esa <code>RefMut&lt;T&gt;</code> smart pointer turini qaytaradi. Ikkala tur ham <code>Deref</code> ni implementatsiya qiladi, shuning uchun biz ularni/doimiy oddiy reference kabi ko'rib chiqishimiz mumkin.</p>
+<p><code>RefCell&lt;T&gt;</code> hozirda qancha <code>Ref&lt;T&gt;</code> va <code>RefMut&lt;T&gt;</code> smart pointerlari faol ekanligini kuzatib boradi. Har safar biz <code>borrow</code> ishga tushirganimizda, <code>RefCell&lt;T&gt;</code> qancha o'zgarmas borrowlar faolligini oshiradi. Agar <code>Ref&lt;T&gt;</code> qiymati chegarasidan chiqib ketsa, o'zgarmas borrowlar soni bittaga kamayadi. Kompilyatsiya vaqtidagi borrowing qoidalari kabi, <code>RefCell&lt;T&gt;</code> bizga istalgan vaqtda koʻp oʻzgarmas yoki bitta oʻzgaruvchan borrowga ega boʻlish imkonini beradi.</p>
+<p>Agar biz referencelarda bo'lgani kabi kompilyator xatosini olishdan ko'ra, ushbu qoidalarni buzishga harakat qilsak, <code>RefCell&lt;T&gt;</code> amalga oshirilishi runtime vaqtida panic qo'yadi. 15-23 ro'yxatda 15-22 ro'yxatda <code>send</code> ning implementatsiyasining modifikatsiyasi ko'rsatilgan. <code>RefCell&lt;T&gt;</code> runtimeda buni amalga oshirishga to'sqinlik qilishini ko‘rsatish uchun biz ataylab bir xil qamrov uchun faol ikkita o‘zgaruvchan borrowni yaratishga harakat qilapmiz.</p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust ignore panics"><span class="boring">pub trait Messenger {
 </span><span class="boring">    fn send(&amp;self, msg: &amp;str);
 </span><span class="boring">}
@@ -13414,11 +13367,7 @@ at runtime.</p>
 </span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 15-23: Creating two mutable references in the
 same scope to see that <code>RefCell&lt;T&gt;</code> will panic</span></p>
-<p>We create a variable <code>one_borrow</code> for the <code>RefMut&lt;T&gt;</code> smart pointer returned
-from <code>borrow_mut</code>. Then we create another mutable borrow in the same way in the
-variable <code>two_borrow</code>. This makes two mutable references in the same scope,
-which isn’t allowed. When we run the tests for our library, the code in Listing
-15-23 will compile without any errors, but the test will fail:</p>
+<p><code>borrow_mut</code>dan qaytarilgan <code>RefMut&lt;T&gt;</code> smart pointer uchun <code>one_borrow</code> o'zgaruvchisini yaratamiz. Keyin <code>two_borrow</code> o'zgaruvchisida xuddi shu tarzda boshqa o'zgaruvchan borrow hosil qilamiz. Bu bir scopeda ikkita o'zgaruvchan reference qiladi, bu aslida mumkin emas. Kutubxonamiz uchun testlarni o'tkazganimizda, 15-23 ro'yxatdagi kod hech qanday xatosiz kompilyatsiya qilinadi, ammo test muvaffaqiyatsiz bo'ladi:</p>
 <pre><code class="language-console">$ cargo test
    Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
     Finished test [unoptimized + debuginfo] target(s) in 0.91s
@@ -13441,31 +13390,18 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Notice that the code panicked with the message <code>already borrowed: BorrowMutError</code>. This is how <code>RefCell&lt;T&gt;</code> handles violations of the borrowing
-rules at runtime.</p>
-<p>Choosing to catch borrowing errors at runtime rather than compile time, as
-we’ve done here, means you’d potentially be finding mistakes in your code later
-in the development process: possibly not until your code was deployed to
-production. Also, your code would incur a small runtime performance penalty as
-a result of keeping track of the borrows at runtime rather than compile time.
-However, using <code>RefCell&lt;T&gt;</code> makes it possible to write a mock object that can
-modify itself to keep track of the messages it has seen while you’re using it
-in a context where only immutable values are allowed. You can use <code>RefCell&lt;T&gt;</code>
-despite its trade-offs to get more functionality than regular references
-provide.</p>
-<h3 id="having-multiple-owners-of-mutable-data-by-combining-rct-and-refcellt"><a class="header" href="#having-multiple-owners-of-mutable-data-by-combining-rct-and-refcellt">Having Multiple Owners of Mutable Data by Combining <code>Rc&lt;T&gt;</code> and <code>RefCell&lt;T&gt;</code></a></h3>
-<p>A common way to use <code>RefCell&lt;T&gt;</code> is in combination with <code>Rc&lt;T&gt;</code>. Recall that
-<code>Rc&lt;T&gt;</code> lets you have multiple owners of some data, but it only gives immutable
-access to that data. If you have an <code>Rc&lt;T&gt;</code> that holds a <code>RefCell&lt;T&gt;</code>, you can
-get a value that can have multiple owners <em>and</em> that you can mutate!</p>
-<p>For example, recall the cons list example in Listing 15-18 where we used
-<code>Rc&lt;T&gt;</code> to allow multiple lists to share ownership of another list. Because
-<code>Rc&lt;T&gt;</code> holds only immutable values, we can’t change any of the values in the
-list once we’ve created them. Let’s add in <code>RefCell&lt;T&gt;</code> to gain the ability to
-change the values in the lists. Listing 15-24 shows that by using a
-<code>RefCell&lt;T&gt;</code> in the <code>Cons</code> definition, we can modify the value stored in all
-the lists:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>E'tibor bering ushbu kod quyidagi panicni keltirib chiqardi <code>already borrowed: BorrowMutError</code>. Bu <code>RefCell&lt;T&gt;</code>runtime vaqtida borrowing qoidalari buzilishini boshqariishini ko'rsak bo'ladi</p>
+<p>Ko'p marta qilganimizdek, ya'ni kompilyatsiya vaqtida emas, balki ish vaqtida borriwing 
+xatolarini ko'rish, ishlab chiqish jarayonida keyinchalik kodingizda 
+xatolar topishingiz mumkinligini anglatadi, ya'ni sizning kodingiz productionga 
+deploy qilinmagungacha. Bundan tashqari, sizning kodingiz kompilyatsiya vaqtida emas, aksincha runtime 
+vaqtida borrowlarni kuzatib borishi natijasida kichik runtime xatolik bo'lishi mumkin. 
+Lekin, <code>RefCell&lt;T&gt;</code>dan foydalanish faqat o'zgaruvchan qiymatlar mumkin bo'lgan kontekstdan foydalanayotgan
+vaqtingizdagi xabarlarni kuzatish uchun o'zini o'zgaritira oladigan soxta obyektni yaratish imkonini beradi. Doimiy referencelardan ko'ra ko'proq funksionallikni olishni xohlasangiz <code>RefCell&lt;T&gt;</code>dan foydalanishingiz mumkin, uning farqli tomomnlariga qaramasdan ham.</p>
+<h3 id="rct-va-refcelltni-birlashtirish-orqali-ozgaruvchan-malumotlarning-bir-nechta-egalariga-ega-bolish"><a class="header" href="#rct-va-refcelltni-birlashtirish-orqali-ozgaruvchan-malumotlarning-bir-nechta-egalariga-ega-bolish"><code>Rc&lt;T&gt;</code> va <code>RefCell&lt;T&gt;</code>ni birlashtirish orqali o<code>zgaruvchan ma</code>lumotlarning bir nechta egalariga ega bo`lish</a></h3>
+<p><code>RefCell&lt;T&gt;</code> dan foydalanishning keng tarqalgan usuli <code>Rc&lt;T&gt;</code> bilan kombinatsiyadir. Eslatib o'tamiz, <code>Rc&lt;T&gt;</code> sizga ba'zi ma'lumotlarning bir nechta egalariga ega bo'lish imkonini beradi, lekin u faqat ushbu ma'lumotlarga o'zgarmas ruxsat beradi. Agar sizda <code>RefCell&lt;T&gt;</code> ga ega <code>Rc&lt;T&gt;</code> boʻlsa, siz bir nechta egalari boʻlishi mumkin boʻlgan <em>va</em> siz o'zgartira oladigan qiymatni olishingiz mumkin!</p>
+<p>Misol uchun, 15-18-sonli ro'yxatdagi kamchiliklar ro'yxati misolini eslang, bu ro'yxatda bir nechta ro'yxatlarga boshqa ro'yxat egaligini ulashishga ruxsat berish uchun <code>Rc&lt;T&gt;</code> dan foydalanganmiz. <code>Rc&lt;T&gt;</code> faqat oʻzgarmas qiymatlarga ega boʻlgani uchun biz ularni yaratganimizdan soʻng biz roʻyxatdagi qiymatlarni oʻzgartira olmaymiz. Ro'yxatlardagi qiymatlarni o'zgartirish imkoniyatiga ega bo'lish uchun <code>RefCell&lt;T&gt;</code> ni qo'shaylik. 15-24-ro'yxat shuni ko'rsatadiki, <code>Cons</code> ta'rifida <code>RefCell&lt;T&gt;</code> dan foydalanib, biz barcha ro'yxatlarda saqlangan qiymatni o'zgartirishimiz mumkin:</p>
+<p><span class="filename">src/main.rs nomli fayl:</span></p>
 <pre><pre class="playground"><code class="language-rust">#[derive(Debug)]
 enum List {
     Cons(Rc&lt;RefCell&lt;i32&gt;&gt;, Rc&lt;List&gt;),
@@ -13490,25 +13426,11 @@ fn main() {
     println!(&quot;b after = {:?}&quot;, b);
     println!(&quot;c after = {:?}&quot;, c);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-24: Using <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> to create a
-<code>List</code> that we can mutate</span></p>
-<p>We create a value that is an instance of <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> and store it in a
-variable named <code>value</code> so we can access it directly later. Then we create a
-<code>List</code> in <code>a</code> with a <code>Cons</code> variant that holds <code>value</code>. We need to clone
-<code>value</code> so both <code>a</code> and <code>value</code> have ownership of the inner <code>5</code> value rather
-than transferring ownership from <code>value</code> to <code>a</code> or having <code>a</code> borrow from
-<code>value</code>.</p>
-<p>We wrap the list <code>a</code> in an <code>Rc&lt;T&gt;</code> so when we create lists <code>b</code> and <code>c</code>, they
-can both refer to <code>a</code>, which is what we did in Listing 15-18.</p>
-<p>After we’ve created the lists in <code>a</code>, <code>b</code>, and <code>c</code>, we want to add 10 to the
-value in <code>value</code>. We do this by calling <code>borrow_mut</code> on <code>value</code>, which uses the
-automatic dereferencing feature we discussed in Chapter 5 (see the section
-<a href="ch05-03-method-syntax.html#wheres-the---operator">“Where’s the <code>-&gt;</code> Operator?”</a><!-- ignore -->) to
-dereference the <code>Rc&lt;T&gt;</code> to the inner <code>RefCell&lt;T&gt;</code> value. The <code>borrow_mut</code>
-method returns a <code>RefMut&lt;T&gt;</code> smart pointer, and we use the dereference operator
-on it and change the inner value.</p>
-<p>When we print <code>a</code>, <code>b</code>, and <code>c</code>, we can see that they all have the modified
-value of 15 rather than 5:</p>
+<p><span class="caption">15-24-ro'yxat: <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> yordamida o'zgaruvchan <code>List</code> yaratish</span></p>
+<p>Keyinchalik to'g'ridan-to'g'ri foydalana olishimiz mumkin bo'lgan <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> namunasi (instance) bo'lgan qiymatni yaratamiz <code>value</code> nomli o'zgaruvchiga joylashtiramiz. Keyin <code>a</code> bilan birga <code>value</code>ni o'z ichiga olgan <code>Cons</code> variantida <code>List</code> yaratamiz. <code>value</code>ni klonlashimiz kerak bo'ladi, shunda <code>value</code>dan <code>a</code>ga ownershipni (egalik) berishdan yoki <code>value</code>dan <code>a</code> borrowga ega bo;lishdan ko'ra <code>a</code> va <code>value</code>ning ikkalasi ham ichki <code>5</code>ga ownershipga (egalikka) ega bo'ladilar.</p>
+<p>15-18-ro'yxatda qilganimizdek, <code>a</code> ro'yxatini <code>Rc&lt;T&gt;</code> ichiga o'rab olamiz, shunda <code>b</code> va <code>c</code> ro'yxatlarini yaratganimizda, ular ikkalasi ham <code>a</code> ga murojaat (refer) qilishlari mumkin bo'ladi</p>
+<p><code>a</code>, <code>b</code> va <code>c</code> ro'yxatlarini yaratganimizdan so'ng, biz <code>qiymat</code> qiymatiga 10 qo'shmoqchimiz. Biz buni 5-bobda muhokama qilgan avtomatik yoʻqotish xususiyatidan foydalanadigan <code>value</code>da <code>borrow_mut</code> ni ishga tushurishh orqali, ya'ni <code>Rc&lt;T&gt;</code>ni ichki <code>RefCell&lt;T&gt;</code> qiymatiga yo'naltirish orqali amalga oshiramiz ([<code>-&gt;</code> Operatori Qayerda?”]ida ko'ring <a href="ch05-03-method-syntax.html#wheres-the---operator">wheres-the---operator</a><!-- ignore -->). <code>borrow_mut</code> usuli <code>RefMut&lt;T&gt;</code> smart pointerini qaytaradi va biz unda dereference operatoridan foydalanamiz va uning ichki qiymatni o`zgartiramiz.</p>
+<p><code>a</code>, <code>b</code>, va <code>c</code> print qilganimizda, 5dan ko'ra 15lik qiymatni hammasi o'zgaritirish kiritganligini ko'rishimiz mumkin.</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
     Finished dev [unoptimized + debuginfo] target(s) in 0.63s
@@ -13517,26 +13439,19 @@ a after = Cons(RefCell { value: 15 }, Nil)
 b after = Cons(RefCell { value: 3 }, Cons(RefCell { value: 15 }, Nil))
 c after = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
 </code></pre>
-<p>This technique is pretty neat! By using <code>RefCell&lt;T&gt;</code>, we have an outwardly
-immutable <code>List</code> value. But we can use the methods on <code>RefCell&lt;T&gt;</code> that provide
-access to its interior mutability so we can modify our data when we need to.
-The runtime checks of the borrowing rules protect us from data races, and it’s
-sometimes worth trading a bit of speed for this flexibility in our data
-structures. Note that <code>RefCell&lt;T&gt;</code> does not work for multithreaded code!
-<code>Mutex&lt;T&gt;</code> is the thread-safe version of <code>RefCell&lt;T&gt;</code> and we’ll discuss
-<code>Mutex&lt;T&gt;</code> in Chapter 16.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="reference-cycles-can-leak-memory"><a class="header" href="#reference-cycles-can-leak-memory">Reference Cycles Can Leak Memory</a></h2>
-<p>Rust’s memory safety guarantees make it difficult, but not impossible, to
-accidentally create memory that is never cleaned up (known as a <em>memory leak</em>).
-Preventing memory leaks entirely is not one of Rust’s guarantees, meaning
-memory leaks are memory safe in Rust. We can see that Rust allows memory leaks
-by using <code>Rc&lt;T&gt;</code> and <code>RefCell&lt;T&gt;</code>: it’s possible to create references where
-items refer to each other in a cycle. This creates memory leaks because the
-reference count of each item in the cycle will never reach 0, and the values
-will never be dropped.</p>
-<h3 id="creating-a-reference-cycle"><a class="header" href="#creating-a-reference-cycle">Creating a Reference Cycle</a></h3>
-<p>Let’s look at how a reference cycle might happen and how to prevent it,
-starting with the definition of the <code>List</code> enum and a <code>tail</code> method in Listing
+<p>Ushbu uslub juda jozibali! <code>RefCell&lt;T&gt;</code> dan foydalanib, biz tashqi o'zgarmas <code>List</code> qiymatiga ega bo'lamiz. Lekin biz <code>RefCell&lt;T&gt;</code> da uning ichki o'zgaruvchanligiga kirish/boshqarishni ta'minlaydigan metoddan foydalanishimiz mumkin, shunda kerak bo'lganda ma'lumotlarimizni o'zgartirishimiz mumkin. Runtime qarz olish (borrowing) qoidalari bizni ma'lumotlar o'zgaruvchanligidan (data races) himoya qilishini tekshiradi, va ba'zida ma'lumotlar tuzilmalarimizdagi bu moslashuvchanlik uchun biroz tezlikni oshirishga/o'zgaritishga (trading) arziydi. <code>RefCell&lt;T&gt;</code> ko'p oqimli (multithreaded) kod uchun ishlamaydi, shuni inobatga oling! <code>Mutex&lt;T&gt;</code> bu <code>RefCell&lt;T&gt;</code> ning xafsizroq versiyasidir va biz <code>Mutex&lt;T&gt;</code> ni 16-bobda muhokama qilamiz.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="yonaltiruvchi-tsikllar-xotirani-oqishi-mumkin"><a class="header" href="#yonaltiruvchi-tsikllar-xotirani-oqishi-mumkin">Yo'naltiruvchi tsikllar xotirani oqishi mumkin</a></h2>
+<p>Rustning xotira xavfsizligi kafolatlari buni qiyinlashtiradi, lekin imkonsiz emas
+tasodifan hech qachon tozalanmaydigan xotira yaratish (<em>xotira oqish</em> deb nomlanadi).
+Xotiraning oqishi to'liq oldini olish Rustning kafolatlaridan biri emas, ya'ni
+xotira sızıntıları Rust-da xotira xavfsizdir. Rust xotira oqishiga ruxsat berishini ko'rishimiz mumkin
+<code>Rc&lt;T&gt;</code> va <code>RefCell&lt;T&gt;</code> dan foydalanib: bu yerda havolalar yaratish mumkin.
+elementlar siklda bir-biriga ishora qiladi. Bu xotira oqishini yaratadi, chunki
+tsikldagi har bir elementning mos yozuvlar soni hech qachon 0 ga etib bormaydi va qiymatlar
+hech qachon tashlab ketilmaydi.</p>
+<h3 id="malumot-siklini-yaratish"><a class="header" href="#malumot-siklini-yaratish">Malumot siklini yaratish</a></h3>
+<p>Keling, mos yozuvlar sikli qanday sodir bo'lishi mumkinligini va uni qanday oldini olishni ko'rib chiqaylik,
+Listingdagi <code>List</code> enum va <code>tail</code> usulining ta`rifidan boshlab
 15-25:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use crate::List::{Cons, Nil};
@@ -13561,17 +13476,17 @@ impl List {
 fn main() {}</code></pre></pre>
 <p><span class="caption">Listing 15-25: A cons list definition that holds a
 <code>RefCell&lt;T&gt;</code> so we can modify what a <code>Cons</code> variant is referring to</span></p>
-<p>We’re using another variation of the <code>List</code> definition from Listing 15-5. The
-second element in the <code>Cons</code> variant is now <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, meaning that
-instead of having the ability to modify the <code>i32</code> value as we did in Listing
-15-24, we want to modify the <code>List</code> value a <code>Cons</code> variant is pointing to.
-We’re also adding a <code>tail</code> method to make it convenient for us to access the
-second item if we have a <code>Cons</code> variant.</p>
-<p>In Listing 15-26, we’re adding a <code>main</code> function that uses the definitions in
-Listing 15-25. This code creates a list in <code>a</code> and a list in <code>b</code> that points to
-the list in <code>a</code>. Then it modifies the list in <code>a</code> to point to <code>b</code>, creating a
-reference cycle. There are <code>println!</code> statements along the way to show what the
-reference counts are at various points in this process.</p>
+<p>Biz 15-5 roʻyxatdagi “Roʻyxat” taʼrifining boshqa variantidan foydalanmoqdamiz. The
+<code>Cons</code> variantidagi ikkinchi element endi <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, ya`ni
+Biz Listingda bo'lgani kabi &quot;i32&quot; qiymatini o'zgartirish imkoniyatiga ega bo'lish o'rniga
+15-24, biz 'Kasalliklar' varianti ko'rsatayotgan 'Ro'yxat' qiymatini o'zgartirmoqchimiz.
+Bizga kirishni qulay qilish uchun biz &quot;quyruq&quot; usulini ham qo'shmoqdamiz
+ikkinchi element, agar bizda &quot;Kasalliklar&quot; varianti bo'lsa.</p>
+<p>15-26 roʻyxatda biz “asosiy” funksiyani qoʻshmoqdamiz.
+Ro'yxat 15-25. Bu kod <code>a</code> ro<code>yxatini va </code>b<code> ga ishora qiluvchi ro</code>yxatni yaratadi
+<code>a</code> ichidagi ro'yxat. Keyin u <code>a</code> ro<code>yxatini </code>b<code> ga ishora qilib o</code>zgartiradi va a ni yaratadi
+mos yozuvlar aylanishi. Yo'lda nima ekanligini ko'rsatish uchun `println!' iboralari mavjud
+mos yozuvlar soni bu jarayonning turli nuqtalarida.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use crate::List::{Cons, Nil};
 </span><span class="boring">use std::cell::RefCell;
@@ -13617,17 +13532,17 @@ reference counts are at various points in this process.</p>
 }</code></pre></pre>
 <p><span class="caption">Listing 15-26: Creating a reference cycle of two <code>List</code>
 values pointing to each other</span></p>
-<p>We create an <code>Rc&lt;List&gt;</code> instance holding a <code>List</code> value in the variable <code>a</code>
-with an initial list of <code>5, Nil</code>. We then create an <code>Rc&lt;List&gt;</code> instance holding
-another <code>List</code> value in the variable <code>b</code> that contains the value 10 and points
-to the list in <code>a</code>.</p>
-<p>We modify <code>a</code> so it points to <code>b</code> instead of <code>Nil</code>, creating a cycle. We do
-that by using the <code>tail</code> method to get a reference to the <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>
-in <code>a</code>, which we put in the variable <code>link</code>. Then we use the <code>borrow_mut</code>
-method on the <code>RefCell&lt;Rc&lt;List&gt;&gt;</code> to change the value inside from an <code>Rc&lt;List&gt;</code>
-that holds a <code>Nil</code> value to the <code>Rc&lt;List&gt;</code> in <code>b</code>.</p>
-<p>When we run this code, keeping the last <code>println!</code> commented out for the
-moment, we’ll get this output:</p>
+<p>Biz “a” o‘zgaruvchisida “Ro‘yxat” qiymatiga ega “Rc<List>” misolini yaratamiz.
+boshlang'ich ro'yxati &quot;5, Nil&quot; bilan. Keyin biz <code>Rc&lt;List&gt;</code> misol xoldingini yaratamiz
+10 qiymati va nuqtalarni o'z ichiga olgan &quot;b&quot; o'zgaruvchisidagi boshqa &quot;Ro'yxat&quot; qiymati
+<code>a</code> ro'yxatiga.</p>
+<p>Biz &quot;a&quot; ni o'zgartiramiz, shuning uchun u &quot;Nil&quot; o'rniga &quot;b&quot; ga ishora qiladi va sikl hosil qiladi. Biz qilamiz
+<code>RefCell&lt;Rc&lt;List&gt;&gt;</code> ga havola olish uchun <code>tail</code> usuli yordamida
+&quot;a&quot; da, biz &quot;link&quot; o'zgaruvchisini qo'yamiz. Keyin biz &quot;borrow_mut&quot; dan foydalanamiz
+<code>RefCell&lt;Rc&lt;List&gt;&gt;</code> ichidagi qiymatni <code>Rc&lt;List&gt;</code>dan oʻzgartirish uchun usul
+Bu <code>b</code> dagi <code>Rc&lt;List&gt;</code> uchun <code>Nil</code> qiymatiga ega.</p>
+<p>Ushbu kodni ishga tushirganimizda, oxirgi <code>println!</code> uchun izoh berilgan
+lahzada biz ushbu natijani olamiz:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
     Finished dev [unoptimized + debuginfo] target(s) in 0.53s
@@ -13640,75 +13555,71 @@ b next item = Some(RefCell { value: Cons(5, RefCell { value: Nil }) })
 b rc count after changing a = 2
 a rc count after changing a = 2
 </code></pre>
-<p>The reference count of the <code>Rc&lt;List&gt;</code> instances in both <code>a</code> and <code>b</code> are 2 after
-we change the list in <code>a</code> to point to <code>b</code>. At the end of <code>main</code>, Rust drops the
-variable <code>b</code>, which decreases the reference count of the <code>b</code> <code>Rc&lt;List&gt;</code> instance
-from 2 to 1. The memory that <code>Rc&lt;List&gt;</code> has on the heap won’t be dropped at
-this point, because its reference count is 1, not 0. Then Rust drops <code>a</code>, which
-decreases the reference count of the <code>a</code> <code>Rc&lt;List&gt;</code> instance from 2 to 1 as
-well. This instance’s memory can’t be dropped either, because the other
-<code>Rc&lt;List&gt;</code> instance still refers to it. The memory allocated to the list will
-remain uncollected forever. To visualize this reference cycle, we’ve created a
-diagram in Figure 15-4.</p>
+<p><code>a</code> va <code>b</code>dagi <code>Rc&lt;List&gt;</code> misollarining mos yozuvlar soni 2 dan keyin
+biz <code>a</code> ro<code>yxatini </code>b<code> ga ishora qilish uchun o</code>zgartiramiz. &quot;Asosiy&quot; oxirida Rust ni tushiradi
+<code>b</code> o'zgaruvchisi, bu <code>b</code> <code>Rc&lt;List&gt;</code> misolining mos yozuvlar sonini kamaytiradi
+2 dan 1 gacha. <code>Rc&lt;List&gt;</code> to'plamida bo'lgan xotira o'chirilmaydi.
+bu nuqta, chunki uning mos yozuvlar soni 0 emas, 1. Keyin Rust <code>a</code> tushiradi, qaysi
+<code>a</code> <code>Rc&lt;List&gt;</code> misolining mos yozuvlar sonini 2 dan 1 gacha kamaytiradi
+yaxshi. Bu misolning xotirasini ham tashlab bo'lmaydi, chunki boshqasi
+<code>Rc&lt;List&gt;</code> misoli hali ham unga ishora qiladi. Ro'yxatga ajratilgan xotira bo'ladi
+abadiy yig'ilmagan qoladi. Ushbu mos yozuvlar siklini tasavvur qilish uchun biz yaratdik
+15-4-rasmdagi diagramma.</p>
 <img alt="Reference cycle of lists" src="img/trpl15-04.svg" class="center" />
 <p><span class="caption">Figure 15-4: A reference cycle of lists <code>a</code> and <code>b</code>
 pointing to each other</span></p>
-<p>If you uncomment the last <code>println!</code> and run the program, Rust will try to
-print this cycle with <code>a</code> pointing to <code>b</code> pointing to <code>a</code> and so forth until it
-overflows the stack.</p>
-<p>Compared to a real-world program, the consequences creating a reference cycle
-in this example aren’t very dire: right after we create the reference cycle,
-the program ends. However, if a more complex program allocated lots of memory
-in a cycle and held onto it for a long time, the program would use more memory
-than it needed and might overwhelm the system, causing it to run out of
-available memory.</p>
-<p>Creating reference cycles is not easily done, but it’s not impossible either.
-If you have <code>RefCell&lt;T&gt;</code> values that contain <code>Rc&lt;T&gt;</code> values or similar nested
-combinations of types with interior mutability and reference counting, you must
-ensure that you don’t create cycles; you can’t rely on Rust to catch them.
-Creating a reference cycle would be a logic bug in your program that you should
-use automated tests, code reviews, and other software development practices to
-minimize.</p>
-<p>Another solution for avoiding reference cycles is reorganizing your data
-structures so that some references express ownership and some references don’t.
-As a result, you can have cycles made up of some ownership relationships and
-some non-ownership relationships, and only the ownership relationships affect
-whether or not a value can be dropped. In Listing 15-25, we always want <code>Cons</code>
-variants to own their list, so reorganizing the data structure isn’t possible.
-Let’s look at an example using graphs made up of parent nodes and child nodes
-to see when non-ownership relationships are an appropriate way to prevent
-reference cycles.</p>
+<p>Agar siz oxirgi <code>println!</code>-ni izohdan olib tashlasangiz va dasturni ishga tushirsangiz, Rust bunga harakat qiladi
+bu siklni <code>a</code> bilan <code>b</code> <code>a</code> ga ishora qilib va ​​shunga o`xshash davom etguncha chop eting
+stekni to'ldirib yuboradi.</p>
+<p>Haqiqiy dunyo dasturi bilan taqqoslaganda, oqibatlar mos yozuvlar aylanishini yaratadi
+bu misolda unchalik dahshatli emas: biz mos yozuvlar siklini yaratganimizdan so'ng,
+dastur tugaydi. Ammo, agar murakkabroq dasturda ko'p xotira ajratilgan bo'lsa
+siklda va uni uzoq vaqt ushlab tursa, dastur ko'proq xotiradan foydalanadi
+kerak bo'lganidan ko'ra va tizimni to'sib qo'yishi mumkin, bu esa uning tugashiga olib keladi
+mavjud xotira.</p>
+<p>Malumot davrlarini yaratish oson emas, lekin bu ham imkonsiz emas.
+Agar sizda <code>Rc&lt;T&gt;</code> qiymatlari yoki shunga o'xshash ichki o'rnatilgan <code>RefCell&lt;T&gt;</code> qiymatlari mavjud bo'lsa
+ichki o'zgaruvchanlik va mos yozuvlar hisoblash bilan turlarning kombinatsiyasi, siz kerak
+tsikllarni yaratmasligingizga ishonch hosil qiling; ularni qo'lga olish uchun siz Rustga tayanolmaysiz.
+Malumot siklini yaratish dasturingizdagi mantiqiy xato bo'lishi mumkin
+avtomatlashtirilgan testlar, kodlarni ko'rib chiqish va boshqa dasturiy ta'minotni ishlab chiqish amaliyotlaridan foydalaning
+minimallashtirish.</p>
+<p>Malumot davrlarini oldini olishning yana bir yechimi maʼlumotlaringizni qayta tashkil etishdir
+tuzilmalar shunday qilib, ba'zi havolalar egalik huquqini bildiradi, ba'zi havolalar esa bildirmaydi.
+Natijada, siz ba'zi egalik munosabatlaridan tashkil topgan davrlarga ega bo'lishingiz mumkin va
+ba'zi mulkiy bo'lmagan munosabatlar va faqat mulkchilik munosabatlari ta'sir qiladi
+qiymat tushirilishi mumkinmi yoki yo'qmi. 15-25 ro'yxatda biz har doim &quot;Kasalliklar&quot; ni xohlaymiz
+o'z ro'yxatiga egalik qilish variantlari mavjud, shuning uchun ma'lumotlar strukturasini qayta tashkil qilish mumkin emas.
+Keling, ota-ona va tugunlardan tashkil topgan grafiklardan foydalangan holda misolni ko'rib chiqaylik
+egalik bo'lmagan munosabatlar qachon oldini olish uchun to'g'ri yo'l ekanligini ko'rish
+mos yozuvlar davrlari.</p>
 <h3 id="preventing-reference-cycles-turning-an-rct-into-a-weakt"><a class="header" href="#preventing-reference-cycles-turning-an-rct-into-a-weakt">Preventing Reference Cycles: Turning an <code>Rc&lt;T&gt;</code> into a <code>Weak&lt;T&gt;</code></a></h3>
-<p>So far, we’ve demonstrated that calling <code>Rc::clone</code> increases the
-<code>strong_count</code> of an <code>Rc&lt;T&gt;</code> instance, and an <code>Rc&lt;T&gt;</code> instance is only cleaned
-up if its <code>strong_count</code> is 0. You can also create a <em>weak reference</em> to the
-value within an <code>Rc&lt;T&gt;</code> instance by calling <code>Rc::downgrade</code> and passing a
-reference to the <code>Rc&lt;T&gt;</code>. Strong references are how you can share ownership of
-an <code>Rc&lt;T&gt;</code> instance. Weak references don’t express an ownership relationship,
-and their count doesn’t affect when an <code>Rc&lt;T&gt;</code> instance is cleaned up. They
-won’t cause a reference cycle because any cycle involving some weak references
-will be broken once the strong reference count of values involved is 0.</p>
-<p>When you call <code>Rc::downgrade</code>, you get a smart pointer of type <code>Weak&lt;T&gt;</code>.
-Instead of increasing the <code>strong_count</code> in the <code>Rc&lt;T&gt;</code> instance by 1, calling
-<code>Rc::downgrade</code> increases the <code>weak_count</code> by 1. The <code>Rc&lt;T&gt;</code> type uses
-<code>weak_count</code> to keep track of how many <code>Weak&lt;T&gt;</code> references exist, similar to
-<code>strong_count</code>. The difference is the <code>weak_count</code> doesn’t need to be 0 for the
-<code>Rc&lt;T&gt;</code> instance to be cleaned up.</p>
-<p>Because the value that <code>Weak&lt;T&gt;</code> references might have been dropped, to do
-anything with the value that a <code>Weak&lt;T&gt;</code> is pointing to, you must make sure the
-value still exists. Do this by calling the <code>upgrade</code> method on a <code>Weak&lt;T&gt;</code>
-instance, which will return an <code>Option&lt;Rc&lt;T&gt;&gt;</code>. You’ll get a result of <code>Some</code>
-if the <code>Rc&lt;T&gt;</code> value has not been dropped yet and a result of <code>None</code> if the
-<code>Rc&lt;T&gt;</code> value has been dropped. Because <code>upgrade</code> returns an <code>Option&lt;Rc&lt;T&gt;&gt;</code>,
-Rust will ensure that the <code>Some</code> case and the <code>None</code> case are handled, and
-there won’t be an invalid pointer.</p>
-<p>As an example, rather than using a list whose items know only about the next
-item, we’ll create a tree whose items know about their children items <em>and</em>
-their parent items.</p>
+<p>Hozirgacha biz &quot;Rc::clone&quot; ni chaqirish ko'rsatkichni oshirishini ko'rsatdik
+<code>Rc&lt;T&gt;</code> misolining <code>kuchli_hisobchasi</code> va <code>Rc&lt;T&gt;</code> misoli faqat tozalanadi
+yuqoriga, agar uning &quot;kuchli_hisoblash&quot; qiymati 0 bo'lsa. Shuningdek, &quot;kuchli_hisob&quot; ga * zaif havola* yaratishingiz mumkin
+<code>Rc&lt;T&gt;</code> misolidagi qiymatni <code>Rc::downgrade</code> deb chaqirish va
+<code>Rc&lt;T&gt;</code> ga havola. Kuchli havolalar egalik huquqini baham ko'rishingiz mumkin
+<code>Rc&lt;T&gt;</code> misoli. Zaif havolalar egalik munosabatlarini bildirmaydi,
+va <code>Rc&lt;T&gt;</code> namunasi tozalanganda ularning soni ta'sir qilmaydi. Ular
+mos yozuvlar aylanishiga olib kelmaydi, chunki ba'zi zaif havolalarni o'z ichiga olgan har qanday tsikl
+jalb qilingan qiymatlarning kuchli mos yozuvlar soni 0 bo'lsa, buziladi.</p>
+<p><code>Rc::downgrade</code> ga qo<code>ng</code>iroq qilganingizda, siz <code>Zaif&lt;T&gt;</code> tipidagi aqlli ko<code>rsatgichga ega bo</code>lasiz.
+<code>Rc&lt;T&gt;</code> misolidagi <code>strong_count</code> ni 1 ga oshirish o<code>rniga, </code>Rc::downgrade<code> </code>zaif_hisobni<code>1 ga oshiradi.</code>Rc<T><code>turi foydalanadi Qancha</code>Zaif<T><code>havolalari mavjudligini kuzatish uchun</code>zaif_hisob<code></code>kuchli_hisob<code>. Farqi shundaki, &quot;zaif_hisob&quot; uchun 0 bo'lishi shart emas </code>Rc<T>` namunasi tozalanadi.</p>
+<p>Chunki <code>Zaif&lt;T&gt;</code> havola qiladigan qiymat oʻchirilgan boʻlishi mumkin
+<code>Zaif&lt;T&gt;</code> ko'rsatayotgan qiymatga ega bo'lgan har qanday narsaga ishonch hosil qilishingiz kerak
+qiymati hali ham mavjud. Buni “Zaif<T>” da “yangilash” usulini chaqirish orqali bajaring
+misol, bu <code>Option&lt;Rc&lt;T&gt;&gt;</code>ni qaytaradi. Siz &quot;Ba'zi&quot; natijasini olasiz
+agar &quot;Rc<T>&quot; qiymati hali tushirilmagan bo'lsa va &quot;Yo'q&quot; natijasi, agar
+<code>Rc&lt;T&gt;</code> qiymati olib tashlandi. Chunki <code>yangilash</code> <code>Option&lt;Rc&lt;T&gt;&gt;</code>ni qaytaradi,
+Rust <code>Some</code> ishi va <code>None</code> ishi ko'rib chiqilishini ta'minlaydi va
+yaroqsiz ko'rsatgich bo'lmaydi.</p>
+<p>Misol sifatida, elementlari faqat keyingi haqida biladigan ro'yxatni ishlatish o'rniga
+elementi boʻlsa, biz daraxt yaratamiz, uning obʼyektlari oʻz bolalari buyumlari haqida <em>va</em>
+ularning ota-onalari.</p>
 <h4 id="creating-a-tree-data-structure-a-node-with-child-nodes"><a class="header" href="#creating-a-tree-data-structure-a-node-with-child-nodes">Creating a Tree Data Structure: a <code>Node</code> with Child Nodes</a></h4>
-<p>To start, we’ll build a tree with nodes that know about their child nodes.
-We’ll create a struct named <code>Node</code> that holds its own <code>i32</code> value as well as
-references to its children <code>Node</code> values:</p>
+<p>Boshlash uchun biz ularning tugunlari haqida biladigan tugunlari bo'lgan daraxt quramiz.
+Biz o'zining &quot;i32&quot; qiymatiga ega bo'lgan &quot;tugun&quot; nomli tuzilmani yaratamiz.
+uning bolalar 'Tugun' qiymatlariga havolalar:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::cell::RefCell;
 use std::rc::Rc;
@@ -13730,14 +13641,14 @@ struct Node {
 </span><span class="boring">        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
 </span><span class="boring">    });
 </span><span class="boring">}</span></code></pre></pre>
-<p>We want a <code>Node</code> to own its children, and we want to share that ownership with
-variables so we can access each <code>Node</code> in the tree directly. To do this, we
-define the <code>Vec&lt;T&gt;</code> items to be values of type <code>Rc&lt;Node&gt;</code>. We also want to
-modify which nodes are children of another node, so we have a <code>RefCell&lt;T&gt;</code> in
-<code>children</code> around the <code>Vec&lt;Rc&lt;Node&gt;&gt;</code>.</p>
-<p>Next, we’ll use our struct definition and create one <code>Node</code> instance named
-<code>leaf</code> with the value 3 and no children, and another instance named <code>branch</code>
-with the value 5 and <code>leaf</code> as one of its children, as shown in Listing 15-27:</p>
+<p>Biz &quot;Tugun&quot; o'z farzandlariga ega bo'lishini istaymiz va biz bu egalikni baham ko'rmoqchimiz
+o'zgaruvchilar, shuning uchun biz daraxtdagi har bir &quot;Tugun&quot; ga to'g'ridan-to'g'ri kirishimiz mumkin. Buning uchun biz
+<code>Vec&lt;T&gt;</code> elementlarini <code>Rc&lt;Node&gt;</code> tipidagi qiymatlar sifatida belgilang. Biz ham xohlaymiz
+qaysi tugunlar boshqa tugunning bolalari ekanligini o'zgartiring, shuning uchun bizda <code>RefCell&lt;T&gt;</code> mavjud
+<code>Vec&lt;Rc&lt;tugun&gt;&gt;</code> atrofidagi <code>bolalar</code>.</p>
+<p>Keyinchalik, biz strukturaning ta'rifidan foydalanamiz va bitta &quot;Tugun&quot; nomini yaratamiz
+<code>barg</code> qiymati 3 va bolalari yo'q va boshqa misol <code>filial</code>
+15-27 roʻyxatda koʻrsatilganidek, qiymati 5 va “barg” uning farzandlaridan biri sifatida:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::cell::RefCell;
 </span><span class="boring">use std::rc::Rc;
@@ -13761,26 +13672,23 @@ with the value 5 and <code>leaf</code> as one of its children, as shown in Listi
 }</code></pre></pre>
 <p><span class="caption">Listing 15-27: Creating a <code>leaf</code> node with no children
 and a <code>branch</code> node with <code>leaf</code> as one of its children</span></p>
-<p>We clone the <code>Rc&lt;Node&gt;</code> in <code>leaf</code> and store that in <code>branch</code>, meaning the
-<code>Node</code> in <code>leaf</code> now has two owners: <code>leaf</code> and <code>branch</code>. We can get from
-<code>branch</code> to <code>leaf</code> through <code>branch.children</code>, but there’s no way to get from
-<code>leaf</code> to <code>branch</code>. The reason is that <code>leaf</code> has no reference to <code>branch</code> and
-doesn’t know they’re related. We want <code>leaf</code> to know that <code>branch</code> is its
-parent. We’ll do that next.</p>
-<h4 id="adding-a-reference-from-a-child-to-its-parent"><a class="header" href="#adding-a-reference-from-a-child-to-its-parent">Adding a Reference from a Child to Its Parent</a></h4>
-<p>To make the child node aware of its parent, we need to add a <code>parent</code> field to
-our <code>Node</code> struct definition. The trouble is in deciding what the type of
-<code>parent</code> should be. We know it can’t contain an <code>Rc&lt;T&gt;</code>, because that would
-create a reference cycle with <code>leaf.parent</code> pointing to <code>branch</code> and
-<code>branch.children</code> pointing to <code>leaf</code>, which would cause their <code>strong_count</code>
-values to never be 0.</p>
-<p>Thinking about the relationships another way, a parent node should own its
-children: if a parent node is dropped, its child nodes should be dropped as
-well. However, a child should not own its parent: if we drop a child node, the
-parent should still exist. This is a case for weak references!</p>
-<p>So instead of <code>Rc&lt;T&gt;</code>, we’ll make the type of <code>parent</code> use <code>Weak&lt;T&gt;</code>,
-specifically a <code>RefCell&lt;Weak&lt;Node&gt;&gt;</code>. Now our <code>Node</code> struct definition looks
-like this:</p>
+<p>Biz <code>Rc&lt;tugun&gt;</code>ni <code>barg</code>da klonlaymiz va uni <code>filial</code>da saqlaymiz, ya<code>ni Endi “barg”dagi “tugun” ikkita egasiga ega: “barg” va “novda”. dan olishimiz mumkin 'branch.children' orqali 'shox'dan 'barg'ga, lekin undan olishning iloji yo'q 'barg'dan 'filialga'. Sababi, </code>barg<code> so</code>zi <code>filial</code> va
+aloqadorligini bilmaydi. Biz “barg” “filial” uning ekanligini bilishini istaymiz
+ota-ona. Biz buni keyin qilamiz.</p>
+<h4 id="bolaning-ota-onasiga-havolani-qoshish"><a class="header" href="#bolaning-ota-onasiga-havolani-qoshish">Bolaning ota-onasiga havolani qo'shish</a></h4>
+<p>Bola tugunni ota-onasidan xabardor qilish uchun biz &quot;ota-ona&quot; maydonini qo'shishimiz kerak
+bizning &quot;tugun&quot; tuzilmasining ta'rifi. Muammo nima turini tanlashda
+&quot;ota-ona&quot; bo'lishi kerak. Biz bilamizki, unda <code>Rc&lt;T&gt;</code> bo'lishi mumkin emas, chunki bu bo'lar edi
+<code>leaf.parent</code> <code>filial</code>ga ishora qiluvchi mos yozuvlar siklini yarating va
+<code>barg</code>ga ishora qiluvchi <code>filial.bolalar</code>, bu ularning <code>kuchli_hisobiga</code> olib keladi
+qiymatlar hech qachon 0 bo'lmasligi kerak.</p>
+<p>O'zaro munosabatlar haqida boshqa yo'l bilan o'ylab, ota-ona tuguniga ega bo'lishi kerak
+bolalar: agar ota-ona tugunlari tushirilsa, uning tugunlari sifatida tushirilishi kerak
+yaxshi. Biroq, bola o'z ota-onasiga egalik qilmasligi kerak: agar biz bola tugunini tashlasak,
+ota-ona hali ham mavjud bo'lishi kerak. Bu zaif havolalar uchun holat!</p>
+<p>Shunday qilib, &quot;Rc<T>&quot; o'rniga, &quot;ota-ona&quot; turini &quot;Zaif<T>&quot; dan foydalanamiz,
+xususan <code>RefCell&lt;Zaif&lt;tugun&gt;&gt;</code>. Endi bizning &quot;tugun&quot; tuzilmasining ta'rifi ko'rinadi
+shunga o'xshash:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::cell::RefCell;
 use std::rc::{Rc, Weak};
@@ -13811,9 +13719,9 @@ struct Node {
 </span><span class="boring">
 </span><span class="boring">    println!(&quot;leaf parent = {:?}&quot;, leaf.parent.borrow().upgrade());
 </span><span class="boring">}</span></code></pre></pre>
-<p>A node will be able to refer to its parent node but doesn’t own its parent.
-In Listing 15-28, we update <code>main</code> to use this new definition so the <code>leaf</code>
-node will have a way to refer to its parent, <code>branch</code>:</p>
+<p>Tugun o'zining asosiy tuguniga murojaat qilishi mumkin, lekin uning ota-onasiga ega emas.
+15-28 ro'yxatda biz ushbu yangi ta'rifdan foydalanish uchun &quot;asosiy&quot; ni yangilaymiz, shuning uchun &quot;barg&quot;
+tugun o'zining ota-onasi &quot;filial&quot; ga murojaat qilish usuliga ega bo'ladi:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::cell::RefCell;
 </span><span class="boring">use std::rc::{Rc, Weak};
@@ -13846,39 +13754,39 @@ node will have a way to refer to its parent, <code>branch</code>:</p>
 }</code></pre></pre>
 <p><span class="caption">Listing 15-28: A <code>leaf</code> node with a weak reference to its
 parent node <code>branch</code></span></p>
-<p>Creating the <code>leaf</code> node looks similar to Listing 15-27 with the exception of
-the <code>parent</code> field: <code>leaf</code> starts out without a parent, so we create a new,
-empty <code>Weak&lt;Node&gt;</code> reference instance.</p>
-<p>At this point, when we try to get a reference to the parent of <code>leaf</code> by using
-the <code>upgrade</code> method, we get a <code>None</code> value. We see this in the output from the
-first <code>println!</code> statement:</p>
-<pre><code class="language-text">leaf parent = None
+<p>“Yaproq” tugunini yaratish 15-27 roʻyxatga oʻxshaydi, bundan tashqari
+&quot;ota-ona&quot; maydoni: &quot;barg&quot; ota-onasiz boshlanadi, shuning uchun biz yangisini yaratamiz,
+bo'sh <code>Zaif&lt;tugun&gt;</code> mos yozuvlar misoli.</p>
+<p>Shu nuqtada, biz yordamida <code>barg</code> ota-onasiga havola olishga harakat qilganimizda
+&quot;yangilash&quot; usulida biz &quot;Yo'q&quot; qiymatini olamiz. Buni biz dan chiqishda ko'ramiz
+birinchi <code>println!</code> bayonoti:</p>
+<pre><code class="language-matn">barg ota-onasi = Yo'q
 </code></pre>
-<p>When we create the <code>branch</code> node, it will also have a new <code>Weak&lt;Node&gt;</code>
-reference in the <code>parent</code> field, because <code>branch</code> doesn’t have a parent node.
-We still have <code>leaf</code> as one of the children of <code>branch</code>. Once we have the
-<code>Node</code> instance in <code>branch</code>, we can modify <code>leaf</code> to give it a <code>Weak&lt;Node&gt;</code>
-reference to its parent. We use the <code>borrow_mut</code> method on the
-<code>RefCell&lt;Weak&lt;Node&gt;&gt;</code> in the <code>parent</code> field of <code>leaf</code>, and then we use the
-<code>Rc::downgrade</code> function to create a <code>Weak&lt;Node&gt;</code> reference to <code>branch</code> from
-the <code>Rc&lt;Node&gt;</code> in <code>branch.</code></p>
-<p>When we print the parent of <code>leaf</code> again, this time we’ll get a <code>Some</code> variant
-holding <code>branch</code>: now <code>leaf</code> can access its parent! When we print <code>leaf</code>, we
-also avoid the cycle that eventually ended in a stack overflow like we had in
-Listing 15-26; the <code>Weak&lt;Node&gt;</code> references are printed as <code>(Weak)</code>:</p>
-<pre><code class="language-text">leaf parent = Some(Node { value: 5, parent: RefCell { value: (Weak) },
-children: RefCell { value: [Node { value: 3, parent: RefCell { value: (Weak) },
-children: RefCell { value: [] } }] } })
+<p>Biz <code>filial</code> tugunini yaratganimizda, u ham yangi <code>Zaif&lt;tugun&gt;</code>ga ega bo'ladi.
+&quot;ota&quot; maydonida havola, chunki &quot;filial&quot; da asosiy tugun yo'q.
+Bizda hamon “barg” “filial” farzandlaridan biri. Bir marta bizda
+“Filial”dagi “tugun” misolida biz “barg”ni “zaif<tugun>” qilish uchun o‘zgartirishimiz mumkin.
+uning ota-onasiga havola. Biz &quot;borrow_mut&quot; usulidan foydalanamiz
+<code>barg</code>ning <code>ota</code> maydonida <code>RefCell&lt;Zaif&lt;tugun&gt;&gt;</code> va keyin biz
+<code>Rc::downgrade</code> funksiyasidan <code>filial</code>ga <code>Zaif&lt;tugun&gt;</code> havolasini yaratish
+<code>filialdagi </code>Rc<tugun>`</p>
+<p>Biz “barg” ning ota-onasini yana chop qilsak, bu safar “Ba’zi” variantini olamiz
+&quot;filial&quot; ni ushlab turish: endi &quot;barg&quot; ota-onasiga kira oladi! Biz &quot;barg&quot; ni chop etganda, biz
+Shuningdek, oxir-oqibat bizda bo'lgani kabi stekning to'lib ketishi bilan yakunlangan tsikldan qoching
+Ro'yxat 15-26; <code>Zaif&lt;tugun&gt;</code> havolalari <code>(Zaif)</code> sifatida chop etiladi:</p>
+<pre><code class="language-matn">barg ota = Ba'zi(tugun {qiymat: 5, ota: RefCell {qiymat: (zaif)},
+bolalar: RefCell { qiymat: [tugun {qiymat: 3, ota: RefCell {qiymat: (zaif)},
+bolalar: RefCell { qiymat: [] } }] } })
 </code></pre>
-<p>The lack of infinite output indicates that this code didn’t create a reference
-cycle. We can also tell this by looking at the values we get from calling
-<code>Rc::strong_count</code> and <code>Rc::weak_count</code>.</p>
-<h4 id="visualizing-changes-to-strong_count-and-weak_count"><a class="header" href="#visualizing-changes-to-strong_count-and-weak_count">Visualizing Changes to <code>strong_count</code> and <code>weak_count</code></a></h4>
-<p>Let’s look at how the <code>strong_count</code> and <code>weak_count</code> values of the <code>Rc&lt;Node&gt;</code>
-instances change by creating a new inner scope and moving the creation of
-<code>branch</code> into that scope. By doing so, we can see what happens when <code>branch</code> is
-created and then dropped when it goes out of scope. The modifications are shown
-in Listing 15-29:</p>
+<p>Cheksiz chiqishning yo'qligi ushbu kod mos yozuvlar yaratmaganligini ko'rsatadi
+tsikl. Buni biz qo'ng'iroq qilishdan olgan qadriyatlarimizga qarab ham aytishimiz mumkin
+<code>Rc::strong_count</code> va <code>Rc::weak_count</code>.</p>
+<h4 id="kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish"><a class="header" href="#kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish">&quot;Kuchli_hisob&quot; va &quot;zaif_hisob&quot; dagi o'zgarishlarni vizualizatsiya qilish</a></h4>
+<p>Keling, <code>Rc&lt;tugun&gt;</code> <code>kuchli_hisoblash</code> va <code>zaif_hisoblash</code> qiymatlari qanday ekanligini ko'rib chiqamiz.
+misollar yangi ichki doirani yaratish va yaratishni ko'chirish orqali o'zgaradi
+<code>filial</code> shu doiraga kiradi. Shunday qilib, biz &quot;filial&quot; bo'lganda nima sodir bo'lishini ko'rishimiz mumkin
+yaratilgan va keyin u ko'lamdan chiqib ketganda tushib ketgan. O'zgartirishlar ko'rsatilgan
+15-29 ro'yxatda:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::cell::RefCell;
 </span><span class="boring">use std::rc::{Rc, Weak};
@@ -13934,45 +13842,41 @@ in Listing 15-29:</p>
 }</code></pre></pre>
 <p><span class="caption">Listing 15-29: Creating <code>branch</code> in an inner scope and
 examining strong and weak reference counts</span></p>
-<p>After <code>leaf</code> is created, its <code>Rc&lt;Node&gt;</code> has a strong count of 1 and a weak
-count of 0. In the inner scope, we create <code>branch</code> and associate it with
-<code>leaf</code>, at which point when we print the counts, the <code>Rc&lt;Node&gt;</code> in <code>branch</code>
-will have a strong count of 1 and a weak count of 1 (for <code>leaf.parent</code> pointing
-to <code>branch</code> with a <code>Weak&lt;Node&gt;</code>). When we print the counts in <code>leaf</code>, we’ll see
-it will have a strong count of 2, because <code>branch</code> now has a clone of the
-<code>Rc&lt;Node&gt;</code> of <code>leaf</code> stored in <code>branch.children</code>, but will still have a weak
-count of 0.</p>
-<p>When the inner scope ends, <code>branch</code> goes out of scope and the strong count of
-the <code>Rc&lt;Node&gt;</code> decreases to 0, so its <code>Node</code> is dropped. The weak count of 1
-from <code>leaf.parent</code> has no bearing on whether or not <code>Node</code> is dropped, so we
-don’t get any memory leaks!</p>
-<p>If we try to access the parent of <code>leaf</code> after the end of the scope, we’ll get
-<code>None</code> again. At the end of the program, the <code>Rc&lt;Node&gt;</code> in <code>leaf</code> has a strong
-count of 1 and a weak count of 0, because the variable <code>leaf</code> is now the only
-reference to the <code>Rc&lt;Node&gt;</code> again.</p>
-<p>All of the logic that manages the counts and value dropping is built into
-<code>Rc&lt;T&gt;</code> and <code>Weak&lt;T&gt;</code> and their implementations of the <code>Drop</code> trait. By
-specifying that the relationship from a child to its parent should be a
-<code>Weak&lt;T&gt;</code> reference in the definition of <code>Node</code>, you’re able to have parent
-nodes point to child nodes and vice versa without creating a reference cycle
-and memory leaks.</p>
-<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>This chapter covered how to use smart pointers to make different guarantees and
-trade-offs from those Rust makes by default with regular references. The
-<code>Box&lt;T&gt;</code> type has a known size and points to data allocated on the heap. The
-<code>Rc&lt;T&gt;</code> type keeps track of the number of references to data on the heap so
-that data can have multiple owners. The <code>RefCell&lt;T&gt;</code> type with its interior
-mutability gives us a type that we can use when we need an immutable type but
-need to change an inner value of that type; it also enforces the borrowing
-rules at runtime instead of at compile time.</p>
-<p>Also discussed were the <code>Deref</code> and <code>Drop</code> traits, which enable a lot of the
-functionality of smart pointers. We explored reference cycles that can cause
-memory leaks and how to prevent them using <code>Weak&lt;T&gt;</code>.</p>
-<p>If this chapter has piqued your interest and you want to implement your own
-smart pointers, check out <a href="../nomicon/index.html">“The Rustonomicon”</a> for more useful
-information.</p>
-<p>Next, we’ll talk about concurrency in Rust. You’ll even learn about a few new
-smart pointers.</p>
+<p>'barg' yaratilgandan so'ng, uning 'Rc<tugun>' kuchli soni 1 va zaif bo'ladi.
+0 ning soni. Ichki doirada biz &quot;filial&quot; yaratamiz va uni bog'laymiz.
+<code>barg</code>, biz hisoblarni chop etganda, <code>filialdagi </code>Rc<tugun><code>kuchli soni 1 va zaif soni 1 bo‘ladi (“leaf.parent” ko‘rsatish uchun</code>zaif<tugun><code>bilan</code>filial<code>ga). Hisoblarni “barg”da chop etganimizda, biz ko'ramiz uning kuchli soni 2 ga teng bo'ladi, chunki </code>filial<code>endi kloniga ega</code>barg<code>ning </code>Rc<tugun><code> </code>branch.children` da saqlanadi, lekin baribir zaif bo'ladi.
+soni 0.</p>
+<p>Ichki qamrov tugagach, &quot;filial&quot; doiradan chiqib ketadi va kuchli soni
+<code>Rc&lt;Node&gt;</code> 0 ga kamayadi, shuning uchun uning <code>Tugun</code> tushiriladi. Zaif hisob 1
+'leaf.parent' dan &quot;tugun&quot; tushirilgan yoki yo'qligiga ta'sir qilmaydi, shuning uchun biz
+hech qanday xotira oqishiga yo'l qo'ymang!</p>
+<p>Qo'llanish doirasi tugagandan so'ng &quot;barg&quot; ning ota-onasiga kirishga harakat qilsak, biz olamiz
+Yana 'Yo'q'. Dastur oxirida <code>barg</code>dagi <code>Rc&lt;tugun&gt;</code> kuchli
+soni 1 va kuchsiz soni 0, chunki &quot;barg&quot; o'zgaruvchisi endi yagona
+yana <code>Rc&lt;tugun&gt;</code> ga murojaat qiling.</p>
+<p>Hisoblash va qiymatni pasaytirishni boshqaradigan barcha mantiq o'rnatilgan
+<code>Rc&lt;T&gt;</code> va <code>Zaif&lt;T&gt;</code> va ularning <code>Drop</code> xususiyatini amalga oshirish. tomonidan
+bolaning ota-onasiga bo'lgan munosabati a bo'lishi kerakligini ko'rsatib
+<code>Tugun</code> ta<code>rifida </code>zaif<T><code> havolasi, siz ota-onaga ega bo</code>lishingiz mumkin
+tugunlar mos yozuvlar siklini yaratmasdan, bola tugunlariga ishora qiladi va aksincha
+va xotira oqadi.</p>
+<h2 id="xulosa-14"><a class="header" href="#xulosa-14">Xulosa</a></h2>
+<p>Ushbu bobda turli xil kafolatlar berish uchun aqlli ko'rsatkichlardan qanday foydalanish kerakligi ko'rib chiqildi
+Rust odatiy havolalar bilan sukut bo'yicha qiladi. The
+<code>Box&lt;T&gt;</code> turi ma'lum o'lchamga ega va u yerda ajratilgan ma'lumotlarga ishora qiladi. The
+<code>Rc&lt;T&gt;</code> turi to'pdagi ma'lumotlarga havolalar sonini kuzatib boradi
+bu ma'lumotlar bir nechta egalariga ega bo'lishi mumkin. <code>RefCell&lt;T&gt;</code> turi ichki ko'rinishi bilan
+o'zgaruvchanlik bizga o'zgarmas tur kerak bo'lganda foydalanishimiz mumkin bo'lgan turni beradi, lekin
+ushbu turdagi ichki qiymatni o'zgartirish kerak; u qarz olishni ham majbur qiladi
+kompilyatsiya vaqtida emas, balki ish vaqtidagi qoidalar.</p>
+<p>Shuningdek, ko'plab imkoniyatlarni beradigan &quot;Deref&quot; va &quot;Drop&quot; xususiyatlari ham muhokama qilindi
+aqlli ko'rsatkichlarning funksionalligi. Biz sabab bo'lishi mumkin bo'lgan mos yozuvlar davrlarini o'rganib chiqdik
+xotira oqishi va ularni <code>Zaif&lt;T&gt;</code> yordamida qanday qilib oldini olish mumkin.</p>
+<p>Agar ushbu bob sizni qiziqtirgan bo'lsa va siz o'zingiznikini amalga oshirmoqchi bo'lsangiz
+aqlli ko'rsatkichlar, foydaliroq bo'lishi uchun <a href="../nomicon/index.html">“The Rustonomicon”</a> ni tekshiring
+ma'lumot.</p>
+<p>Keyinchalik, biz Rustdagi parallellik haqida gaplashamiz. Siz hatto bir nechta yangi narsalarni bilib olasiz
+aqlli ko'rsatkichlar.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fearless-concurrency"><a class="header" href="#fearless-concurrency">Fearless Concurrency</a></h1>
 <p>Bir vaqtning o'zida dasturlashni(concurrent programming) xavfsiz va samarali boshqarish Rustning asosiy maqsadlaridan biridir. Dasturning turli qismlari mustaqil ravishda bajariladigan(execute) <em>concurrent programming</em> va dasturning turli qismlari bir vaqtning o'zida bajariladigan <em>parallel dasturlash</em> ko'proq kompyuterlar o'zlarining bir nechta protsessorlaridan foydalanishlari sababli tobora muhim ahamiyat kasb etmoqda. Tarixiy jihatdan, ushbu kontekstlarda dasturlash qiyin va xatolarga moyil bo'lgan: Rust buni o'zgartirishga umid qilmoqda.</p>
 <p>Dastlab, Rust jamoasi xotira xavfsizligini ta'minlash va parallel muammolarning oldini olish turli usullar bilan hal qilinishi kerak bo'lgan ikkita alohida muammo deb o'ylagan. Vaqt o'tishi bilan jamoa egalik(ownership) va turdagi tizimlar(type system) xotira xavfsizligi <em>va</em> parallellik muammolarini boshqarishga yordam beradigan kuchli vositalar to'plami ekanligini aniqladi! Ownership(egalik) va turlarni tekshirishdan(type checking) foydalangan holda, ko'plab parallellik xatolar runtimedagi xatolardan ko'ra Rustda kompilyatsiya vaqtidagi xatolardir. Shuning uchun, runtime bilan bir vaqtda xatolik yuzaga kelgan aniq holatlarni takrorlash uchun ko'p vaqt sarflashdan ko'ra, noto'g'ri kod kompilyatsiya qilishni rad etadi va muammoni tushuntiruvchi xatoni taqdim etadi. Natijada, siz kodingizni ishlab chiqarishga(production) yuborilgandan keyin emas, balki uning ustida ishlayotganingizda tuzatishingiz mumkin. Biz Rustning bu jihatini <em>fearless</em> <em>concurrency</em> deb nomladik. Fearless concurrency sizga nozik xatolarsiz kod yozish imkonini beradi va yangi xatolarni kiritmasdan qayta tiklash oson.</p>
@@ -14462,23 +14366,17 @@ fn main() {
 Mutex ichidagi ma'lumotlarga kirish uchun biz qulfni olish uchun <code>lock</code> metodidan foydalanamiz. Bu chaqiruv joriy threadni bloklaydi, shuning uchun u bizni qulflash navbati kelmaguncha hech qanday ishni bajara olmaydi.</p>
 <p>Qulfni ushlab turgan boshqa thread panic qo'zg'atsa, <code>lock</code> chaqiruvi muvaffaqiyatsiz bo'ladi. Bunday holda, hech kim qulfni qo'lga kirita olmaydi, shuning uchun biz  <code>unwrap</code>ni tanladik va agar shunday vaziyatda bo'lsak, bu threadni panic qo'yishni tanladik.</p>
 <p>Qulfni qo'lga kiritganimizdan so'ng, biz bu holatda <code>num</code> deb nomlangan return qiymatini ichidagi ma'lumotlarga o'zgaruvchan reference sifatida ko'rib chiqishimiz mumkin. Tur(type) tizimi <code>m</code> dagi qiymatni ishlatishdan oldin qulfni olishimizni ta'minlaydi. <code>m</code> turi <code>i32</code> emas, <code>Mutex&lt;i32&gt;</code>, shuning uchun biz <code>i32</code> qiymatidan foydalanish uchun <code>lock</code>ni chaqirishimiz kerak. Biz unuta olmaymiz; aks holda turdagi tizim bizga ichki <code>i32</code> ga kirishga ruxsat bermaydi.</p>
-<p>As you might suspect, <code>Mutex&lt;T&gt;</code> is a smart pointer. More accurately, the call
-to <code>lock</code> <em>returns</em> a smart pointer called <code>MutexGuard</code>, wrapped in a
-<code>LockResult</code> that we handled with the call to <code>unwrap</code>. The <code>MutexGuard</code> smart
-pointer implements <code>Deref</code> to point at our inner data; the smart pointer also
-has a <code>Drop</code> implementation that releases the lock automatically when a
-<code>MutexGuard</code> goes out of scope, which happens at the end of the inner scope. As
-a result, we don’t risk forgetting to release the lock and blocking the mutex
-from being used by other threads, because the lock release happens
-automatically.</p>
-<p>After dropping the lock, we can print the mutex value and see that we were able
-to change the inner <code>i32</code> to 6.</p>
-<h4 id="sharing-a-mutext-between-multiple-threads"><a class="header" href="#sharing-a-mutext-between-multiple-threads">Sharing a <code>Mutex&lt;T&gt;</code> Between Multiple Threads</a></h4>
-<p>Now, let’s try to share a value between multiple threads using <code>Mutex&lt;T&gt;</code>.
-We’ll spin up 10 threads and have them each increment a counter value by 1, so
-the counter goes from 0 to 10. The next example in Listing 16-13 will have
-a compiler error, and we’ll use that error to learn more about using
-<code>Mutex&lt;T&gt;</code> and how Rust helps us use it correctly.</p>
+<p>Taxmin qilgan bolishingiz mumkinki Mutex<T> aqlli ko'rsatgich. Aniqroq qilib aytadigan bo'lsak, <code>lock</code> qo'ng'irog'i MutexGuard deb nomlangan  ochish
+qo'ng'irog'i bilan oralgan LockResult-ga o'ralgan aqlli ko'rsatgichni qaytaradi . <code>MutexGuard</code> ko'rsatkichi esa bizning ichki ma'lumotlarimizga ishora
+qilish uchun <code>Deref</code>ni amalga oshiradi( Derefdan foydalanadi). Aqlli ko'rsatgichda <code>Drop</code> ilovasi ham mavjud bo'lib, MutexGuard qo'llanilish doirasidan
+tashqariga chiqqanda avtomatik ravishda  qulfni chiqaradi va bu esa ichki doiraning oxirida sodir bo'ladi. Natijada, biz qulfni(lock) bo'shatishni unutib
+qo'ymaymiz va asosiysi mutexni boshqa threadlar tomonidan ishlatilishini bloklaymiz, chunki qulfni(lock) chiqarish avtomatik ravishda sodir bo'ladi.</p>
+<p>Qulfni tashlaganimizdan so'ng, biz mutex qiymatini print qilishimiz(chop etishimiz ) va ichki <code>i32</code> ni 6 ga o'zgartira olganimizni ko'rishimiz mumkin.</p>
+<h4 id="bitta-mutekstni--bir-nechta-mavzular-ortasida-ulashishalmashtirish"><a class="header" href="#bitta-mutekstni--bir-nechta-mavzular-ortasida-ulashishalmashtirish">Bitta <code>Muteks&lt;T&gt;</code>ni  Bir nechta mavzular o'rtasida ulashish(almashtirish):</a></h4>
+<p>Keling, <code>Mutex&lt;T&gt;</code>-dan foydalanib, bir nechta oqimlar o'rtasida qiymatni  share qilishga(qiymatni almashtirishga) harakat qilaylik. Biz 10 ta threadni
+aylantiramiz va ularning har biri hisoblagich qiymatini 1 ga oshiradi, shuning uchun hisoblagich 0 dan 10 gacha boradi. 16-13 ro'yxatdagi keyingi misolda
+kompilyator xatosi (compiler error)bo'ladi va biz bu xatoni o'rganish uchun ishlatamiz. <code>Mutex&lt;T&gt;</code>-dan foydalanish va Rust uni to'g'ri ishlatishimizga
+qanday yordam berishi haqida ko'proq o'rganamiz.</p>
 <p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use std::sync::Mutex;
 use std::thread;
@@ -14502,20 +14400,15 @@ fn main() {
 
     println!(&quot;Result: {}&quot;, *counter.lock().unwrap());
 }</code></pre>
-<p><span class="caption">Listing 16-13: Ten threads each increment a counter
-guarded by a <code>Mutex&lt;T&gt;</code></span></p>
-<p>We create a <code>counter</code> variable to hold an <code>i32</code> inside a <code>Mutex&lt;T&gt;</code>, as we did
-in Listing 16-12. Next, we create 10 threads by iterating over a range of
-numbers. We use <code>thread::spawn</code> and give all the threads the same closure: one
-that moves the counter into the thread, acquires a lock on the <code>Mutex&lt;T&gt;</code> by
-calling the <code>lock</code> method, and then adds 1 to the value in the mutex. When a
-thread finishes running its closure, <code>num</code> will go out of scope and release the
-lock so another thread can acquire it.</p>
-<p>In the main thread, we collect all the join handles. Then, as we did in Listing
-16-2, we call <code>join</code> on each handle to make sure all the threads finish. At
-that point, the main thread will acquire the lock and print the result of this
-program.</p>
-<p>We hinted that this example wouldn’t compile. Now let’s find out why!</p>
+<p><span class="caption">Ro'yxat 16-13: <code>Mutex&lt;T&gt;</code> tomonidan qo'riqlanadigan hisoblagichni har biri o'nta threaddan amalga oshirishi.</span></p>
+<p><code>Mutex&lt;T&gt;</code>ni ichida <code>i32</code> ni ushlab turish uchun hisoblagich o'zgaruvchisini yaratamiz, xuddi 16-12 ro'yxatdagi kabi(listing 16-12). Keyingi amal esa,
+biz raqamlar oralig'ida takrorlash orqali 10 ta thread yaratamiz. Biz <code>thread::spawn</code> dan foydalanamiz va barcha threadlarga bir xil yopilishni beramiz:
+hisoblagichni threadga o'tkazish uchun ishlatiladigan  qulflash usulini amalga oshirish orqali(chaqirish orqali) orqali <code>Mutex&lt;T&gt;</code> da blokirovkaga ega
+bo'ladi va keyin mutexdagi qiymatga 1 qo'shiladi. Thread o'zining yopilishini tugatgandan so'ng, <code>num</code> doirasi tashqariga chiqadi va boshqa thread uni
+olishi uchun qulfni bo'shatadi.</p>
+<p>Asosiy threadda biz barcha birlashma tutqichlarini yig'amiz. Keyin, 16-2 ro'yxatdagidek,barcha threadlar tugashiga ishonch hosil qilish uchun har bir
+tutqichga <code>join</code> chaqiramiz. O'sha paytda asosiy thread qulfni oladi va ushbu dasturning natijasini print(chop etadi).</p>
+<p>Bu misol tuzilmasligiga ishora qilingan. Endi nima uchunligini o'ylab ko'raylik!</p>
 <pre><code class="language-console">$ cargo run
    Compiling shared-state v0.1.0 (file:///projects/shared-state)
 error[E0382]: use of moved value: `counter`
@@ -14532,15 +14425,13 @@ error[E0382]: use of moved value: `counter`
 For more information about this error, try `rustc --explain E0382`.
 error: could not compile `shared-state` due to previous error
 </code></pre>
-<p>The error message states that the <code>counter</code> value was moved in the previous
-iteration of the loop. Rust is telling us that we can’t move the ownership
-of lock <code>counter</code> into multiple threads. Let’s fix the compiler error with a
-multiple-ownership method we discussed in Chapter 15.</p>
-<h4 id="multiple-ownership-with-multiple-threads"><a class="header" href="#multiple-ownership-with-multiple-threads">Multiple Ownership with Multiple Threads</a></h4>
-<p>In Chapter 15, we gave a value multiple owners by using the smart pointer
-<code>Rc&lt;T&gt;</code> to create a reference counted value. Let’s do the same here and see
-what happens. We’ll wrap the <code>Mutex&lt;T&gt;</code> in <code>Rc&lt;T&gt;</code> in Listing 16-14 and clone
-the <code>Rc&lt;T&gt;</code> before moving ownership to the thread.</p>
+<p>Xato xabari <code>counter</code>(hisoblagich) qiymati tsiklning oldingi iteratsiyasida ko'chirilganligini bildiradi. Rust bizga qulflash <code>counter</code>(hisoblagichining)
+egaligini bir nechta mavzularga o'tkaza olmasligimizni aytadi. Keling, 15-bobda muhokama qilgan bir nechta egalik usuli bilan kompilyator xatosini
+tuzataylik.</p>
+<h4 id="bir-nechta-mavzular-bilan-bir-nechta-egalik"><a class="header" href="#bir-nechta-mavzular-bilan-bir-nechta-egalik">Bir nechta mavzular bilan bir nechta egalik</a></h4>
+<p>15-bobda mos yozuvlar hisoblangan qiymatni yaratish uchun aqlli ko'rsatkich Rc<T> yordamida bir nechta egalarga qiymat berdik. Bu yerda ham xuddi shunday
+qilaylik va nima bo'lishini ko'ramiz.  <code>Mutex&lt;T&gt;</code>-ni  <code>Rc &lt;T&gt;</code>-ga 16-14-listingda o'rab olamiz va egalikni threadga ko'chirishdan oldin  <code>Rc&lt;T&gt;</code>-ni
+klonlaymiz(nusxasini yaratmoq, cloning).</p>
 <p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use std::rc::Rc;
 use std::sync::Mutex;
@@ -14566,10 +14457,8 @@ fn main() {
 
     println!(&quot;Result: {}&quot;, *counter.lock().unwrap());
 }</code></pre>
-<p><span class="caption">Listing 16-14: Attempting to use <code>Rc&lt;T&gt;</code> to allow
-multiple threads to own the <code>Mutex&lt;T&gt;</code></span></p>
-<p>Once again, we compile and get... different errors! The compiler is teaching us
-a lot.</p>
+<p><span class="caption">Listing 16-14: <code>Rc&lt;T&gt;</code> ni ishlatib, bir nechta iplar (threads) <code>Mutex&lt;T&gt;</code> ga egalik qilishiga imkon berishga urinish.</span></p>
+<p>Yana bir bor, biz kompilyatsiya qilamiz va... turli xatolarni olamiz! Kompilyator bizga ko'p narsani o'rgatmoqda.</p>
 <pre><code class="language-console">$ cargo run
    Compiling shared-state v0.1.0 (file:///projects/shared-state)
 error[E0277]: `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
@@ -14601,36 +14490,27 @@ note: required by a bound in `spawn`
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `shared-state` due to previous error
 </code></pre>
-<p>Wow, that error message is very wordy! Here’s the important part to focus on:
-<code>`Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely</code>. The compiler is
-also telling us the reason why: <code>the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;` </code>. We’ll talk about <code>Send</code> in the next section: it’s one of
-the traits that ensures the types we use with threads are meant for use in
-concurrent situations.</p>
-<p>Unfortunately, <code>Rc&lt;T&gt;</code> is not safe to share across threads. When <code>Rc&lt;T&gt;</code>
-manages the reference count, it adds to the count for each call to <code>clone</code> and
-subtracts from the count when each clone is dropped. But it doesn’t use any
-concurrency primitives to make sure that changes to the count can’t be
-interrupted by another thread. This could lead to wrong counts—subtle bugs that
-could in turn lead to memory leaks or a value being dropped before we’re done
-with it. What we need is a type exactly like <code>Rc&lt;T&gt;</code> but one that makes changes
-to the reference count in a thread-safe way.</p>
-<h4 id="atomic-reference-counting-with-arct"><a class="header" href="#atomic-reference-counting-with-arct">Atomic Reference Counting with <code>Arc&lt;T&gt;</code></a></h4>
-<p>Fortunately, <code>Arc&lt;T&gt;</code> <em>is</em> a type like <code>Rc&lt;T&gt;</code> that is safe to use in
-concurrent situations. The <em>a</em> stands for <em>atomic</em>, meaning it’s an <em>atomically
-reference counted</em> type. Atomics are an additional kind of concurrency
-primitive that we won’t cover in detail here: see the standard library
-documentation for <a href="../std/sync/atomic/index.html"><code>std::sync::atomic</code></a><!-- ignore --> for more
-details. At this point, you just need to know that atomics work like primitive
-types but are safe to share across threads.</p>
-<p>You might then wonder why all primitive types aren’t atomic and why standard
-library types aren’t implemented to use <code>Arc&lt;T&gt;</code> by default. The reason is that
-thread safety comes with a performance penalty that you only want to pay when
-you really need to. If you’re just performing operations on values within a
-single thread, your code can run faster if it doesn’t have to enforce the
-guarantees atomics provide.</p>
-<p>Let’s return to our example: <code>Arc&lt;T&gt;</code> and <code>Rc&lt;T&gt;</code> have the same API, so we fix
-our program by changing the <code>use</code> line, the call to <code>new</code>, and the call to
-<code>clone</code>. The code in Listing 16-15 will finally compile and run:</p>
+<p>Afsus, bu xato xabari juda uzun va yoqimsizroq(rasmiyligi uchun) ekan! Bu yerda diqqat qilish kerak bo'lgan muhim qism:
+<code>Rc&lt;Mutex&lt;i32&gt;&gt; ` threadlar o'rtasida xavfsiz yuborilishi mumkin emas</code>. Kompilyator bizga buning sababini ham aytib beradi: <code>Send </code> xususiyati
+<code>Rc&lt;Mutex&lt;i32&gt;&gt; </code> uchun amalga oshirilmagan. Keyingi bo'limda<code> Send</code>(Yuborish) haqida gaplashamiz: bu biz threadlar bilan ishlatadigan turlarni bir
+vaqtda vaziyatlarda foydalanishga mo'ljallanganligini ta'minlaydigan xususiyatlardan biridir.</p>
+<p>Afsuski, <code>Rc&lt;T&gt;</code> ni threadlar bo'ylab almashish xavfsiz emas(yuqorida ham aytilishicha mumkin ham emas). <code>Rc&lt;T&gt;</code> mos yozuvlar sonini boshqarganda, u clone
+(klonlash) uchun har bir qo'ng'iroq uchun hisobni qo'shadi va har bir clone(klon) tushirilganda hisobdan ayiradi. Ammo hisobdagi o'zgarishlarni boshqa
+oqim bilan to'xtatib qo'ymasligiga ishonch hosil qilish uchun u parallellik ibtidoiylaridan(parallallik ibtidoiysi bu concurrency yani raqobatga tegishli
+mavzu) foydalanmaydi. Bu noto'g'ri hisob-kitoblarga olib kelishi mumkin - nozik xatolar, o'z navbatida, xotiraning oqishi yoki biz bilan ishlash
+tugashidan oldin qiymatning tushib ketishiga olib kelishi mumkin. Bizga aynan <code>Rc&lt;T&gt;</code>ga o'xshash tur kerak bo'ladi, ammo u mos yozuvlar soniga
+o'zgartirish kiritadi.</p>
+<h4 id="arct-bilan-atomik-havolalarni-hisoblash"><a class="header" href="#arct-bilan-atomik-havolalarni-hisoblash"><code>Arc&lt;T&gt;</code> bilan atomik havolalarni hisoblash</a></h4>
+<p>Yaxshiyamki, <code>Arc&lt;T&gt;</code> <code>Rc&lt;T&gt;</code> kabi bir xil vaziyatlarda foydalanish uchun xavfsiz tur. A atomik degan ma'noni anglatadi, ya'ni bu atomik havola orqali
+hisoblangan tur. Atomlar parallellik ibtidoiyning(concurrency:konkurentlik) qo'shimcha turi bo'lib,bu yerda batafsik ko'rib chiqolmaymiz: batafsil
+ma'lumot uchun <code>std::sync::atomic</code> uchun standart kutubxona hujjatlariga(dokumentatsiyasiga) qarang. Shu nuqtada, atomlar ibtidoiy turlar kabi ishlashini
+bilishingiz kerak, lekin ularni threadlar bo'ylab almashish xavfsizdir.</p>
+<p>Keyin nima uchun barcha ibtidoiy turlar atom emasligi va nega standart kutubxona turlari sukut bo'yicha <code>Arc&lt;T&gt;</code> dan foydalanish uchun amalga
+oshirilmaganligi haqida hayron bo'lishingiz mumkin. Buning sababi shundaki, thread xavfsizligi faqat sizga kerak bo'lganda to'lamoqchi bo'lgan ishlash
+jazosi bilan birga keladi(PERFORMANCE PENALTY-IJRO,BAJARISH UCHUN JAZO) .Agar siz faqat bitta oqim ichidagi qiymatlar ustida amllarni bajarayotgan
+bo'lsangiz yani atomik kafolatlarni bajarish shart bo'lmasa, kodingiz tezroq ishlashi mumkin.</p>
+<p>Keling, misolimizga qaytaylik: <code>Arc&lt;T&gt;</code> va <code>Rc&lt;T&gt;</code> bir xil APIga ega, shuning uchun biz dasturimizni <code>use</code>(foydalanish) qatorini, <code>new</code>(yangi) chaqiruvni
+va <code>clone</code>(klonlash) uchun qo'ng'iroqni o'zgartirish orqali tuzatamiz. 16-15 ro'yxatdagi kod nihoyat togri boladi:</p>
 <p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::sync::{Arc, Mutex};
 use std::thread;
@@ -14655,44 +14535,33 @@ fn main() {
 
     println!(&quot;Result: {}&quot;, *counter.lock().unwrap());
 }</code></pre></pre>
-<p><span class="caption">Listing 16-15: Using an <code>Arc&lt;T&gt;</code> to wrap the <code>Mutex&lt;T&gt;</code>
-to be able to share ownership across multiple threads</span></p>
-<p>This code will print the following:</p>
+<p><span class="caption">Ro'yxat 16-15: <code>Mutex&lt;T&gt;</code>-ni o'rash uchun <code>Arc&lt;T&gt;</code> dan foydalanish, bir nechta mavzular bo'ylab egalik huquqini baham ko'rish
+uchun</span></p>
+<p>Ushbu kod quyidagilarni print qiladi:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 <pre><code class="language-text">Result: 10
 </code></pre>
-<p>We did it! We counted from 0 to 10, which may not seem very impressive, but it
-did teach us a lot about <code>Mutex&lt;T&gt;</code> and thread safety. You could also use this
-program’s structure to do more complicated operations than just incrementing a
-counter. Using this strategy, you can divide a calculation into independent
-parts, split those parts across threads, and then use a <code>Mutex&lt;T&gt;</code> to have each
-thread update the final result with its part.</p>
-<p>Note that if you are doing simple numerical operations, there are types simpler
-than <code>Mutex&lt;T&gt;</code> types provided by the <a href="../std/sync/atomic/index.html"><code>std::sync::atomic</code> module of the
-standard library</a><!-- ignore -->. These types provide safe, concurrent,
-atomic access to primitive types. We chose to use <code>Mutex&lt;T&gt;</code> with a primitive
-type for this example so we could concentrate on how <code>Mutex&lt;T&gt;</code> works.</p>
-<h3 id="similarities-between-refcelltrct-and-mutextarct"><a class="header" href="#similarities-between-refcelltrct-and-mutextarct">Similarities Between <code>RefCell&lt;T&gt;</code>/<code>Rc&lt;T&gt;</code> and <code>Mutex&lt;T&gt;</code>/<code>Arc&lt;T&gt;</code></a></h3>
-<p>You might have noticed that <code>counter</code> is immutable but we could get a mutable
-reference to the value inside it; this means <code>Mutex&lt;T&gt;</code> provides interior
-mutability, as the <code>Cell</code> family does. In the same way we used <code>RefCell&lt;T&gt;</code> in
-Chapter 15 to allow us to mutate contents inside an <code>Rc&lt;T&gt;</code>, we use <code>Mutex&lt;T&gt;</code>
-to mutate contents inside an <code>Arc&lt;T&gt;</code>.</p>
-<p>Another detail to note is that Rust can’t protect you from all kinds of logic
-errors when you use <code>Mutex&lt;T&gt;</code>. Recall in Chapter 15 that using <code>Rc&lt;T&gt;</code> came
-with the risk of creating reference cycles, where two <code>Rc&lt;T&gt;</code> values refer to
-each other, causing memory leaks. Similarly, <code>Mutex&lt;T&gt;</code> comes with the risk of
-creating <em>deadlocks</em>. These occur when an operation needs to lock two resources
-and two threads have each acquired one of the locks, causing them to wait for
-each other forever. If you’re interested in deadlocks, try creating a Rust
-program that has a deadlock; then research deadlock mitigation strategies for
-mutexes in any language and have a go at implementing them in Rust. The
-standard library API documentation for <code>Mutex&lt;T&gt;</code> and <code>MutexGuard</code> offers
-useful information.</p>
-<p>We’ll round out this chapter by talking about the <code>Send</code> and <code>Sync</code> traits and
-how we can use them with custom types.</p>
+<p>Biz uddaladik! Biz 0 dan 10 gacha hisobladik, bu katta ishdek korinmasligi mumkin, ammo bu bizga <code>Mutex&lt;T&gt;</code> va thread xavfsizligi haqida ko‘p narsalarni 
+o‘rgatadi. Hisoblagich faqat ko'paytirishdan koproq ish qila olishini orgatdi. Ushbu strategiyadan foydalanib, siz hisobni mustaqil qismlarga
+bo'lishingiz, bu qismlarni threadlar bo'ylab ajratishingiz va keyin <code>Mutex&lt;T&gt;</code> dan foydalanib, har bir thread yakuniy natijani o'z qismi bilan yangilashi
+mumkin.</p>
+<p>E'tibor bering, agar siz oddiy raqamli amallarni bajarayotgan bo'lsangiz, standart kutubxonaning <code>std::sync::atomic</code> modulida taqdim etilgan <code>Mutex&lt;T&gt;</code>
+turlaridan oddiyroq turlar mavjud. Ushbu turlar ibtidoiy turlarga xavfsiz, parallel, atomik kirishni ta'minlaydi va  ushbu misol uchun <code>Mutex&lt;T&gt;</code>ning
+ibtidoiy turi bilan foydalanishni tanladik, shuning uchun <code>Mutex&lt;T&gt;</code> qanday ishlashiga e'tibor qaratishimiz mumkin.</p>
+<h3 id="refcelltrct-va-mutextarct-ortasidagi-oxshashliklar"><a class="header" href="#refcelltrct-va-mutextarct-ortasidagi-oxshashliklar"><code>RefCell&lt;T&gt;</code>/<code>Rc&lt;T&gt;</code> va <code>Mutex&lt;T&gt;</code>/<code>Arc&lt;T&gt;</code> o'rtasidagi o'xshashliklar</a></h3>
+<p>Hisoblagich(counter) o'zgarmasligini payqagan bo'lishingiz mumkin, lekin biz uning ichidagi qiymatga o'zgaruvchan havolani olishimiz mumkin; bu <code>Mutex&lt;T&gt; Cell</code> oilasi kabi ichki o'zgaruvchanlikni qollab quvvatlaydi. Xuddi shu tarzda biz <code>Rc&lt;T&gt;</code> ichidagi tarkibni o'zgartirishga ruxsat berish uchun 15-bobda
+<code>RefCell&lt;T&gt;</code> dan foydalanganmiz, <code>Arc&lt;T&gt;</code> ichidagi tarkibni mutatsiya qilish uchun <code>Mutex&lt;T&gt;</code> dan foydalanamiz.</p>
+<p>Yana bir muhim ma' lumot, <code>Mutex&lt;T&gt;</code> dan foydalanganda Rust sizni barcha turdagi mantiqiy xatolardan himoya qila olmaydi.  15-bobda <code>Rc&lt;T&gt;</code> dan
+foydalanish oziga xos yozuvlar sikllarini yaratish xavfi bilan kelganligini eslang, bu erda ikkita <code>Rc&lt;T&gt;</code> qiymati bir-biriga tegishli bo'lib, xotira
+susayishi, tanqisligiga olib keladi. Xuddi shunday, <code>Mutex&lt;T&gt;</code> ham boshi berk deadlocks(ko'chalarni) yaratish xavfi bilan birga keladi. Bular amal ikkita
+resursni bloklashi kerak bo'lganda sodir bo'ladi va ikkita thread har biri locks(qulflardan) birini qo'lga kiritib. Agar siz ziddiyatlarga qiziqsangiz,
+tanqislik deadlocks(ko'chasiga) ega Rust dasturini yaratishga harakat qiling; keyin har qanday tilda mutekslar uchun ziddiyatni yengilashtirish, yechim
+topish strategiyalarini o'rganing va Rustda ularni amalga oshirishga kirishing. <code>Mutex&lt;T&gt;</code> va <code>MutexGuard</code> uchun standart kutubxona API hujjatlari
+foydali ma'lumotlarni taqdim etadi.</p>
+<p>Biz ushbu bobni <code>Send</code>(Yuborish) va <code>Sync</code>(Sinxronlashtirish) xususiyatlari va ularni maxsus turlar bilan qanday ishlatishimiz haqida gapirib,
+yakunlaymiz. </p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="extensible-concurrency-with-the-sync-and-send-traits"><a class="header" href="#extensible-concurrency-with-the-sync-and-send-traits">Extensible Concurrency with the <code>Sync</code> and <code>Send</code> Traits</a></h2>
 <p>Interestingly, the Rust language has <em>very</em> few concurrency features. Almost
 every concurrency feature we’ve talked about so far in this chapter has been
@@ -14741,7 +14610,7 @@ information is that building new concurrent types not made up of <code>Send</cod
 <code>Sync</code> parts requires careful thought to uphold the safety guarantees. <a href="../nomicon/index.html">“The
 Rustonomicon”</a> has more information about these guarantees and how to
 uphold them.</p>
-<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>This isn’t the last you’ll see of concurrency in this book: the project in
 Chapter 20 will use the concepts in this chapter in a more realistic situation
 than the smaller examples discussed here.</p>
@@ -14773,59 +14642,45 @@ that are commonly considered object-oriented and how those characteristics
 translate to idiomatic Rust. We’ll then show you how to implement an
 object-oriented design pattern in Rust and discuss the trade-offs of doing so
 versus implementing a solution using some of Rust’s strengths instead.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="characteristics-of-object-oriented-languages"><a class="header" href="#characteristics-of-object-oriented-languages">Characteristics of Object-Oriented Languages</a></h2>
-<p>There is no consensus in the programming community about what features a
-language must have to be considered object-oriented. Rust is influenced by many
-programming paradigms, including OOP; for example, we explored the features
-that came from functional programming in Chapter 13. Arguably, OOP languages
-share certain common characteristics, namely objects, encapsulation, and
-inheritance. Let’s look at what each of those characteristics means and whether
-Rust supports it.</p>
-<h3 id="objects-contain-data-and-behavior"><a class="header" href="#objects-contain-data-and-behavior">Objects Contain Data and Behavior</a></h3>
-<p>The book <em>Design Patterns: Elements of Reusable Object-Oriented Software</em> by
-Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides (Addison-Wesley
-Professional, 1994), colloquially referred to as <em>The Gang of Four</em> book, is a
-catalog of object-oriented design patterns. It defines OOP this way:</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="obyektga-yonaltirilgan-dasturlash-xususiyatlari"><a class="header" href="#obyektga-yonaltirilgan-dasturlash-xususiyatlari">Obyektga Yo'naltirilgan Dasturlash Xususiyatlari</a></h2>
+<p>Dasturlash jamiyatida bir tilni obyektga yo'naltirilgan deb hisoblash uchun qanday xususiyatlarga ega bo'lishi kerakligi haqida kelishuv yo'q. Rust ko'p
+dasturlash paradigmalaridan, jumladan OOPdan ilhomlangan; masalan, 13-bobda funksional dasturlashdan kelgan xususiyatlarni o'rgandik. Ehtimol, OOP
+tillari ma'lum umumiy xususiyatlarga ega, ya'ni obyektlar, inkapsulyatsiya va meros. Keling, har bir xususiyatning nimani anglatishini va Rust uni
+qo'llab-quvvatlaydimi yoki yo'qligini ko'rib chiqaylik.</p>
+<h3 id="obyektlar-malumotlar-va-xatti-harakatlarni-oz-ichiga-oladi"><a class="header" href="#obyektlar-malumotlar-va-xatti-harakatlarni-oz-ichiga-oladi">Obyektlar Ma'lumotlar va Xatti-harakatlarni O'z ichiga oladi</a></h3>
+<p>Erich Gamma, Richard Helm, Ralph Johnson va John Vlissides tomonidan yozilgan *Design Patterns: Elements of Reusable Object-Oriented Software
+(Addison-Wesley Professional, 1994), oddiygina <em>The Gang of Four</em> deb ataladigan kitob, obyektga yo'naltirilgan dizayn shablonlarining katalogidir. U
+OOPni quyidagicha ta'riflaydi:</p>
 <blockquote>
-<p>Object-oriented programs are made up of objects. An <em>object</em> packages both
-data and the procedures that operate on that data. The procedures are
-typically called <em>methods</em> or <em>operations</em>.</p>
+<p>Obyektga yo'naltirilgan dasturlar obyektlardan tashkil topgan. 
+Bir <em>obyekt</em> ma'lumotlar va ushbu ma'lumotlar bilan ishlaydigan 
+protseduralarni paketlaydi. Protseduralar odatda <em>metodlar</em><br />
+yoki <em>operatsiyalar</em> deb ataladi.</p>
 </blockquote>
-<p>Using this definition, Rust is object-oriented: structs and enums have data,
-and <code>impl</code> blocks provide methods on structs and enums. Even though structs and
-enums with methods aren’t <em>called</em> objects, they provide the same
-functionality, according to the Gang of Four’s definition of objects.</p>
-<h3 id="encapsulation-that-hides-implementation-details"><a class="header" href="#encapsulation-that-hides-implementation-details">Encapsulation that Hides Implementation Details</a></h3>
-<p>Another aspect commonly associated with OOP is the idea of <em>encapsulation</em>,
-which means that the implementation details of an object aren’t accessible to
-code using that object. Therefore, the only way to interact with an object is
-through its public API; code using the object shouldn’t be able to reach into
-the object’s internals and change data or behavior directly. This enables the
-programmer to change and refactor an object’s internals without needing to
-change the code that uses the object.</p>
-<p>We discussed how to control encapsulation in Chapter 7: we can use the <code>pub</code>
-keyword to decide which modules, types, functions, and methods in our code
-should be public, and by default everything else is private. For example, we
-can define a struct <code>AveragedCollection</code> that has a field containing a vector
-of <code>i32</code> values. The struct can also have a field that contains the average of
-the values in the vector, meaning the average doesn’t have to be computed
-on demand whenever anyone needs it. In other words, <code>AveragedCollection</code> will
-cache the calculated average for us. Listing 17-1 has the definition of the
-<code>AveragedCollection</code> struct:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p>Ushbu ta'rifga ko'ra, Rust obyektga yo'naltirilgan: structlar va enumlar ma'lumotlarga ega va <code>impl</code> bloklari structlar va enumlarda metodlar taqdim
+etadi. Garchi structlar va enumlar metodlar bilan <em>obyekt</em> deb atalmagan bo'lsa-da, ular The Gang of Four ta'rifiga ko'ra obyektlarning bir xil
+funksionalligini ta'minlaydi.</p>
+<h3 id="amalga-oshirish-tafsilotlarini-yashiruvchi-inkapsulyatsiya"><a class="header" href="#amalga-oshirish-tafsilotlarini-yashiruvchi-inkapsulyatsiya">Amalga oshirish Tafsilotlarini Yashiruvchi Inkapsulyatsiya</a></h3>
+<p>OOP bilan odatda bog'liq bo'lgan yana bir jihat <em>inkapsulyatsiya</em> tushunchasi bo'lib, bu obyektning amalga oshirish tafsilotlari ushbu obyektni
+ishlatadigan kod uchun ochiq bo'lmasligini anglatadi. Shuning uchun, obyekt bilan o'zaro ta'sir qilishning yagona usuli uning ommaviy APIi orqali amalga
+oshiriladi; obyektni ishlatadigan kod obyektning ichki qismlariga kirib, ma'lumotlar yoki xatti-harakatlarni bevosita o'zgartira olmaydi. Bu dasturchiga
+obyektning ichki qismlarini o'zgartirish va refaktor qilish imkonini beradi, obyektdan foydalanadigan kodni o'zgartirmasdan.</p>
+<p>7-bobda inkapsulyatsiyani qanday boshqarish mumkinligini muhokama qildik: biz <code>pub</code> kalit so'zidan foydalanib, kodimizdagi qaysi modullar, turlar,
+funksiyalar va metodlar ommaviy bo'lishi kerakligini va standart bo'lib hamma narsalar xususiy ekanligini hal qilishimiz mumkin. Masalan,
+<code>AveragedCollection</code> deb nomlangan structni aniqlashimiz mumkin, u <code>i32</code> qiymatlarining vektorini o'z ichiga oladi. Struct shuningdek, vektordagi
+qiymatlarning o'rtacha qiymatini o'z ichiga oluvchi maydonga ham ega bo'lishi mumkin, ya'ni o'rtacha qiymatga har safar ehtiyoj tug'ilganda hisoblanishi
+shart emas. Boshqacha qilib aytganda, <code>AveragedCollection</code> biz uchun hisoblangan o'rtacha qiymatni keshlaydi. 17-1 ro'yxatda <code>AveragedCollection</code>
+structining ta'rifi keltirilgan:</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub struct AveragedCollection {
     list: Vec&lt;i32&gt;,
     average: f64,
 }</code></pre>
-<p><span class="caption">Listing 17-1: An <code>AveragedCollection</code> struct that
-maintains a list of integers and the average of the items in the
-collection</span></p>
-<p>The struct is marked <code>pub</code> so that other code can use it, but the fields within
-the struct remain private. This is important in this case because we want to
-ensure that whenever a value is added or removed from the list, the average is
-also updated. We do this by implementing <code>add</code>, <code>remove</code>, and <code>average</code> methods
-on the struct, as shown in Listing 17-2:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">Ro'yxat 17-1: <code>AveragedCollection</code> structi, integerlar ro'yxatini va yig'indi elementlarning o'rtacha qiymatini saqlaydi</span></p>
+<p>Struct <code>pub</code> deb belgilangan, shuning uchun boshqa kodlar uni ishlatishi mumkin, lekin struct ichidagi maydonlar xususiy bo'lib qoladi. Bu holda bu
+muhim, chunki biz ro'yxatga qiymat qo'shilgan yoki o'chirilganida o'rtacha qiymat ham yangilanishini ta'minlamoqchimiz. Buni biz <code>add</code>, <code>remove</code> va
+<code>average</code> metodlarini structga tatbiq etish orqali amalga oshiramiz, bu 17-2 ro'yxatda ko'rsatilgan:</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub struct AveragedCollection {
 </span><span class="boring">    list: Vec&lt;i32&gt;,
 </span><span class="boring">    average: f64,
@@ -14857,77 +14712,51 @@ on the struct, as shown in Listing 17-2:</p>
         self.average = total as f64 / self.list.len() as f64;
     }
 }</code></pre>
-<p><span class="caption">Listing 17-2: Implementations of the public methods
-<code>add</code>, <code>remove</code>, and <code>average</code> on <code>AveragedCollection</code></span></p>
-<p>The public methods <code>add</code>, <code>remove</code>, and <code>average</code> are the only ways to access
-or modify data in an instance of <code>AveragedCollection</code>. When an item is added
-to <code>list</code> using the <code>add</code> method or removed using the <code>remove</code> method, the
-implementations of each call the private <code>update_average</code> method that handles
-updating the <code>average</code> field as well.</p>
-<p>We leave the <code>list</code> and <code>average</code> fields private so there is no way for
-external code to add or remove items to or from the <code>list</code> field directly;
-otherwise, the <code>average</code> field might become out of sync when the <code>list</code>
-changes. The <code>average</code> method returns the value in the <code>average</code> field,
-allowing external code to read the <code>average</code> but not modify it.</p>
-<p>Because we’ve encapsulated the implementation details of the struct
-<code>AveragedCollection</code>, we can easily change aspects, such as the data structure,
-in the future. For instance, we could use a <code>HashSet&lt;i32&gt;</code> instead of a
-<code>Vec&lt;i32&gt;</code> for the <code>list</code> field. As long as the signatures of the <code>add</code>,
-<code>remove</code>, and <code>average</code> public methods stay the same, code using
-<code>AveragedCollection</code> wouldn’t need to change. If we made <code>list</code> public instead,
-this wouldn’t necessarily be the case: <code>HashSet&lt;i32&gt;</code> and <code>Vec&lt;i32&gt;</code> have
-different methods for adding and removing items, so the external code would
-likely have to change if it were modifying <code>list</code> directly.</p>
-<p>If encapsulation is a required aspect for a language to be considered
-object-oriented, then Rust meets that requirement. The option to use <code>pub</code> or
-not for different parts of code enables encapsulation of implementation details.</p>
-<h3 id="inheritance-as-a-type-system-and-as-code-sharing"><a class="header" href="#inheritance-as-a-type-system-and-as-code-sharing">Inheritance as a Type System and as Code Sharing</a></h3>
-<p><em>Inheritance</em> is a mechanism whereby an object can inherit elements from
-another object’s definition, thus gaining the parent object’s data and behavior
-without you having to define them again.</p>
-<p>If a language must have inheritance to be an object-oriented language, then
-Rust is not one. There is no way to define a struct that inherits the parent
-struct’s fields and method implementations without using a macro.</p>
-<p>However, if you’re used to having inheritance in your programming toolbox, you
-can use other solutions in Rust, depending on your reason for reaching for
-inheritance in the first place.</p>
-<p>You would choose inheritance for two main reasons. One is for reuse of code:
-you can implement particular behavior for one type, and inheritance enables you
-to reuse that implementation for a different type. You can do this in a limited
-way in Rust code using default trait method implementations, which you saw in
-Listing 10-14 when we added a default implementation of the <code>summarize</code> method
-on the <code>Summary</code> trait. Any type implementing the <code>Summary</code> trait would have
-the <code>summarize</code> method available on it without any further code. This is
-similar to a parent class having an implementation of a method and an
-inheriting child class also having the implementation of the method. We can
-also override the default implementation of the <code>summarize</code> method when we
-implement the <code>Summary</code> trait, which is similar to a child class overriding the
-implementation of a method inherited from a parent class.</p>
-<p>The other reason to use inheritance relates to the type system: to enable a
-child type to be used in the same places as the parent type. This is also
-called <em>polymorphism</em>, which means that you can substitute multiple objects for
-each other at runtime if they share certain characteristics.</p>
+<p><span class="caption">Ro'yxat 17-2: <code>AveragedCollection</code> ustida ommaviy <code>add</code>, <code>remove</code> va <code>average</code> metodlarining amalga oshirilishi</span></p>
+<p><code>add</code>, <code>remove</code> va <code>average</code> ommaviy metodlar <code>AveragedCollection</code> nusxasidagi ma'lumotlarni kirish yoki o'zgartirishning yagona usuli. Element ro'yxatga
+<code>add</code> metodi orqali qo'shilganda yoki <code>remove</code> metodi orqali olib tashlanganda, har biri <code>average</code> maydonini yangilash bilan shug'ullanadigan xususiy
+<code>update_average</code> metodini chaqiradi.</p>
+<p><code>list</code> va <code>average</code> maydonlarini xususiy qilib qoldiramiz, shunda tashqi kod <code>list</code> maydoniga elementlar qo'shish yoki olib tashlash imkoniga ega
+bo'lmaydi; aks holda, <code>average</code> maydoni <code>list</code> o'zgarganda sinxronlashdan chiqib ketishi mumkin. 
+<code>average</code> metodi <code>average</code> maydonidagi qiymatni qaytaradi, tashqi kodga <code>average</code>ni o'qish imkonini beradi, lekin uni o'zgartirish imkonini bermaydi.</p>
+<p>Biz <code>AveragedCollection</code> structining amalga oshirish tafsilotlarini inkapsulyatsiya qilganimiz sababli, kelajakda uning jihatlarini osonlik bilan
+o'zgartirishimiz mumkin. Masalan, <code>list</code> maydoni uchun <code>Vec&lt;i32&gt;</code> o'rniga <code>HashSet&lt;i32&gt;</code> dan foydalanishimiz mumkin. <code>add</code>, <code>remove</code> va <code>average</code> ommaviy
+metodlarining imzolari o'zgarmagan holda, <code>AveragedCollection</code>dan foydalanadigan kodni o'zgartirish kerak bo'lmaydi. Agar <code>list</code>ni ommaviy qilsak, bu har
+doim ham shunday bo'lmaydi: <code>HashSet&lt;i32&gt;</code> va <code>Vec&lt;i32&gt;</code> elementlarni qo'shish va olib tashlash uchun turli xil metodlarga ega, shuning uchun <code>list</code>ni
+to'g'ridan-to'g'ri o'zgartirayotgan tashqi kod o'zgartirilishi kerak bo'ladi.</p>
+<p>Agar inkapsulyatsiya tilni obyektga yo'naltirilgan deb hisoblash uchun zaruriy xususiyat bo'lsa, Rust bu talabga javob beradi. Kodning turli qismlari
+uchun <code>pub</code>dan foydalanish yoki foydalanmaslik imkoniyati amalga oshirish tafsilotlarini inkapsulyatsiya qilish imkonini beradi.</p>
+<h3 id="merozdan-foydalanish-tizimi-va-kodni-ulashish-sifatida"><a class="header" href="#merozdan-foydalanish-tizimi-va-kodni-ulashish-sifatida">Merozdan foydalanish Tizimi va Kodni Ulashish Sifatida</a></h3>
+<p><em>Meros olish</em> bu mexanizm bo'lib, bunda obyekt boshqa obyektning ta'rifidan elementlarni meros qilib oladi va shunday qilib, ota obyektning ma'lumotlari
+va xatti-harakatlarini qayta ta'riflashsiz oladi.</p>
+<p>Agar til obyektga yo'naltirilgan til deb hisoblanishi uchun meros olishga ega bo'lishi kerak bo'lsa, Rust bunday til emas. Ota structning maydonlari va
+metodlarini makrosiz meros qilib olishning hech qanday yo'li yo'q.</p>
+<p>Biroq, agar siz dasturlash vositangizda meros olishga ega bo'lishga odatlangan bo'lsangiz, Rustda boshqa echimlardan foydalanishingiz mumkin, bu meros
+olishga erishmoqchi bo'lgan sababingizga qarab o'zgaradi.</p>
+<p>Meros olishni tanlashning ikki asosiy sababi bor. Biri kodni qayta ishlatish uchun: siz bir tur uchun ma'lum xatti-harakatni amalga oshirishingiz mumkin
+va meros olish bu amalga oshirishni boshqa tur uchun qayta ishlatishga imkon beradi. Rust kodida siz buni cheklangan tarzda trait metodlari uchun 
+standart amalga oshirishlar yordamida amalga oshirishingiz mumkin, bu 10-14 ro'yxatda <code>Summary</code> traitida <code>summarize</code> metodining standart amalga
+oshirilishini qo'shganimizda ko'rsatilgan.</p>
+<p><code>Summary</code> traitini amalga oshirgan har qanday tur <code>summarize</code> metodiga ega bo'ladi, hech qanday qo'shimcha kod yozmasdan. Bu ota sinfning metodini
+amalga oshirishiga va meros qilib olingan bola sinfining metodni amalga oshirishiga o'xshaydi. <code>Summary</code> traitini amalga oshirganimizda <code>summarize</code>
+metodining standart amalga oshirilishini ham bekor qilishimiz mumkin, bu meros qilib olingan bola sinfi ota sinfdan meros qilib olingan metodni amalga
+oshirishini bekor qilishga o'xshaydi.</p>
+<p>Meros olishdan foydalanishning boshqa sababi turi tizimiga bog'liq: bola turini ota turi bilan bir xil joylarda ishlatishga imkon berish. Bu shuningdek
+<em>polimorfizm</em> deb ataladi, bu bir-birini almashtirish imkonini beradi, agar ular ma'lum xususiyatlarga ega bo'lsa.</p>
 <blockquote>
-<h3 id="polymorphism"><a class="header" href="#polymorphism">Polymorphism</a></h3>
-<p>To many people, polymorphism is synonymous with inheritance. But it’s
-actually a more general concept that refers to code that can work with data
-of multiple types. For inheritance, those types are generally subclasses.</p>
-<p>Rust instead uses generics to abstract over different possible types and
-trait bounds to impose constraints on what those types must provide. This is
-sometimes called <em>bounded parametric polymorphism</em>.</p>
+<h3 id="polimorfizm"><a class="header" href="#polimorfizm">Polimorfizm</a></h3>
+<p>Ko'pchilik uchun polimorfizm meros olish bilan sinonimdir. Ammo bu aslida ko'proq umumiy tushuncha bo'lib, u turli turlardagi ma'lumotlar bilan
+ishlaydigan kodni anglatadi. Meros olish uchun bu turlar odatda quyi sinflardir.</p>
+<p>Rust esa o'rniga turli xil turlar ustida abstraksiya qilish uchun generiklardan va bu turlarning nimani ta'minlashi kerakligini cheklash uchun trait
+cheklovlaridan foydalanadi. Bu ba'zan <em>cheklangan parametrik polimorfizm</em> deb ataladi.</p>
 </blockquote>
-<p>Inheritance has recently fallen out of favor as a programming design solution
-in many programming languages because it’s often at risk of sharing more code
-than necessary. Subclasses shouldn’t always share all characteristics of their
-parent class but will do so with inheritance. This can make a program’s design
-less flexible. It also introduces the possibility of calling methods on
-subclasses that don’t make sense or that cause errors because the methods don’t
-apply to the subclass. In addition, some languages will only allow single
-inheritance (meaning a subclass can only inherit from one class), further
-restricting the flexibility of a program’s design.</p>
-<p>For these reasons, Rust takes the different approach of using trait objects
-instead of inheritance. Let’s look at how trait objects enable polymorphism in
-Rust.</p>
+<p>Meros olish ko'pincha dastur dizayn yechimi sifatida ko'plab dasturlash tillarida sevilmay qoldi, chunki u ko'pincha kerakli koddan ko'proq kodni ulash
+xavfini tug'diradi. Quyi sinflar har doim ham ota sinfining barcha xususiyatlarini ulashmasligi kerak, ammo meros olishda shunday bo'ladi. Bu dastur
+dizaynini kamroq moslashuvchan qiladi. Shuningdek, bu quyi sinfda metodlarni chaqirish imkoniyatini beradi, bu metodlar quyi sinfga mos kelmasligi yoki
+xatolarga olib kelishi mumkin, chunki metodlar quyi sinfga tatbiq etilmaydi. Bundan tashqari, ba'zi tillar faqat yagona meros olishga ruxsat beradi (bu
+quyi sinf faqat bitta sinfdan meros olishi mumkinligini anglatadi), bu esa dastur dizaynining moslashuvchanligini yanada cheklaydi.</p>
+<p>Ushbu sabablarga ko'ra, Rust meros olish o'rniga trait obyektlaridan foydalanish yo'lini tanlaydi. Keling, Rustda trait obyektlari qanday qilib
+polimorfizmni ta'minlashini ko'rib chiqaylik.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="using-trait-objects-that-allow-for-values-of-different-types"><a class="header" href="#using-trait-objects-that-allow-for-values-of-different-types">Using Trait Objects That Allow for Values of Different Types</a></h2>
 <p>In Chapter 8, we mentioned that one limitation of vectors is that they can
 store elements of only one type. We created a workaround in Listing 8-9 where
@@ -16075,7 +15904,7 @@ problem to take advantage of Rust’s features can provide benefits, such as
 preventing some bugs at compile time. Object-oriented patterns won’t always be
 the best solution in Rust due to certain features, like ownership, that
 object-oriented languages don’t have.</p>
-<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
+<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
 <p>No matter whether or not you think Rust is an object-oriented language after
 reading this chapter, you now know that you can use trait objects to get some
 object-oriented features in Rust. Dynamic dispatch can give your code some
@@ -17108,7 +16937,7 @@ reason is that we’ve used the struct field shorthand syntax. But we haven’t
 applied any test to the value in the <code>id</code> field in this arm, as we did with the
 first two arms: any value would match this pattern.</p>
 <p>Using <code>@</code> lets us test a value and save it in a variable within one pattern.</p>
-<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
+<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
 <p>Rust’s patterns are very useful in distinguishing between different kinds of
 data. When used in <code>match</code> expressions, Rust ensures your patterns cover every
 possible value, or your program won’t compile. Patterns in <code>let</code> statements and
@@ -17117,26 +16946,36 @@ destructuring of values into smaller parts at the same time as assigning to
 variables. We can create simple or complex patterns to suit our needs.</p>
 <p>Next, for the penultimate chapter of the book, we’ll look at some advanced
 aspects of a variety of Rust’s features.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-features"><a class="header" href="#advanced-features">Advanced Features</a></h1>
-<p>By now, you’ve learned the most commonly used parts of the Rust programming
-language. Before we do one more project in Chapter 20, we’ll look at a few
-aspects of the language you might run into every once in a while, but may not
-use every day. You can use this chapter as a reference for when you encounter
-any unknowns. The features covered here are useful in very specific situations.
-Although you might not reach for them often, we want to make sure you have a
-grasp of all the features Rust has to offer.</p>
-<p>In this chapter, we’ll cover:</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="kengaytirilgan-xususiyatlar"><a class="header" href="#kengaytirilgan-xususiyatlar">Kengaytirilgan xususiyatlar</a></h1>
+<p>Hozirgacha Rust dasturlash tilining eng ko'p qo'llaniladigan qismlarini o'rgandingiz. 
+20-bobda yana bir loyihani amalga oshirishimizdan oldin, siz vaqti-vaqti bilan duch kelishingiz 
+mumkin bo'lgan, lekin har doim ham ishlatilmaydigan Rust xususiyatlari haqida gaplashamiz. 
+Qachondir tushunmovchiliklarga duch kelganingizda, ushbu bobdan qo'llanma sifatida foydalanishingiz mumkin. 
+Bu yerda ko'rib chiqiladigan xususiyatlar, funksiyalar faqat muayyan vaziyatlardagina foydali bo'ladi.
+Garchi bu funksiyalarga tez-tez murojaat qilmasligingiz mumkin bo‘lsa-da, Rust tili taklif qiladigan 
+barcha imkoniyatlarni tushunib olishingizni istaymiz.</p>
+<p>Ushbu bobda biz quyidagilarni ko'rib chiqamiz:</p>
 <ul>
-<li>Unsafe Rust: how to opt out of some of Rust’s guarantees and take
-responsibility for manually upholding those guarantees</li>
-<li>Advanced traits: associated types, default type parameters, fully qualified
-syntax, supertraits, and the newtype pattern in relation to traits</li>
-<li>Advanced types: more about the newtype pattern, type aliases, the never type,
-and dynamically sized types</li>
-<li>Advanced functions and closures: function pointers and returning closures</li>
-<li>Macros: ways to define code that defines more code at compile time</li>
+<li>
+<p>Xavfsiz bo‘lmagan (Unsafe) Rust: Rustning ayrim kafolatlaridan qanday qilib voz kechish va bu kafolatlarni qo‘lda, ya’ni 
+o‘zingiz mustaqil tarzda boshqarish mas’uliyatini qanday olishni ko‘rib chiqamiz.</p>
+</li>
+<li>
+<p>Kengaytirilgan traitlar: bog‘langan turlar (associated types), standart tur parametrlari (default type parameters), 
+to‘liq aniqlangan sintaksis (fully qualified syntax), supertraitlar (supertraits) va newtype namunasi (newtype pattern).</p>
+</li>
+<li>
+<p>Kengaytirilgan turlar: newtype namunasi (newtype pattern), tur aliaslari (type aliases),  hech qachon yuz bermaydigan tur
+(the never type — !) va dinamik o'lchamdagi turlar (dynamically sized types)</p>
+</li>
+<li>
+<p>Kengaytirilgan funksiyalar va yopiq funksiyalar (Closures): funksiya ko'rsatkichlari (function pointers) va closure qaytaradigan funksiyalar (returning closures)</p>
+</li>
+<li>
+<p>Andozalar (Macros): kodni jamlash (kompilyatsiya) vaqtida boshqa kodni aniqlovchi kodni yozish usullari.</p>
+</li>
 </ul>
-<p>It’s a panoply of Rust features with something for everyone! Let’s dive in!</p>
+<p>Bu — har bir dasturchi uchun foydali bo'lgan Rust imkoniyatlarining to‘liq to‘plamidir! Keling, to'plamga sho'ng'iymiz!</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="unsafe-rust"><a class="header" href="#unsafe-rust">Unsafe Rust</a></h2>
 <p>All the code we’ve discussed so far has had Rust’s memory safety guarantees
 enforced at compile time. However, Rust has a second language hidden inside it
@@ -19177,7 +19016,7 @@ pub fn sql(input: TokenStream) -&gt; TokenStream {</code></pre>
 <p>This definition is similar to the custom derive macro’s signature: we receive
 the tokens that are inside the parentheses and return the code we wanted to
 generate.</p>
-<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
+<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
 <p>Whew! Now you have some Rust features in your toolbox that you likely won’t use
 often, but you’ll know they’re available in very particular circumstances.
 We’ve introduced several complex topics so that when you encounter them in
@@ -19186,34 +19025,21 @@ recognize these concepts and syntax. Use this chapter as a reference to guide
 you to solutions.</p>
 <p>Next, we’ll put everything we’ve discussed throughout the book into practice
 and do one more project!</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="final-project-building-a-multithreaded-web-server"><a class="header" href="#final-project-building-a-multithreaded-web-server">Final Project: Building a Multithreaded Web Server</a></h1>
-<p>It’s been a long journey, but we’ve reached the end of the book. In this
-chapter, we’ll build one more project together to demonstrate some of the
-concepts we covered in the final chapters, as well as recap some earlier
-lessons.</p>
-<p>For our final project, we’ll make a web server that says “hello” and looks like
-Figure 20-1 in a web browser.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="songi-loyiha-kop-oqimli-multithreaded-veb-server-qurish"><a class="header" href="#songi-loyiha-kop-oqimli-multithreaded-veb-server-qurish">So'ngi Loyiha: Ko'p oqimli (Multithreaded) Veb Server qurish</a></h1>
+<p>Bu uzoq safar bo‘ldi, lekin nihoyat kitobning oxiriga yetdik. Ushbu bobda biz yakuniy boblarda o‘rganilgan ba’zi tushunchalarni amalda qo‘llash uchun yana bir loyihani birga quramiz, shuningdek, avvalgi darslarni ham eslab o‘tamiz.</p>
+<p>Yakuniy loyihamizda biz “salom” deb javob beradigan va veb-brauzerda 20-1-rasmga o‘xshash ko‘rinadigan veb-server yaratamiz.</p>
 <p><img src="img/trpl20-01.png" alt="hello from rust" /></p>
-<p><span class="caption">Figure 20-1: Our final shared project</span></p>
-<p>Here is our plan for building the web server:</p>
+<p><span class="caption">20-rasm: Bizning yakuniy umumiy loyihamiz</span></p>
+<p>Veb-serverni yaratish bo‘yicha rejamiz quyidagicha:</p>
 <ol>
-<li>Learn a bit about TCP and HTTP.</li>
-<li>Listen for TCP connections on a socket.</li>
-<li>Parse a small number of HTTP requests.</li>
-<li>Create a proper HTTP response.</li>
-<li>Improve the throughput of our server with a thread pool.</li>
+<li>TCP va HTTP haqida biroz ma’lumot olish.</li>
+<li>Soket orqali TCP ulanishlarini tinglash.</li>
+<li>Bir nechta HTTP so‘rovlarini tahlil qilish.</li>
+<li>To‘g‘ri HTTP javobini (response) yaratish.</li>
+<li>Serverimiz unumdorligini oqimlar to‘plami (thread pool) yordamida oshirish.</li>
 </ol>
-<p>Before we get started, we should mention one detail: the method we’ll use won’t
-be the best way to build a web server with Rust. Community members have
-published a number of production-ready crates available on
-<a href="https://crates.io/">crates.io</a> that provide more complete web server and
-thread pool implementations than we’ll build. However, our intention in this
-chapter is to help you learn, not to take the easy route. Because Rust is a
-systems programming language, we can choose the level of abstraction we want to
-work with and can go to a lower level than is possible or practical in other
-languages. We’ll therefore write the basic HTTP server and thread pool manually
-so you can learn the general ideas and techniques behind the crates you might
-use in the future.</p>
+<p>Boshlashdan oldin bir narsani aytib o‘tishimiz kerak: biz foydalanadigan usul Rust tilida veb-server qurishning eng yaxshi usuli bo‘lmaydi. Rust hamjamiyati 
+<a href="https://crates.io/">crates.io</a> saytida chop etilgan, to‘liq funksiyali veb-server va oqimlar to‘plami (thread pool) kutubxonalarini yaratgan. Bu kutubxonalar biz quradigan versiyadan ko‘ra ancha mukammal. Biroq, ushbu bobdagi maqsadimiz – sizni o‘rgatish, eng oson yo‘lni tanlash emas. Rust tizim dasturlash tili bo‘lganligi sababli, biz o‘zimiz ishlamoqchi bo‘lgan abstraktsiya darajasini tanlashimiz mumkin va boshqa tillarda amalga oshirish qiyin yoki imkonsiz bo‘lgan chuqur darajadagi ishlarni bajarish imkoniyatiga egamiz. Shuning uchun biz HTTP server va oqimlar to‘plamini qo‘lda yozamiz, shunda siz kelajakda foydalanishingiz mumkin bo‘lgan kutubxonalar ortida qanday g‘oya va texnikalar yotganini tushunib olasiz.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="building-a-single-threaded-web-server"><a class="header" href="#building-a-single-threaded-web-server">Building a Single-Threaded Web Server</a></h2>
 <p>We’ll start by getting a single-threaded web server working. Before we begin,
 let’s look at a quick overview of the protocols involved in building web
@@ -21856,7 +21682,7 @@ some ideas:</p>
 similar web server using the crate instead. Then compare its API and
 robustness to the thread pool we implemented.</li>
 </ul>
-<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
+<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
 <p>Well done! You’ve made it to the end of the book! We want to thank you for
 joining us on this tour of Rust. You’re now ready to implement your own Rust
 projects and help with other peoples’ projects. Keep in mind that there is a

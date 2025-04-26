@@ -176,18 +176,18 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="reference-cycles-can-leak-memory"><a class="header" href="#reference-cycles-can-leak-memory">Reference Cycles Can Leak Memory</a></h2>
-<p>Rust’s memory safety guarantees make it difficult, but not impossible, to
-accidentally create memory that is never cleaned up (known as a <em>memory leak</em>).
-Preventing memory leaks entirely is not one of Rust’s guarantees, meaning
-memory leaks are memory safe in Rust. We can see that Rust allows memory leaks
-by using <code>Rc&lt;T&gt;</code> and <code>RefCell&lt;T&gt;</code>: it’s possible to create references where
-items refer to each other in a cycle. This creates memory leaks because the
-reference count of each item in the cycle will never reach 0, and the values
-will never be dropped.</p>
-<h3 id="creating-a-reference-cycle"><a class="header" href="#creating-a-reference-cycle">Creating a Reference Cycle</a></h3>
-<p>Let’s look at how a reference cycle might happen and how to prevent it,
-starting with the definition of the <code>List</code> enum and a <code>tail</code> method in Listing
+                        <h2 id="yonaltiruvchi-tsikllar-xotirani-oqishi-mumkin"><a class="header" href="#yonaltiruvchi-tsikllar-xotirani-oqishi-mumkin">Yo'naltiruvchi tsikllar xotirani oqishi mumkin</a></h2>
+<p>Rustning xotira xavfsizligi kafolatlari buni qiyinlashtiradi, lekin imkonsiz emas
+tasodifan hech qachon tozalanmaydigan xotira yaratish (<em>xotira oqish</em> deb nomlanadi).
+Xotiraning oqishi to'liq oldini olish Rustning kafolatlaridan biri emas, ya'ni
+xotira sızıntıları Rust-da xotira xavfsizdir. Rust xotira oqishiga ruxsat berishini ko'rishimiz mumkin
+<code>Rc&lt;T&gt;</code> va <code>RefCell&lt;T&gt;</code> dan foydalanib: bu yerda havolalar yaratish mumkin.
+elementlar siklda bir-biriga ishora qiladi. Bu xotira oqishini yaratadi, chunki
+tsikldagi har bir elementning mos yozuvlar soni hech qachon 0 ga etib bormaydi va qiymatlar
+hech qachon tashlab ketilmaydi.</p>
+<h3 id="malumot-siklini-yaratish"><a class="header" href="#malumot-siklini-yaratish">Malumot siklini yaratish</a></h3>
+<p>Keling, mos yozuvlar sikli qanday sodir bo'lishi mumkinligini va uni qanday oldini olishni ko'rib chiqaylik,
+Listingdagi <code>List</code> enum va <code>tail</code> usulining ta`rifidan boshlab
 15-25:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use crate::List::{Cons, Nil};
@@ -212,17 +212,17 @@ impl List {
 fn main() {}</code></pre></pre>
 <p><span class="caption">Listing 15-25: A cons list definition that holds a
 <code>RefCell&lt;T&gt;</code> so we can modify what a <code>Cons</code> variant is referring to</span></p>
-<p>We’re using another variation of the <code>List</code> definition from Listing 15-5. The
-second element in the <code>Cons</code> variant is now <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, meaning that
-instead of having the ability to modify the <code>i32</code> value as we did in Listing
-15-24, we want to modify the <code>List</code> value a <code>Cons</code> variant is pointing to.
-We’re also adding a <code>tail</code> method to make it convenient for us to access the
-second item if we have a <code>Cons</code> variant.</p>
-<p>In Listing 15-26, we’re adding a <code>main</code> function that uses the definitions in
-Listing 15-25. This code creates a list in <code>a</code> and a list in <code>b</code> that points to
-the list in <code>a</code>. Then it modifies the list in <code>a</code> to point to <code>b</code>, creating a
-reference cycle. There are <code>println!</code> statements along the way to show what the
-reference counts are at various points in this process.</p>
+<p>Biz 15-5 roʻyxatdagi “Roʻyxat” taʼrifining boshqa variantidan foydalanmoqdamiz. The
+<code>Cons</code> variantidagi ikkinchi element endi <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, ya`ni
+Biz Listingda bo'lgani kabi &quot;i32&quot; qiymatini o'zgartirish imkoniyatiga ega bo'lish o'rniga
+15-24, biz 'Kasalliklar' varianti ko'rsatayotgan 'Ro'yxat' qiymatini o'zgartirmoqchimiz.
+Bizga kirishni qulay qilish uchun biz &quot;quyruq&quot; usulini ham qo'shmoqdamiz
+ikkinchi element, agar bizda &quot;Kasalliklar&quot; varianti bo'lsa.</p>
+<p>15-26 roʻyxatda biz “asosiy” funksiyani qoʻshmoqdamiz.
+Ro'yxat 15-25. Bu kod <code>a</code> ro<code>yxatini va </code>b<code> ga ishora qiluvchi ro</code>yxatni yaratadi
+<code>a</code> ichidagi ro'yxat. Keyin u <code>a</code> ro<code>yxatini </code>b<code> ga ishora qilib o</code>zgartiradi va a ni yaratadi
+mos yozuvlar aylanishi. Yo'lda nima ekanligini ko'rsatish uchun `println!' iboralari mavjud
+mos yozuvlar soni bu jarayonning turli nuqtalarida.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use crate::List::{Cons, Nil};
 </span><span class="boring">use std::cell::RefCell;
@@ -268,17 +268,17 @@ reference counts are at various points in this process.</p>
 }</code></pre></pre>
 <p><span class="caption">Listing 15-26: Creating a reference cycle of two <code>List</code>
 values pointing to each other</span></p>
-<p>We create an <code>Rc&lt;List&gt;</code> instance holding a <code>List</code> value in the variable <code>a</code>
-with an initial list of <code>5, Nil</code>. We then create an <code>Rc&lt;List&gt;</code> instance holding
-another <code>List</code> value in the variable <code>b</code> that contains the value 10 and points
-to the list in <code>a</code>.</p>
-<p>We modify <code>a</code> so it points to <code>b</code> instead of <code>Nil</code>, creating a cycle. We do
-that by using the <code>tail</code> method to get a reference to the <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>
-in <code>a</code>, which we put in the variable <code>link</code>. Then we use the <code>borrow_mut</code>
-method on the <code>RefCell&lt;Rc&lt;List&gt;&gt;</code> to change the value inside from an <code>Rc&lt;List&gt;</code>
-that holds a <code>Nil</code> value to the <code>Rc&lt;List&gt;</code> in <code>b</code>.</p>
-<p>When we run this code, keeping the last <code>println!</code> commented out for the
-moment, we’ll get this output:</p>
+<p>Biz “a” o‘zgaruvchisida “Ro‘yxat” qiymatiga ega “Rc<List>” misolini yaratamiz.
+boshlang'ich ro'yxati &quot;5, Nil&quot; bilan. Keyin biz <code>Rc&lt;List&gt;</code> misol xoldingini yaratamiz
+10 qiymati va nuqtalarni o'z ichiga olgan &quot;b&quot; o'zgaruvchisidagi boshqa &quot;Ro'yxat&quot; qiymati
+<code>a</code> ro'yxatiga.</p>
+<p>Biz &quot;a&quot; ni o'zgartiramiz, shuning uchun u &quot;Nil&quot; o'rniga &quot;b&quot; ga ishora qiladi va sikl hosil qiladi. Biz qilamiz
+<code>RefCell&lt;Rc&lt;List&gt;&gt;</code> ga havola olish uchun <code>tail</code> usuli yordamida
+&quot;a&quot; da, biz &quot;link&quot; o'zgaruvchisini qo'yamiz. Keyin biz &quot;borrow_mut&quot; dan foydalanamiz
+<code>RefCell&lt;Rc&lt;List&gt;&gt;</code> ichidagi qiymatni <code>Rc&lt;List&gt;</code>dan oʻzgartirish uchun usul
+Bu <code>b</code> dagi <code>Rc&lt;List&gt;</code> uchun <code>Nil</code> qiymatiga ega.</p>
+<p>Ushbu kodni ishga tushirganimizda, oxirgi <code>println!</code> uchun izoh berilgan
+lahzada biz ushbu natijani olamiz:</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
     Finished dev [unoptimized + debuginfo] target(s) in 0.53s
@@ -291,75 +291,71 @@ b next item = Some(RefCell { value: Cons(5, RefCell { value: Nil }) })
 b rc count after changing a = 2
 a rc count after changing a = 2
 </code></pre>
-<p>The reference count of the <code>Rc&lt;List&gt;</code> instances in both <code>a</code> and <code>b</code> are 2 after
-we change the list in <code>a</code> to point to <code>b</code>. At the end of <code>main</code>, Rust drops the
-variable <code>b</code>, which decreases the reference count of the <code>b</code> <code>Rc&lt;List&gt;</code> instance
-from 2 to 1. The memory that <code>Rc&lt;List&gt;</code> has on the heap won’t be dropped at
-this point, because its reference count is 1, not 0. Then Rust drops <code>a</code>, which
-decreases the reference count of the <code>a</code> <code>Rc&lt;List&gt;</code> instance from 2 to 1 as
-well. This instance’s memory can’t be dropped either, because the other
-<code>Rc&lt;List&gt;</code> instance still refers to it. The memory allocated to the list will
-remain uncollected forever. To visualize this reference cycle, we’ve created a
-diagram in Figure 15-4.</p>
+<p><code>a</code> va <code>b</code>dagi <code>Rc&lt;List&gt;</code> misollarining mos yozuvlar soni 2 dan keyin
+biz <code>a</code> ro<code>yxatini </code>b<code> ga ishora qilish uchun o</code>zgartiramiz. &quot;Asosiy&quot; oxirida Rust ni tushiradi
+<code>b</code> o'zgaruvchisi, bu <code>b</code> <code>Rc&lt;List&gt;</code> misolining mos yozuvlar sonini kamaytiradi
+2 dan 1 gacha. <code>Rc&lt;List&gt;</code> to'plamida bo'lgan xotira o'chirilmaydi.
+bu nuqta, chunki uning mos yozuvlar soni 0 emas, 1. Keyin Rust <code>a</code> tushiradi, qaysi
+<code>a</code> <code>Rc&lt;List&gt;</code> misolining mos yozuvlar sonini 2 dan 1 gacha kamaytiradi
+yaxshi. Bu misolning xotirasini ham tashlab bo'lmaydi, chunki boshqasi
+<code>Rc&lt;List&gt;</code> misoli hali ham unga ishora qiladi. Ro'yxatga ajratilgan xotira bo'ladi
+abadiy yig'ilmagan qoladi. Ushbu mos yozuvlar siklini tasavvur qilish uchun biz yaratdik
+15-4-rasmdagi diagramma.</p>
 <img alt="Reference cycle of lists" src="img/trpl15-04.svg" class="center" />
 <p><span class="caption">Figure 15-4: A reference cycle of lists <code>a</code> and <code>b</code>
 pointing to each other</span></p>
-<p>If you uncomment the last <code>println!</code> and run the program, Rust will try to
-print this cycle with <code>a</code> pointing to <code>b</code> pointing to <code>a</code> and so forth until it
-overflows the stack.</p>
-<p>Compared to a real-world program, the consequences creating a reference cycle
-in this example aren’t very dire: right after we create the reference cycle,
-the program ends. However, if a more complex program allocated lots of memory
-in a cycle and held onto it for a long time, the program would use more memory
-than it needed and might overwhelm the system, causing it to run out of
-available memory.</p>
-<p>Creating reference cycles is not easily done, but it’s not impossible either.
-If you have <code>RefCell&lt;T&gt;</code> values that contain <code>Rc&lt;T&gt;</code> values or similar nested
-combinations of types with interior mutability and reference counting, you must
-ensure that you don’t create cycles; you can’t rely on Rust to catch them.
-Creating a reference cycle would be a logic bug in your program that you should
-use automated tests, code reviews, and other software development practices to
-minimize.</p>
-<p>Another solution for avoiding reference cycles is reorganizing your data
-structures so that some references express ownership and some references don’t.
-As a result, you can have cycles made up of some ownership relationships and
-some non-ownership relationships, and only the ownership relationships affect
-whether or not a value can be dropped. In Listing 15-25, we always want <code>Cons</code>
-variants to own their list, so reorganizing the data structure isn’t possible.
-Let’s look at an example using graphs made up of parent nodes and child nodes
-to see when non-ownership relationships are an appropriate way to prevent
-reference cycles.</p>
+<p>Agar siz oxirgi <code>println!</code>-ni izohdan olib tashlasangiz va dasturni ishga tushirsangiz, Rust bunga harakat qiladi
+bu siklni <code>a</code> bilan <code>b</code> <code>a</code> ga ishora qilib va ​​shunga o`xshash davom etguncha chop eting
+stekni to'ldirib yuboradi.</p>
+<p>Haqiqiy dunyo dasturi bilan taqqoslaganda, oqibatlar mos yozuvlar aylanishini yaratadi
+bu misolda unchalik dahshatli emas: biz mos yozuvlar siklini yaratganimizdan so'ng,
+dastur tugaydi. Ammo, agar murakkabroq dasturda ko'p xotira ajratilgan bo'lsa
+siklda va uni uzoq vaqt ushlab tursa, dastur ko'proq xotiradan foydalanadi
+kerak bo'lganidan ko'ra va tizimni to'sib qo'yishi mumkin, bu esa uning tugashiga olib keladi
+mavjud xotira.</p>
+<p>Malumot davrlarini yaratish oson emas, lekin bu ham imkonsiz emas.
+Agar sizda <code>Rc&lt;T&gt;</code> qiymatlari yoki shunga o'xshash ichki o'rnatilgan <code>RefCell&lt;T&gt;</code> qiymatlari mavjud bo'lsa
+ichki o'zgaruvchanlik va mos yozuvlar hisoblash bilan turlarning kombinatsiyasi, siz kerak
+tsikllarni yaratmasligingizga ishonch hosil qiling; ularni qo'lga olish uchun siz Rustga tayanolmaysiz.
+Malumot siklini yaratish dasturingizdagi mantiqiy xato bo'lishi mumkin
+avtomatlashtirilgan testlar, kodlarni ko'rib chiqish va boshqa dasturiy ta'minotni ishlab chiqish amaliyotlaridan foydalaning
+minimallashtirish.</p>
+<p>Malumot davrlarini oldini olishning yana bir yechimi maʼlumotlaringizni qayta tashkil etishdir
+tuzilmalar shunday qilib, ba'zi havolalar egalik huquqini bildiradi, ba'zi havolalar esa bildirmaydi.
+Natijada, siz ba'zi egalik munosabatlaridan tashkil topgan davrlarga ega bo'lishingiz mumkin va
+ba'zi mulkiy bo'lmagan munosabatlar va faqat mulkchilik munosabatlari ta'sir qiladi
+qiymat tushirilishi mumkinmi yoki yo'qmi. 15-25 ro'yxatda biz har doim &quot;Kasalliklar&quot; ni xohlaymiz
+o'z ro'yxatiga egalik qilish variantlari mavjud, shuning uchun ma'lumotlar strukturasini qayta tashkil qilish mumkin emas.
+Keling, ota-ona va tugunlardan tashkil topgan grafiklardan foydalangan holda misolni ko'rib chiqaylik
+egalik bo'lmagan munosabatlar qachon oldini olish uchun to'g'ri yo'l ekanligini ko'rish
+mos yozuvlar davrlari.</p>
 <h3 id="preventing-reference-cycles-turning-an-rct-into-a-weakt"><a class="header" href="#preventing-reference-cycles-turning-an-rct-into-a-weakt">Preventing Reference Cycles: Turning an <code>Rc&lt;T&gt;</code> into a <code>Weak&lt;T&gt;</code></a></h3>
-<p>So far, we’ve demonstrated that calling <code>Rc::clone</code> increases the
-<code>strong_count</code> of an <code>Rc&lt;T&gt;</code> instance, and an <code>Rc&lt;T&gt;</code> instance is only cleaned
-up if its <code>strong_count</code> is 0. You can also create a <em>weak reference</em> to the
-value within an <code>Rc&lt;T&gt;</code> instance by calling <code>Rc::downgrade</code> and passing a
-reference to the <code>Rc&lt;T&gt;</code>. Strong references are how you can share ownership of
-an <code>Rc&lt;T&gt;</code> instance. Weak references don’t express an ownership relationship,
-and their count doesn’t affect when an <code>Rc&lt;T&gt;</code> instance is cleaned up. They
-won’t cause a reference cycle because any cycle involving some weak references
-will be broken once the strong reference count of values involved is 0.</p>
-<p>When you call <code>Rc::downgrade</code>, you get a smart pointer of type <code>Weak&lt;T&gt;</code>.
-Instead of increasing the <code>strong_count</code> in the <code>Rc&lt;T&gt;</code> instance by 1, calling
-<code>Rc::downgrade</code> increases the <code>weak_count</code> by 1. The <code>Rc&lt;T&gt;</code> type uses
-<code>weak_count</code> to keep track of how many <code>Weak&lt;T&gt;</code> references exist, similar to
-<code>strong_count</code>. The difference is the <code>weak_count</code> doesn’t need to be 0 for the
-<code>Rc&lt;T&gt;</code> instance to be cleaned up.</p>
-<p>Because the value that <code>Weak&lt;T&gt;</code> references might have been dropped, to do
-anything with the value that a <code>Weak&lt;T&gt;</code> is pointing to, you must make sure the
-value still exists. Do this by calling the <code>upgrade</code> method on a <code>Weak&lt;T&gt;</code>
-instance, which will return an <code>Option&lt;Rc&lt;T&gt;&gt;</code>. You’ll get a result of <code>Some</code>
-if the <code>Rc&lt;T&gt;</code> value has not been dropped yet and a result of <code>None</code> if the
-<code>Rc&lt;T&gt;</code> value has been dropped. Because <code>upgrade</code> returns an <code>Option&lt;Rc&lt;T&gt;&gt;</code>,
-Rust will ensure that the <code>Some</code> case and the <code>None</code> case are handled, and
-there won’t be an invalid pointer.</p>
-<p>As an example, rather than using a list whose items know only about the next
-item, we’ll create a tree whose items know about their children items <em>and</em>
-their parent items.</p>
+<p>Hozirgacha biz &quot;Rc::clone&quot; ni chaqirish ko'rsatkichni oshirishini ko'rsatdik
+<code>Rc&lt;T&gt;</code> misolining <code>kuchli_hisobchasi</code> va <code>Rc&lt;T&gt;</code> misoli faqat tozalanadi
+yuqoriga, agar uning &quot;kuchli_hisoblash&quot; qiymati 0 bo'lsa. Shuningdek, &quot;kuchli_hisob&quot; ga * zaif havola* yaratishingiz mumkin
+<code>Rc&lt;T&gt;</code> misolidagi qiymatni <code>Rc::downgrade</code> deb chaqirish va
+<code>Rc&lt;T&gt;</code> ga havola. Kuchli havolalar egalik huquqini baham ko'rishingiz mumkin
+<code>Rc&lt;T&gt;</code> misoli. Zaif havolalar egalik munosabatlarini bildirmaydi,
+va <code>Rc&lt;T&gt;</code> namunasi tozalanganda ularning soni ta'sir qilmaydi. Ular
+mos yozuvlar aylanishiga olib kelmaydi, chunki ba'zi zaif havolalarni o'z ichiga olgan har qanday tsikl
+jalb qilingan qiymatlarning kuchli mos yozuvlar soni 0 bo'lsa, buziladi.</p>
+<p><code>Rc::downgrade</code> ga qo<code>ng</code>iroq qilganingizda, siz <code>Zaif&lt;T&gt;</code> tipidagi aqlli ko<code>rsatgichga ega bo</code>lasiz.
+<code>Rc&lt;T&gt;</code> misolidagi <code>strong_count</code> ni 1 ga oshirish o<code>rniga, </code>Rc::downgrade<code> </code>zaif_hisobni<code>1 ga oshiradi.</code>Rc<T><code>turi foydalanadi Qancha</code>Zaif<T><code>havolalari mavjudligini kuzatish uchun</code>zaif_hisob<code></code>kuchli_hisob<code>. Farqi shundaki, &quot;zaif_hisob&quot; uchun 0 bo'lishi shart emas </code>Rc<T>` namunasi tozalanadi.</p>
+<p>Chunki <code>Zaif&lt;T&gt;</code> havola qiladigan qiymat oʻchirilgan boʻlishi mumkin
+<code>Zaif&lt;T&gt;</code> ko'rsatayotgan qiymatga ega bo'lgan har qanday narsaga ishonch hosil qilishingiz kerak
+qiymati hali ham mavjud. Buni “Zaif<T>” da “yangilash” usulini chaqirish orqali bajaring
+misol, bu <code>Option&lt;Rc&lt;T&gt;&gt;</code>ni qaytaradi. Siz &quot;Ba'zi&quot; natijasini olasiz
+agar &quot;Rc<T>&quot; qiymati hali tushirilmagan bo'lsa va &quot;Yo'q&quot; natijasi, agar
+<code>Rc&lt;T&gt;</code> qiymati olib tashlandi. Chunki <code>yangilash</code> <code>Option&lt;Rc&lt;T&gt;&gt;</code>ni qaytaradi,
+Rust <code>Some</code> ishi va <code>None</code> ishi ko'rib chiqilishini ta'minlaydi va
+yaroqsiz ko'rsatgich bo'lmaydi.</p>
+<p>Misol sifatida, elementlari faqat keyingi haqida biladigan ro'yxatni ishlatish o'rniga
+elementi boʻlsa, biz daraxt yaratamiz, uning obʼyektlari oʻz bolalari buyumlari haqida <em>va</em>
+ularning ota-onalari.</p>
 <h4 id="creating-a-tree-data-structure-a-node-with-child-nodes"><a class="header" href="#creating-a-tree-data-structure-a-node-with-child-nodes">Creating a Tree Data Structure: a <code>Node</code> with Child Nodes</a></h4>
-<p>To start, we’ll build a tree with nodes that know about their child nodes.
-We’ll create a struct named <code>Node</code> that holds its own <code>i32</code> value as well as
-references to its children <code>Node</code> values:</p>
+<p>Boshlash uchun biz ularning tugunlari haqida biladigan tugunlari bo'lgan daraxt quramiz.
+Biz o'zining &quot;i32&quot; qiymatiga ega bo'lgan &quot;tugun&quot; nomli tuzilmani yaratamiz.
+uning bolalar 'Tugun' qiymatlariga havolalar:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::cell::RefCell;
 use std::rc::Rc;
@@ -381,14 +377,14 @@ struct Node {
 </span><span class="boring">        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
 </span><span class="boring">    });
 </span><span class="boring">}</span></code></pre></pre>
-<p>We want a <code>Node</code> to own its children, and we want to share that ownership with
-variables so we can access each <code>Node</code> in the tree directly. To do this, we
-define the <code>Vec&lt;T&gt;</code> items to be values of type <code>Rc&lt;Node&gt;</code>. We also want to
-modify which nodes are children of another node, so we have a <code>RefCell&lt;T&gt;</code> in
-<code>children</code> around the <code>Vec&lt;Rc&lt;Node&gt;&gt;</code>.</p>
-<p>Next, we’ll use our struct definition and create one <code>Node</code> instance named
-<code>leaf</code> with the value 3 and no children, and another instance named <code>branch</code>
-with the value 5 and <code>leaf</code> as one of its children, as shown in Listing 15-27:</p>
+<p>Biz &quot;Tugun&quot; o'z farzandlariga ega bo'lishini istaymiz va biz bu egalikni baham ko'rmoqchimiz
+o'zgaruvchilar, shuning uchun biz daraxtdagi har bir &quot;Tugun&quot; ga to'g'ridan-to'g'ri kirishimiz mumkin. Buning uchun biz
+<code>Vec&lt;T&gt;</code> elementlarini <code>Rc&lt;Node&gt;</code> tipidagi qiymatlar sifatida belgilang. Biz ham xohlaymiz
+qaysi tugunlar boshqa tugunning bolalari ekanligini o'zgartiring, shuning uchun bizda <code>RefCell&lt;T&gt;</code> mavjud
+<code>Vec&lt;Rc&lt;tugun&gt;&gt;</code> atrofidagi <code>bolalar</code>.</p>
+<p>Keyinchalik, biz strukturaning ta'rifidan foydalanamiz va bitta &quot;Tugun&quot; nomini yaratamiz
+<code>barg</code> qiymati 3 va bolalari yo'q va boshqa misol <code>filial</code>
+15-27 roʻyxatda koʻrsatilganidek, qiymati 5 va “barg” uning farzandlaridan biri sifatida:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::cell::RefCell;
 </span><span class="boring">use std::rc::Rc;
@@ -412,26 +408,23 @@ with the value 5 and <code>leaf</code> as one of its children, as shown in Listi
 }</code></pre></pre>
 <p><span class="caption">Listing 15-27: Creating a <code>leaf</code> node with no children
 and a <code>branch</code> node with <code>leaf</code> as one of its children</span></p>
-<p>We clone the <code>Rc&lt;Node&gt;</code> in <code>leaf</code> and store that in <code>branch</code>, meaning the
-<code>Node</code> in <code>leaf</code> now has two owners: <code>leaf</code> and <code>branch</code>. We can get from
-<code>branch</code> to <code>leaf</code> through <code>branch.children</code>, but there’s no way to get from
-<code>leaf</code> to <code>branch</code>. The reason is that <code>leaf</code> has no reference to <code>branch</code> and
-doesn’t know they’re related. We want <code>leaf</code> to know that <code>branch</code> is its
-parent. We’ll do that next.</p>
-<h4 id="adding-a-reference-from-a-child-to-its-parent"><a class="header" href="#adding-a-reference-from-a-child-to-its-parent">Adding a Reference from a Child to Its Parent</a></h4>
-<p>To make the child node aware of its parent, we need to add a <code>parent</code> field to
-our <code>Node</code> struct definition. The trouble is in deciding what the type of
-<code>parent</code> should be. We know it can’t contain an <code>Rc&lt;T&gt;</code>, because that would
-create a reference cycle with <code>leaf.parent</code> pointing to <code>branch</code> and
-<code>branch.children</code> pointing to <code>leaf</code>, which would cause their <code>strong_count</code>
-values to never be 0.</p>
-<p>Thinking about the relationships another way, a parent node should own its
-children: if a parent node is dropped, its child nodes should be dropped as
-well. However, a child should not own its parent: if we drop a child node, the
-parent should still exist. This is a case for weak references!</p>
-<p>So instead of <code>Rc&lt;T&gt;</code>, we’ll make the type of <code>parent</code> use <code>Weak&lt;T&gt;</code>,
-specifically a <code>RefCell&lt;Weak&lt;Node&gt;&gt;</code>. Now our <code>Node</code> struct definition looks
-like this:</p>
+<p>Biz <code>Rc&lt;tugun&gt;</code>ni <code>barg</code>da klonlaymiz va uni <code>filial</code>da saqlaymiz, ya<code>ni Endi “barg”dagi “tugun” ikkita egasiga ega: “barg” va “novda”. dan olishimiz mumkin 'branch.children' orqali 'shox'dan 'barg'ga, lekin undan olishning iloji yo'q 'barg'dan 'filialga'. Sababi, </code>barg<code> so</code>zi <code>filial</code> va
+aloqadorligini bilmaydi. Biz “barg” “filial” uning ekanligini bilishini istaymiz
+ota-ona. Biz buni keyin qilamiz.</p>
+<h4 id="bolaning-ota-onasiga-havolani-qoshish"><a class="header" href="#bolaning-ota-onasiga-havolani-qoshish">Bolaning ota-onasiga havolani qo'shish</a></h4>
+<p>Bola tugunni ota-onasidan xabardor qilish uchun biz &quot;ota-ona&quot; maydonini qo'shishimiz kerak
+bizning &quot;tugun&quot; tuzilmasining ta'rifi. Muammo nima turini tanlashda
+&quot;ota-ona&quot; bo'lishi kerak. Biz bilamizki, unda <code>Rc&lt;T&gt;</code> bo'lishi mumkin emas, chunki bu bo'lar edi
+<code>leaf.parent</code> <code>filial</code>ga ishora qiluvchi mos yozuvlar siklini yarating va
+<code>barg</code>ga ishora qiluvchi <code>filial.bolalar</code>, bu ularning <code>kuchli_hisobiga</code> olib keladi
+qiymatlar hech qachon 0 bo'lmasligi kerak.</p>
+<p>O'zaro munosabatlar haqida boshqa yo'l bilan o'ylab, ota-ona tuguniga ega bo'lishi kerak
+bolalar: agar ota-ona tugunlari tushirilsa, uning tugunlari sifatida tushirilishi kerak
+yaxshi. Biroq, bola o'z ota-onasiga egalik qilmasligi kerak: agar biz bola tugunini tashlasak,
+ota-ona hali ham mavjud bo'lishi kerak. Bu zaif havolalar uchun holat!</p>
+<p>Shunday qilib, &quot;Rc<T>&quot; o'rniga, &quot;ota-ona&quot; turini &quot;Zaif<T>&quot; dan foydalanamiz,
+xususan <code>RefCell&lt;Zaif&lt;tugun&gt;&gt;</code>. Endi bizning &quot;tugun&quot; tuzilmasining ta'rifi ko'rinadi
+shunga o'xshash:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::cell::RefCell;
 use std::rc::{Rc, Weak};
@@ -462,9 +455,9 @@ struct Node {
 </span><span class="boring">
 </span><span class="boring">    println!(&quot;leaf parent = {:?}&quot;, leaf.parent.borrow().upgrade());
 </span><span class="boring">}</span></code></pre></pre>
-<p>A node will be able to refer to its parent node but doesn’t own its parent.
-In Listing 15-28, we update <code>main</code> to use this new definition so the <code>leaf</code>
-node will have a way to refer to its parent, <code>branch</code>:</p>
+<p>Tugun o'zining asosiy tuguniga murojaat qilishi mumkin, lekin uning ota-onasiga ega emas.
+15-28 ro'yxatda biz ushbu yangi ta'rifdan foydalanish uchun &quot;asosiy&quot; ni yangilaymiz, shuning uchun &quot;barg&quot;
+tugun o'zining ota-onasi &quot;filial&quot; ga murojaat qilish usuliga ega bo'ladi:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::cell::RefCell;
 </span><span class="boring">use std::rc::{Rc, Weak};
@@ -497,39 +490,39 @@ node will have a way to refer to its parent, <code>branch</code>:</p>
 }</code></pre></pre>
 <p><span class="caption">Listing 15-28: A <code>leaf</code> node with a weak reference to its
 parent node <code>branch</code></span></p>
-<p>Creating the <code>leaf</code> node looks similar to Listing 15-27 with the exception of
-the <code>parent</code> field: <code>leaf</code> starts out without a parent, so we create a new,
-empty <code>Weak&lt;Node&gt;</code> reference instance.</p>
-<p>At this point, when we try to get a reference to the parent of <code>leaf</code> by using
-the <code>upgrade</code> method, we get a <code>None</code> value. We see this in the output from the
-first <code>println!</code> statement:</p>
-<pre><code class="language-text">leaf parent = None
+<p>“Yaproq” tugunini yaratish 15-27 roʻyxatga oʻxshaydi, bundan tashqari
+&quot;ota-ona&quot; maydoni: &quot;barg&quot; ota-onasiz boshlanadi, shuning uchun biz yangisini yaratamiz,
+bo'sh <code>Zaif&lt;tugun&gt;</code> mos yozuvlar misoli.</p>
+<p>Shu nuqtada, biz yordamida <code>barg</code> ota-onasiga havola olishga harakat qilganimizda
+&quot;yangilash&quot; usulida biz &quot;Yo'q&quot; qiymatini olamiz. Buni biz dan chiqishda ko'ramiz
+birinchi <code>println!</code> bayonoti:</p>
+<pre><code class="language-matn">barg ota-onasi = Yo'q
 </code></pre>
-<p>When we create the <code>branch</code> node, it will also have a new <code>Weak&lt;Node&gt;</code>
-reference in the <code>parent</code> field, because <code>branch</code> doesn’t have a parent node.
-We still have <code>leaf</code> as one of the children of <code>branch</code>. Once we have the
-<code>Node</code> instance in <code>branch</code>, we can modify <code>leaf</code> to give it a <code>Weak&lt;Node&gt;</code>
-reference to its parent. We use the <code>borrow_mut</code> method on the
-<code>RefCell&lt;Weak&lt;Node&gt;&gt;</code> in the <code>parent</code> field of <code>leaf</code>, and then we use the
-<code>Rc::downgrade</code> function to create a <code>Weak&lt;Node&gt;</code> reference to <code>branch</code> from
-the <code>Rc&lt;Node&gt;</code> in <code>branch.</code></p>
-<p>When we print the parent of <code>leaf</code> again, this time we’ll get a <code>Some</code> variant
-holding <code>branch</code>: now <code>leaf</code> can access its parent! When we print <code>leaf</code>, we
-also avoid the cycle that eventually ended in a stack overflow like we had in
-Listing 15-26; the <code>Weak&lt;Node&gt;</code> references are printed as <code>(Weak)</code>:</p>
-<pre><code class="language-text">leaf parent = Some(Node { value: 5, parent: RefCell { value: (Weak) },
-children: RefCell { value: [Node { value: 3, parent: RefCell { value: (Weak) },
-children: RefCell { value: [] } }] } })
+<p>Biz <code>filial</code> tugunini yaratganimizda, u ham yangi <code>Zaif&lt;tugun&gt;</code>ga ega bo'ladi.
+&quot;ota&quot; maydonida havola, chunki &quot;filial&quot; da asosiy tugun yo'q.
+Bizda hamon “barg” “filial” farzandlaridan biri. Bir marta bizda
+“Filial”dagi “tugun” misolida biz “barg”ni “zaif<tugun>” qilish uchun o‘zgartirishimiz mumkin.
+uning ota-onasiga havola. Biz &quot;borrow_mut&quot; usulidan foydalanamiz
+<code>barg</code>ning <code>ota</code> maydonida <code>RefCell&lt;Zaif&lt;tugun&gt;&gt;</code> va keyin biz
+<code>Rc::downgrade</code> funksiyasidan <code>filial</code>ga <code>Zaif&lt;tugun&gt;</code> havolasini yaratish
+<code>filialdagi </code>Rc<tugun>`</p>
+<p>Biz “barg” ning ota-onasini yana chop qilsak, bu safar “Ba’zi” variantini olamiz
+&quot;filial&quot; ni ushlab turish: endi &quot;barg&quot; ota-onasiga kira oladi! Biz &quot;barg&quot; ni chop etganda, biz
+Shuningdek, oxir-oqibat bizda bo'lgani kabi stekning to'lib ketishi bilan yakunlangan tsikldan qoching
+Ro'yxat 15-26; <code>Zaif&lt;tugun&gt;</code> havolalari <code>(Zaif)</code> sifatida chop etiladi:</p>
+<pre><code class="language-matn">barg ota = Ba'zi(tugun {qiymat: 5, ota: RefCell {qiymat: (zaif)},
+bolalar: RefCell { qiymat: [tugun {qiymat: 3, ota: RefCell {qiymat: (zaif)},
+bolalar: RefCell { qiymat: [] } }] } })
 </code></pre>
-<p>The lack of infinite output indicates that this code didn’t create a reference
-cycle. We can also tell this by looking at the values we get from calling
-<code>Rc::strong_count</code> and <code>Rc::weak_count</code>.</p>
-<h4 id="visualizing-changes-to-strong_count-and-weak_count"><a class="header" href="#visualizing-changes-to-strong_count-and-weak_count">Visualizing Changes to <code>strong_count</code> and <code>weak_count</code></a></h4>
-<p>Let’s look at how the <code>strong_count</code> and <code>weak_count</code> values of the <code>Rc&lt;Node&gt;</code>
-instances change by creating a new inner scope and moving the creation of
-<code>branch</code> into that scope. By doing so, we can see what happens when <code>branch</code> is
-created and then dropped when it goes out of scope. The modifications are shown
-in Listing 15-29:</p>
+<p>Cheksiz chiqishning yo'qligi ushbu kod mos yozuvlar yaratmaganligini ko'rsatadi
+tsikl. Buni biz qo'ng'iroq qilishdan olgan qadriyatlarimizga qarab ham aytishimiz mumkin
+<code>Rc::strong_count</code> va <code>Rc::weak_count</code>.</p>
+<h4 id="kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish"><a class="header" href="#kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish">&quot;Kuchli_hisob&quot; va &quot;zaif_hisob&quot; dagi o'zgarishlarni vizualizatsiya qilish</a></h4>
+<p>Keling, <code>Rc&lt;tugun&gt;</code> <code>kuchli_hisoblash</code> va <code>zaif_hisoblash</code> qiymatlari qanday ekanligini ko'rib chiqamiz.
+misollar yangi ichki doirani yaratish va yaratishni ko'chirish orqali o'zgaradi
+<code>filial</code> shu doiraga kiradi. Shunday qilib, biz &quot;filial&quot; bo'lganda nima sodir bo'lishini ko'rishimiz mumkin
+yaratilgan va keyin u ko'lamdan chiqib ketganda tushib ketgan. O'zgartirishlar ko'rsatilgan
+15-29 ro'yxatda:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::cell::RefCell;
 </span><span class="boring">use std::rc::{Rc, Weak};
@@ -585,45 +578,41 @@ in Listing 15-29:</p>
 }</code></pre></pre>
 <p><span class="caption">Listing 15-29: Creating <code>branch</code> in an inner scope and
 examining strong and weak reference counts</span></p>
-<p>After <code>leaf</code> is created, its <code>Rc&lt;Node&gt;</code> has a strong count of 1 and a weak
-count of 0. In the inner scope, we create <code>branch</code> and associate it with
-<code>leaf</code>, at which point when we print the counts, the <code>Rc&lt;Node&gt;</code> in <code>branch</code>
-will have a strong count of 1 and a weak count of 1 (for <code>leaf.parent</code> pointing
-to <code>branch</code> with a <code>Weak&lt;Node&gt;</code>). When we print the counts in <code>leaf</code>, we’ll see
-it will have a strong count of 2, because <code>branch</code> now has a clone of the
-<code>Rc&lt;Node&gt;</code> of <code>leaf</code> stored in <code>branch.children</code>, but will still have a weak
-count of 0.</p>
-<p>When the inner scope ends, <code>branch</code> goes out of scope and the strong count of
-the <code>Rc&lt;Node&gt;</code> decreases to 0, so its <code>Node</code> is dropped. The weak count of 1
-from <code>leaf.parent</code> has no bearing on whether or not <code>Node</code> is dropped, so we
-don’t get any memory leaks!</p>
-<p>If we try to access the parent of <code>leaf</code> after the end of the scope, we’ll get
-<code>None</code> again. At the end of the program, the <code>Rc&lt;Node&gt;</code> in <code>leaf</code> has a strong
-count of 1 and a weak count of 0, because the variable <code>leaf</code> is now the only
-reference to the <code>Rc&lt;Node&gt;</code> again.</p>
-<p>All of the logic that manages the counts and value dropping is built into
-<code>Rc&lt;T&gt;</code> and <code>Weak&lt;T&gt;</code> and their implementations of the <code>Drop</code> trait. By
-specifying that the relationship from a child to its parent should be a
-<code>Weak&lt;T&gt;</code> reference in the definition of <code>Node</code>, you’re able to have parent
-nodes point to child nodes and vice versa without creating a reference cycle
-and memory leaks.</p>
-<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>This chapter covered how to use smart pointers to make different guarantees and
-trade-offs from those Rust makes by default with regular references. The
-<code>Box&lt;T&gt;</code> type has a known size and points to data allocated on the heap. The
-<code>Rc&lt;T&gt;</code> type keeps track of the number of references to data on the heap so
-that data can have multiple owners. The <code>RefCell&lt;T&gt;</code> type with its interior
-mutability gives us a type that we can use when we need an immutable type but
-need to change an inner value of that type; it also enforces the borrowing
-rules at runtime instead of at compile time.</p>
-<p>Also discussed were the <code>Deref</code> and <code>Drop</code> traits, which enable a lot of the
-functionality of smart pointers. We explored reference cycles that can cause
-memory leaks and how to prevent them using <code>Weak&lt;T&gt;</code>.</p>
-<p>If this chapter has piqued your interest and you want to implement your own
-smart pointers, check out <a href="../nomicon/index.html">“The Rustonomicon”</a> for more useful
-information.</p>
-<p>Next, we’ll talk about concurrency in Rust. You’ll even learn about a few new
-smart pointers.</p>
+<p>'barg' yaratilgandan so'ng, uning 'Rc<tugun>' kuchli soni 1 va zaif bo'ladi.
+0 ning soni. Ichki doirada biz &quot;filial&quot; yaratamiz va uni bog'laymiz.
+<code>barg</code>, biz hisoblarni chop etganda, <code>filialdagi </code>Rc<tugun><code>kuchli soni 1 va zaif soni 1 bo‘ladi (“leaf.parent” ko‘rsatish uchun</code>zaif<tugun><code>bilan</code>filial<code>ga). Hisoblarni “barg”da chop etganimizda, biz ko'ramiz uning kuchli soni 2 ga teng bo'ladi, chunki </code>filial<code>endi kloniga ega</code>barg<code>ning </code>Rc<tugun><code> </code>branch.children` da saqlanadi, lekin baribir zaif bo'ladi.
+soni 0.</p>
+<p>Ichki qamrov tugagach, &quot;filial&quot; doiradan chiqib ketadi va kuchli soni
+<code>Rc&lt;Node&gt;</code> 0 ga kamayadi, shuning uchun uning <code>Tugun</code> tushiriladi. Zaif hisob 1
+'leaf.parent' dan &quot;tugun&quot; tushirilgan yoki yo'qligiga ta'sir qilmaydi, shuning uchun biz
+hech qanday xotira oqishiga yo'l qo'ymang!</p>
+<p>Qo'llanish doirasi tugagandan so'ng &quot;barg&quot; ning ota-onasiga kirishga harakat qilsak, biz olamiz
+Yana 'Yo'q'. Dastur oxirida <code>barg</code>dagi <code>Rc&lt;tugun&gt;</code> kuchli
+soni 1 va kuchsiz soni 0, chunki &quot;barg&quot; o'zgaruvchisi endi yagona
+yana <code>Rc&lt;tugun&gt;</code> ga murojaat qiling.</p>
+<p>Hisoblash va qiymatni pasaytirishni boshqaradigan barcha mantiq o'rnatilgan
+<code>Rc&lt;T&gt;</code> va <code>Zaif&lt;T&gt;</code> va ularning <code>Drop</code> xususiyatini amalga oshirish. tomonidan
+bolaning ota-onasiga bo'lgan munosabati a bo'lishi kerakligini ko'rsatib
+<code>Tugun</code> ta<code>rifida </code>zaif<T><code> havolasi, siz ota-onaga ega bo</code>lishingiz mumkin
+tugunlar mos yozuvlar siklini yaratmasdan, bola tugunlariga ishora qiladi va aksincha
+va xotira oqadi.</p>
+<h2 id="xulosa"><a class="header" href="#xulosa">Xulosa</a></h2>
+<p>Ushbu bobda turli xil kafolatlar berish uchun aqlli ko'rsatkichlardan qanday foydalanish kerakligi ko'rib chiqildi
+Rust odatiy havolalar bilan sukut bo'yicha qiladi. The
+<code>Box&lt;T&gt;</code> turi ma'lum o'lchamga ega va u yerda ajratilgan ma'lumotlarga ishora qiladi. The
+<code>Rc&lt;T&gt;</code> turi to'pdagi ma'lumotlarga havolalar sonini kuzatib boradi
+bu ma'lumotlar bir nechta egalariga ega bo'lishi mumkin. <code>RefCell&lt;T&gt;</code> turi ichki ko'rinishi bilan
+o'zgaruvchanlik bizga o'zgarmas tur kerak bo'lganda foydalanishimiz mumkin bo'lgan turni beradi, lekin
+ushbu turdagi ichki qiymatni o'zgartirish kerak; u qarz olishni ham majbur qiladi
+kompilyatsiya vaqtida emas, balki ish vaqtidagi qoidalar.</p>
+<p>Shuningdek, ko'plab imkoniyatlarni beradigan &quot;Deref&quot; va &quot;Drop&quot; xususiyatlari ham muhokama qilindi
+aqlli ko'rsatkichlarning funksionalligi. Biz sabab bo'lishi mumkin bo'lgan mos yozuvlar davrlarini o'rganib chiqdik
+xotira oqishi va ularni <code>Zaif&lt;T&gt;</code> yordamida qanday qilib oldini olish mumkin.</p>
+<p>Agar ushbu bob sizni qiziqtirgan bo'lsa va siz o'zingiznikini amalga oshirmoqchi bo'lsangiz
+aqlli ko'rsatkichlar, foydaliroq bo'lishi uchun <a href="../nomicon/index.html">“The Rustonomicon”</a> ni tekshiring
+ma'lumot.</p>
+<p>Keyinchalik, biz Rustdagi parallellik haqida gaplashamiz. Siz hatto bir nechta yangi narsalarni bilib olasiz
+aqlli ko'rsatkichlar.</p>
 
                     </main>
 

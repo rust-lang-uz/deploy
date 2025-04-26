@@ -252,14 +252,14 @@ obyektlar kabi ish bajaruvchi struct yaratishingiz mumkin. </p>
 kutubxona yaratamiz va joriy qiymat maksimal qiymatga qanchalik yaqinligiga qarab bizga
 xabar jo'natib turadi. Ushbu kutubxona foydalanuvchi uchun ruxsat etilgan API 'call'lar sonini
 kuzatib borish uchun ishlatilishi mumkin, bu ishlatish mumkin bo'lgan bir misol.</p>
-<p>Our library will only provide the functionality of tracking how close to the
-maximum a value is and what the messages should be at what times. Applications
-that use our library will be expected to provide the mechanism for sending the
-messages: the application could put a message in the application, send an
-email, send a text message, or something else. The library doesn’t need to know
-that detail. All it needs is something that implements a trait we’ll provide
-called <code>Messenger</code>. Listing 15-20 shows the library code:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p>Bizning kutubxonamiz faqatgina qiymatni maksimal qiymatga qanchalik yaqin ekanligi
+va qaysi vaqtda qaysi xabar jo'natilishini kuzatib turish imkonini beredi. Bizning
+kutubxonamizdan foydalanadigan ilovalar xabar jo'natish mexanizmini ta'minlashini
+talab qiladi, ya'ni ilova xabarni ilova ichida, email orqali, matnli xabar ko'rinishida
+yoki boshqa ko'rinishda yuborishi mumkin. Kutubxona ushbu tafsilotlarni bilishi talab etilmaydi.
+Kutubxona uchun biz tomonimizdan qo'llaniladigan <code>Messenger</code> traitini implementatsiya qiladigan
+narsa kerak xolos.</p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub trait Messenger {
     fn send(&amp;self, msg: &amp;str);
 }
@@ -298,25 +298,23 @@ where
         }
     }
 }</code></pre>
-<p><span class="caption">Listing 15-20: A library to keep track of how close a
-value is to a maximum value and warn when the value is at certain levels</span></p>
-<p>One important part of this code is that the <code>Messenger</code> trait has one method
-called <code>send</code> that takes an immutable reference to <code>self</code> and the text of the
-message. This trait is the interface our mock object needs to implement so that
-the mock can be used in the same way a real object is. The other important part
-is that we want to test the behavior of the <code>set_value</code> method on the
-<code>LimitTracker</code>. We can change what we pass in for the <code>value</code> parameter, but
-<code>set_value</code> doesn’t return anything for us to make assertions on. We want to be
-able to say that if we create a <code>LimitTracker</code> with something that implements
-the <code>Messenger</code> trait and a particular value for <code>max</code>, when we pass different
-numbers for <code>value</code>, the messenger is told to send the appropriate messages.</p>
-<p>We need a mock object that, instead of sending an email or text message when we
-call <code>send</code>, will only keep track of the messages it’s told to send. We can
-create a new instance of the mock object, create a <code>LimitTracker</code> that uses the
-mock object, call the <code>set_value</code> method on <code>LimitTracker</code>, and then check that
-the mock object has the messages we expect. Listing 15-21 shows an attempt to
-implement a mock object to do just that, but the borrow checker won’t allow it:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">15-20-ro'yxat: Qiymatni qanchalik maksimal qiymatga yaqinligini kuzatish va kerakli darajaga 
+yetganda ogohlantiruvchi kutubxona</span></p>
+<p>Ushbu kodning e'tiborli tomoni shundaki <code>Messenger</code> traitining <code>send</code> nomli metodi 
+xabarning matni hamda<code>self</code>ga o'zgarmas referensni oladi. Ushbu trait bizning soxta 
+obyektimizning implementatisiyasi uchun kerak bo'lgan interfeys hisoblanadi, shu 
+holatda soxta obyekt haqiqiy obyektga o'xshab ishlatilishi mumkin. Yana bir muhim 
+tomoni shundaki, biz <code>set_value</code>ni ko'rinishini <code>LimitTracker</code> orqali ko'rishimiz mumkin.<br />
+Biz xohlaganimizcha o'tkazayotganimizni <code>value</code> parametri uchun o'zgartirishimiz mumkin, 
+lekin <code>set_value</code> biz da'vo qilishimiz mumkin bo'lgan narsani return qilmaydi. Agar biz 
+<code>Messenger</code> traitini implementatisiya qiladigan va ma'lum bir qiymatga ega bo'lgan <code>LimitTracker</code> 
+yaratsak, <code>value</code> uchun turli raqamlar berganimizda, xabar kerakli xabar ko'rinishida jo'natildi 
+deya olishni xohlaymiz.</p>
+<p>Pochta orqali yoki matn xabar orqali xabar jo'natish o'rniga biz <code>send</code> ni ishga tushurib yuborilishi kerak bo'lgan xabarni 
+kuzatish uchun soxta obyekt kerak bo'ladi. Obyektning yangi namunasini yaratishimiz mumkin, soxta obyektdan foydalanadigan 
+<code>LimitTracker</code> yaratib, <code>LimitTracker</code>da <code>set_value</code> metodini qo'llashimiz va soxta obyekt biz kutgan xabar bor yoki yo'qligin 
+tekshirib ko'ramiz. 15-21-ro'yxat soxta obyekt implementatsiya qilishga urinishi, lekin borrow tekshiruvchi ruxsat bermasligi ko'rsatilgan: </p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">pub trait Messenger {
 </span><span class="boring">    fn send(&amp;self, msg: &amp;str);
 </span><span class="boring">}
@@ -388,25 +386,10 @@ mod tests {
         assert_eq!(mock_messenger.sent_messages.len(), 1);
     }
 }</code></pre>
-<p><span class="caption">Listing 15-21: An attempt to implement a <code>MockMessenger</code>
-that isn’t allowed by the borrow checker</span></p>
-<p>This test code defines a <code>MockMessenger</code> struct that has a <code>sent_messages</code>
-field with a <code>Vec</code> of <code>String</code> values to keep track of the messages it’s told
-to send. We also define an associated function <code>new</code> to make it convenient to
-create new <code>MockMessenger</code> values that start with an empty list of messages. We
-then implement the <code>Messenger</code> trait for <code>MockMessenger</code> so we can give a
-<code>MockMessenger</code> to a <code>LimitTracker</code>. In the definition of the <code>send</code> method, we
-take the message passed in as a parameter and store it in the <code>MockMessenger</code>
-list of <code>sent_messages</code>.</p>
-<p>In the test, we’re testing what happens when the <code>LimitTracker</code> is told to set
-<code>value</code> to something that is more than 75 percent of the <code>max</code> value. First, we
-create a new <code>MockMessenger</code>, which will start with an empty list of messages.
-Then we create a new <code>LimitTracker</code> and give it a reference to the new
-<code>MockMessenger</code> and a <code>max</code> value of 100. We call the <code>set_value</code> method on the
-<code>LimitTracker</code> with a value of 80, which is more than 75 percent of 100. Then
-we assert that the list of messages that the <code>MockMessenger</code> is keeping track
-of should now have one message in it.</p>
-<p>However, there’s one problem with this test, as shown here:</p>
+<p><span class="caption">15-21-ro'yxat: <code>MockMessenger</code>ning implementatsiya qilishga urinishi, ammo borrow checker bunga ruxsat bermayotgaligi ko'rsatilgan</span></p>
+<p>Ushbu test kodimiz <code>Sent_messages</code> maydoniga ega boʻlgan <code>MockMessenger</code> strukturasini belgilaydi va u <code>Vec</code>ga ega bo'lgan <code>String</code> qiymatlari bilan joʻnatilishi kerak boʻlgan xabarlarni kuzatib boradi. Shuningdek, biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi <code>MockMessenger</code> qiymatlarini yaratishni qulay qilish uchun <code>yangi</code> funksiyasini aniqlaymiz. Biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi MockMessenger qiymatlarini yaratamiz. Keyin biz <code>LimitTracker</code> ga <code>MockMessenger</code>ni berishimiz uchun <code>MockMessenger</code> uchun “Messenger” xususiyatini amalga oshiramiz. <code>send</code> usulining taʼrifida biz uzatilgan xabarni parametr sifatida qabul qilamiz va uni <code>sent_messages</code>ning <code>MockMessenger</code> roʻyxatida saqlaymiz. </p>
+<p>Sinovda biz <code>LimitTracker</code>ga <code>value</code>ni <code>max</code> qiymatining 75 foizidan ko‘prog‘iga o‘rnatish buyurilganda nima sodir bo‘lishini sinab ko‘ramiz. Birinchidan, biz yangi <code>MockMessenger</code> ni yaratamiz, u xabarlarning bo'sh ro'yxati bilan boshlanadi. Keyin biz yangi <code>LimitTracker</code> yaratamiz va unga yangi <code>MockMessenger</code> va <code>max</code> qiymati 100 ga teng reference beramiz. 100dan 75dan katta bo'lgan, 80ga teng bo'lgan qiymatli <code>LimitTracker</code>dagi <code>set_value</code> metodini ishga tushiramiz. Keyin biz <code>MockMessenger</code> kuzatayotgan xabarlar roʻyxatida bitta xabar boʻlishi kerakligini taʼkidlaymiz.</p>
+<p>Biroq, bu testda ko'rsatilganidek, bitta muammo bor:</p>
 <pre><code class="language-console">$ cargo test
    Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
 error[E0596]: cannot borrow `self.sent_messages` as mutable, as it is behind a `&amp;` reference
@@ -422,16 +405,9 @@ For more information about this error, try `rustc --explain E0596`.
 error: could not compile `limit-tracker` due to previous error
 warning: build failed, waiting for other jobs to finish...
 </code></pre>
-<p>We can’t modify the <code>MockMessenger</code> to keep track of the messages, because the
-<code>send</code> method takes an immutable reference to <code>self</code>. We also can’t take the
-suggestion from the error text to use <code>&amp;mut self</code> instead, because then the
-signature of <code>send</code> wouldn’t match the signature in the <code>Messenger</code> trait
-definition (feel free to try and see what error message you get).</p>
-<p>This is a situation in which interior mutability can help! We’ll store the
-<code>sent_messages</code> within a <code>RefCell&lt;T&gt;</code>, and then the <code>send</code> method will be
-able to modify <code>sent_messages</code> to store the messages we’ve seen. Listing 15-22
-shows what that looks like:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p>Biz <code>MockMessenger</code>ni xabarlarni kuzatib borish uchun o‘zgartira olmaymiz, chunki <code>send</code> metodi <code>self</code>ga o'zgarmas refernce oladi. Shuningdek, xato matnidagi <code>&amp;mut self</code> dan foydalanish taklifini ham qabul qila olmaymiz, chunki <code>send</code> signaturasi <code>Messenger</code> traiti taʼrifidagi imzoga toʻgʻri kelmas edi (urunib ko'rganingizda qanaqa xatolik (error message) bo'lishini ko'rishingiz mumkin).</p>
+<p>Ushbu holatda bizga ichgi o'zgaruvchanlik yordam berishi mumkin! Biz <code>RefCell&lt;T&gt;</code> orqali <code>sent_messages</code>ni joylyamiz, va keyin biz ko'rgan xabarlarni joylashtirish uchun <code>send</code> metodi <code>sent_messages</code>ni o'zgartira oladi. 15-22-ro'yxat bu qanday ko'rinishda bo'lishini ko'rsatadi:</p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Messenger {
 </span><span class="boring">    fn send(&amp;self, msg: &amp;str);
 </span><span class="boring">}
@@ -505,41 +481,18 @@ mod tests {
         assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
     }
 }</code></pre>
-<p><span class="caption">Listing 15-22: Using <code>RefCell&lt;T&gt;</code> to mutate an inner
-value while the outer value is considered immutable</span></p>
-<p>The <code>sent_messages</code> field is now of type <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> instead of
-<code>Vec&lt;String&gt;</code>. In the <code>new</code> function, we create a new <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>
-instance around the empty vector.</p>
-<p>For the implementation of the <code>send</code> method, the first parameter is still an
-immutable borrow of <code>self</code>, which matches the trait definition. We call
-<code>borrow_mut</code> on the <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> in <code>self.sent_messages</code> to get a
-mutable reference to the value inside the <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>, which is the
-vector. Then we can call <code>push</code> on the mutable reference to the vector to keep
-track of the messages sent during the test.</p>
-<p>The last change we have to make is in the assertion: to see how many items are
-in the inner vector, we call <code>borrow</code> on the <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> to get an
-immutable reference to the vector.</p>
-<p>Now that you’ve seen how to use <code>RefCell&lt;T&gt;</code>, let’s dig into how it works!</p>
-<h4 id="keeping-track-of-borrows-at-runtime-with-refcellt"><a class="header" href="#keeping-track-of-borrows-at-runtime-with-refcellt">Keeping Track of Borrows at Runtime with <code>RefCell&lt;T&gt;</code></a></h4>
-<p>When creating immutable and mutable references, we use the <code>&amp;</code> and <code>&amp;mut</code>
-syntax, respectively. With <code>RefCell&lt;T&gt;</code>, we use the <code>borrow</code> and <code>borrow_mut</code>
-methods, which are part of the safe API that belongs to <code>RefCell&lt;T&gt;</code>. The
-<code>borrow</code> method returns the smart pointer type <code>Ref&lt;T&gt;</code>, and <code>borrow_mut</code>
-returns the smart pointer type <code>RefMut&lt;T&gt;</code>. Both types implement <code>Deref</code>, so we
-can treat them like regular references.</p>
-<p>The <code>RefCell&lt;T&gt;</code> keeps track of how many <code>Ref&lt;T&gt;</code> and <code>RefMut&lt;T&gt;</code> smart
-pointers are currently active. Every time we call <code>borrow</code>, the <code>RefCell&lt;T&gt;</code>
-increases its count of how many immutable borrows are active. When a <code>Ref&lt;T&gt;</code>
-value goes out of scope, the count of immutable borrows goes down by one. Just
-like the compile-time borrowing rules, <code>RefCell&lt;T&gt;</code> lets us have many immutable
-borrows or one mutable borrow at any point in time.</p>
-<p>If we try to violate these rules, rather than getting a compiler error as we
-would with references, the implementation of <code>RefCell&lt;T&gt;</code> will panic at
-runtime. Listing 15-23 shows a modification of the implementation of <code>send</code> in
-Listing 15-22. We’re deliberately trying to create two mutable borrows active
-for the same scope to illustrate that <code>RefCell&lt;T&gt;</code> prevents us from doing this
-at runtime.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">15-22-ro'yxat: tashqi qiymat o'zgarmas bo'lganida <code>RefCell&lt;T&gt;</code> yordamida ichki qiymatni o'zgaruvchan qilish</span></p>
+<p><code>sent_messages</code> maydoni endi <code>Vec&lt;String&gt;</code> oʻrniga <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> turiga ega. 
+<code>new</code> funksiyada biz yangisini yaratamiz <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> bo'sh vektor atrofidagi misol.
+<code>new</code> funksiyasida biz yangi <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> instancesini bo'sh vektor atrofida yaratib olamiz.</p>
+<p><code>send</code> metodini ishga tushirishda, traitning ma'no/tarifiga o'xshash bo'lgan birinchi parametr <code>self</code>ning o'zgarmas borrowi bo'lib qolaveradi. Vvektor hisoblangan <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>ninig ichidagi qiymatga o'zgaruvchan reference olish uchun <code>self.sent_messages</code>ning <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>dagi <code>borrow_mut</code>ni ishga tushuramiz. Keyin test paytida yuborilgan xabarlarni kuzatib borish uchun vektorga o'zgaruvchan referenceda <code>push</code> ni ishga tushirishimiz mumkin.</p>
+<p>Tasdiqlash uchun biz qilishimiz kerak bo'lgan oxirgi o'zgarish bu: ichki vektor ichida qancha itemlar borligini ko'rish uchun, vektorga o'zgarmas refrence olish uchun<code>RefCell&lt;Vec&lt;String&gt;&gt;</code>dagi <code>borrow</code>ni ishga tushiramiz.</p>
+<p><code>RefCell&lt;T&gt;</code>dan qanday ishlatish mumkiniligi bilan tanishdik, keling qanday ishlashi haqida o'raganib chiqaylik.</p>
+<h4 id="runtime-vaqtidan-refcellt-yordamida-borrowlarni-kuzatish"><a class="header" href="#runtime-vaqtidan-refcellt-yordamida-borrowlarni-kuzatish">Runtime vaqtidan <code>RefCell&lt;T&gt;</code> yordamida Borrowlarni kuzatish</a></h4>
+<p>O'zgarmas va o'zgaruvchan referencelarni yaratishda biz mos ravishda <code>&amp;</code> va <code>&amp;mut</code> sintaksisidan foydalanamiz. <code>RefCell&lt;T&gt;</code> bilan biz <code>RefCell&lt;T&gt;</code>ga tegishli xavfsiz API tarkibiga kiruvchi <code>borrow</code> va <code>borrow_mut</code> usullaridan foydalanamiz. <code>borrow</code> metodi <code>Ref&lt;T&gt;</code> smart pointer turini, <code>borrow_mut</code> esa <code>RefMut&lt;T&gt;</code> smart pointer turini qaytaradi. Ikkala tur ham <code>Deref</code> ni implementatsiya qiladi, shuning uchun biz ularni/doimiy oddiy reference kabi ko'rib chiqishimiz mumkin.</p>
+<p><code>RefCell&lt;T&gt;</code> hozirda qancha <code>Ref&lt;T&gt;</code> va <code>RefMut&lt;T&gt;</code> smart pointerlari faol ekanligini kuzatib boradi. Har safar biz <code>borrow</code> ishga tushirganimizda, <code>RefCell&lt;T&gt;</code> qancha o'zgarmas borrowlar faolligini oshiradi. Agar <code>Ref&lt;T&gt;</code> qiymati chegarasidan chiqib ketsa, o'zgarmas borrowlar soni bittaga kamayadi. Kompilyatsiya vaqtidagi borrowing qoidalari kabi, <code>RefCell&lt;T&gt;</code> bizga istalgan vaqtda koʻp oʻzgarmas yoki bitta oʻzgaruvchan borrowga ega boʻlish imkonini beradi.</p>
+<p>Agar biz referencelarda bo'lgani kabi kompilyator xatosini olishdan ko'ra, ushbu qoidalarni buzishga harakat qilsak, <code>RefCell&lt;T&gt;</code> amalga oshirilishi runtime vaqtida panic qo'yadi. 15-23 ro'yxatda 15-22 ro'yxatda <code>send</code> ning implementatsiyasining modifikatsiyasi ko'rsatilgan. <code>RefCell&lt;T&gt;</code> runtimeda buni amalga oshirishga to'sqinlik qilishini ko‘rsatish uchun biz ataylab bir xil qamrov uchun faol ikkita o‘zgaruvchan borrowni yaratishga harakat qilapmiz.</p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust ignore panics"><span class="boring">pub trait Messenger {
 </span><span class="boring">    fn send(&amp;self, msg: &amp;str);
 </span><span class="boring">}
@@ -618,11 +571,7 @@ at runtime.</p>
 </span><span class="boring">}</span></code></pre>
 <p><span class="caption">Listing 15-23: Creating two mutable references in the
 same scope to see that <code>RefCell&lt;T&gt;</code> will panic</span></p>
-<p>We create a variable <code>one_borrow</code> for the <code>RefMut&lt;T&gt;</code> smart pointer returned
-from <code>borrow_mut</code>. Then we create another mutable borrow in the same way in the
-variable <code>two_borrow</code>. This makes two mutable references in the same scope,
-which isn’t allowed. When we run the tests for our library, the code in Listing
-15-23 will compile without any errors, but the test will fail:</p>
+<p><code>borrow_mut</code>dan qaytarilgan <code>RefMut&lt;T&gt;</code> smart pointer uchun <code>one_borrow</code> o'zgaruvchisini yaratamiz. Keyin <code>two_borrow</code> o'zgaruvchisida xuddi shu tarzda boshqa o'zgaruvchan borrow hosil qilamiz. Bu bir scopeda ikkita o'zgaruvchan reference qiladi, bu aslida mumkin emas. Kutubxonamiz uchun testlarni o'tkazganimizda, 15-23 ro'yxatdagi kod hech qanday xatosiz kompilyatsiya qilinadi, ammo test muvaffaqiyatsiz bo'ladi:</p>
 <pre><code class="language-console">$ cargo test
    Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
     Finished test [unoptimized + debuginfo] target(s) in 0.91s
@@ -645,31 +594,18 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Notice that the code panicked with the message <code>already borrowed: BorrowMutError</code>. This is how <code>RefCell&lt;T&gt;</code> handles violations of the borrowing
-rules at runtime.</p>
-<p>Choosing to catch borrowing errors at runtime rather than compile time, as
-we’ve done here, means you’d potentially be finding mistakes in your code later
-in the development process: possibly not until your code was deployed to
-production. Also, your code would incur a small runtime performance penalty as
-a result of keeping track of the borrows at runtime rather than compile time.
-However, using <code>RefCell&lt;T&gt;</code> makes it possible to write a mock object that can
-modify itself to keep track of the messages it has seen while you’re using it
-in a context where only immutable values are allowed. You can use <code>RefCell&lt;T&gt;</code>
-despite its trade-offs to get more functionality than regular references
-provide.</p>
-<h3 id="having-multiple-owners-of-mutable-data-by-combining-rct-and-refcellt"><a class="header" href="#having-multiple-owners-of-mutable-data-by-combining-rct-and-refcellt">Having Multiple Owners of Mutable Data by Combining <code>Rc&lt;T&gt;</code> and <code>RefCell&lt;T&gt;</code></a></h3>
-<p>A common way to use <code>RefCell&lt;T&gt;</code> is in combination with <code>Rc&lt;T&gt;</code>. Recall that
-<code>Rc&lt;T&gt;</code> lets you have multiple owners of some data, but it only gives immutable
-access to that data. If you have an <code>Rc&lt;T&gt;</code> that holds a <code>RefCell&lt;T&gt;</code>, you can
-get a value that can have multiple owners <em>and</em> that you can mutate!</p>
-<p>For example, recall the cons list example in Listing 15-18 where we used
-<code>Rc&lt;T&gt;</code> to allow multiple lists to share ownership of another list. Because
-<code>Rc&lt;T&gt;</code> holds only immutable values, we can’t change any of the values in the
-list once we’ve created them. Let’s add in <code>RefCell&lt;T&gt;</code> to gain the ability to
-change the values in the lists. Listing 15-24 shows that by using a
-<code>RefCell&lt;T&gt;</code> in the <code>Cons</code> definition, we can modify the value stored in all
-the lists:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>E'tibor bering ushbu kod quyidagi panicni keltirib chiqardi <code>already borrowed: BorrowMutError</code>. Bu <code>RefCell&lt;T&gt;</code>runtime vaqtida borrowing qoidalari buzilishini boshqariishini ko'rsak bo'ladi</p>
+<p>Ko'p marta qilganimizdek, ya'ni kompilyatsiya vaqtida emas, balki ish vaqtida borriwing 
+xatolarini ko'rish, ishlab chiqish jarayonida keyinchalik kodingizda 
+xatolar topishingiz mumkinligini anglatadi, ya'ni sizning kodingiz productionga 
+deploy qilinmagungacha. Bundan tashqari, sizning kodingiz kompilyatsiya vaqtida emas, aksincha runtime 
+vaqtida borrowlarni kuzatib borishi natijasida kichik runtime xatolik bo'lishi mumkin. 
+Lekin, <code>RefCell&lt;T&gt;</code>dan foydalanish faqat o'zgaruvchan qiymatlar mumkin bo'lgan kontekstdan foydalanayotgan
+vaqtingizdagi xabarlarni kuzatish uchun o'zini o'zgaritira oladigan soxta obyektni yaratish imkonini beradi. Doimiy referencelardan ko'ra ko'proq funksionallikni olishni xohlasangiz <code>RefCell&lt;T&gt;</code>dan foydalanishingiz mumkin, uning farqli tomomnlariga qaramasdan ham.</p>
+<h3 id="rct-va-refcelltni-birlashtirish-orqali-ozgaruvchan-malumotlarning-bir-nechta-egalariga-ega-bolish"><a class="header" href="#rct-va-refcelltni-birlashtirish-orqali-ozgaruvchan-malumotlarning-bir-nechta-egalariga-ega-bolish"><code>Rc&lt;T&gt;</code> va <code>RefCell&lt;T&gt;</code>ni birlashtirish orqali o<code>zgaruvchan ma</code>lumotlarning bir nechta egalariga ega bo`lish</a></h3>
+<p><code>RefCell&lt;T&gt;</code> dan foydalanishning keng tarqalgan usuli <code>Rc&lt;T&gt;</code> bilan kombinatsiyadir. Eslatib o'tamiz, <code>Rc&lt;T&gt;</code> sizga ba'zi ma'lumotlarning bir nechta egalariga ega bo'lish imkonini beradi, lekin u faqat ushbu ma'lumotlarga o'zgarmas ruxsat beradi. Agar sizda <code>RefCell&lt;T&gt;</code> ga ega <code>Rc&lt;T&gt;</code> boʻlsa, siz bir nechta egalari boʻlishi mumkin boʻlgan <em>va</em> siz o'zgartira oladigan qiymatni olishingiz mumkin!</p>
+<p>Misol uchun, 15-18-sonli ro'yxatdagi kamchiliklar ro'yxati misolini eslang, bu ro'yxatda bir nechta ro'yxatlarga boshqa ro'yxat egaligini ulashishga ruxsat berish uchun <code>Rc&lt;T&gt;</code> dan foydalanganmiz. <code>Rc&lt;T&gt;</code> faqat oʻzgarmas qiymatlarga ega boʻlgani uchun biz ularni yaratganimizdan soʻng biz roʻyxatdagi qiymatlarni oʻzgartira olmaymiz. Ro'yxatlardagi qiymatlarni o'zgartirish imkoniyatiga ega bo'lish uchun <code>RefCell&lt;T&gt;</code> ni qo'shaylik. 15-24-ro'yxat shuni ko'rsatadiki, <code>Cons</code> ta'rifida <code>RefCell&lt;T&gt;</code> dan foydalanib, biz barcha ro'yxatlarda saqlangan qiymatni o'zgartirishimiz mumkin:</p>
+<p><span class="filename">src/main.rs nomli fayl:</span></p>
 <pre><pre class="playground"><code class="language-rust">#[derive(Debug)]
 enum List {
     Cons(Rc&lt;RefCell&lt;i32&gt;&gt;, Rc&lt;List&gt;),
@@ -694,25 +630,11 @@ fn main() {
     println!(&quot;b after = {:?}&quot;, b);
     println!(&quot;c after = {:?}&quot;, c);
 }</code></pre></pre>
-<p><span class="caption">Listing 15-24: Using <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> to create a
-<code>List</code> that we can mutate</span></p>
-<p>We create a value that is an instance of <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> and store it in a
-variable named <code>value</code> so we can access it directly later. Then we create a
-<code>List</code> in <code>a</code> with a <code>Cons</code> variant that holds <code>value</code>. We need to clone
-<code>value</code> so both <code>a</code> and <code>value</code> have ownership of the inner <code>5</code> value rather
-than transferring ownership from <code>value</code> to <code>a</code> or having <code>a</code> borrow from
-<code>value</code>.</p>
-<p>We wrap the list <code>a</code> in an <code>Rc&lt;T&gt;</code> so when we create lists <code>b</code> and <code>c</code>, they
-can both refer to <code>a</code>, which is what we did in Listing 15-18.</p>
-<p>After we’ve created the lists in <code>a</code>, <code>b</code>, and <code>c</code>, we want to add 10 to the
-value in <code>value</code>. We do this by calling <code>borrow_mut</code> on <code>value</code>, which uses the
-automatic dereferencing feature we discussed in Chapter 5 (see the section
-<a href="ch05-03-method-syntax.html#wheres-the---operator">“Where’s the <code>-&gt;</code> Operator?”</a><!-- ignore -->) to
-dereference the <code>Rc&lt;T&gt;</code> to the inner <code>RefCell&lt;T&gt;</code> value. The <code>borrow_mut</code>
-method returns a <code>RefMut&lt;T&gt;</code> smart pointer, and we use the dereference operator
-on it and change the inner value.</p>
-<p>When we print <code>a</code>, <code>b</code>, and <code>c</code>, we can see that they all have the modified
-value of 15 rather than 5:</p>
+<p><span class="caption">15-24-ro'yxat: <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> yordamida o'zgaruvchan <code>List</code> yaratish</span></p>
+<p>Keyinchalik to'g'ridan-to'g'ri foydalana olishimiz mumkin bo'lgan <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> namunasi (instance) bo'lgan qiymatni yaratamiz <code>value</code> nomli o'zgaruvchiga joylashtiramiz. Keyin <code>a</code> bilan birga <code>value</code>ni o'z ichiga olgan <code>Cons</code> variantida <code>List</code> yaratamiz. <code>value</code>ni klonlashimiz kerak bo'ladi, shunda <code>value</code>dan <code>a</code>ga ownershipni (egalik) berishdan yoki <code>value</code>dan <code>a</code> borrowga ega bo;lishdan ko'ra <code>a</code> va <code>value</code>ning ikkalasi ham ichki <code>5</code>ga ownershipga (egalikka) ega bo'ladilar.</p>
+<p>15-18-ro'yxatda qilganimizdek, <code>a</code> ro'yxatini <code>Rc&lt;T&gt;</code> ichiga o'rab olamiz, shunda <code>b</code> va <code>c</code> ro'yxatlarini yaratganimizda, ular ikkalasi ham <code>a</code> ga murojaat (refer) qilishlari mumkin bo'ladi</p>
+<p><code>a</code>, <code>b</code> va <code>c</code> ro'yxatlarini yaratganimizdan so'ng, biz <code>qiymat</code> qiymatiga 10 qo'shmoqchimiz. Biz buni 5-bobda muhokama qilgan avtomatik yoʻqotish xususiyatidan foydalanadigan <code>value</code>da <code>borrow_mut</code> ni ishga tushurishh orqali, ya'ni <code>Rc&lt;T&gt;</code>ni ichki <code>RefCell&lt;T&gt;</code> qiymatiga yo'naltirish orqali amalga oshiramiz ([<code>-&gt;</code> Operatori Qayerda?”]ida ko'ring <a href="ch05-03-method-syntax.html#wheres-the---operator">wheres-the---operator</a><!-- ignore -->). <code>borrow_mut</code> usuli <code>RefMut&lt;T&gt;</code> smart pointerini qaytaradi va biz unda dereference operatoridan foydalanamiz va uning ichki qiymatni o`zgartiramiz.</p>
+<p><code>a</code>, <code>b</code>, va <code>c</code> print qilganimizda, 5dan ko'ra 15lik qiymatni hammasi o'zgaritirish kiritganligini ko'rishimiz mumkin.</p>
 <pre><code class="language-console">$ cargo run
    Compiling cons-list v0.1.0 (file:///projects/cons-list)
     Finished dev [unoptimized + debuginfo] target(s) in 0.63s
@@ -721,14 +643,7 @@ a after = Cons(RefCell { value: 15 }, Nil)
 b after = Cons(RefCell { value: 3 }, Cons(RefCell { value: 15 }, Nil))
 c after = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
 </code></pre>
-<p>This technique is pretty neat! By using <code>RefCell&lt;T&gt;</code>, we have an outwardly
-immutable <code>List</code> value. But we can use the methods on <code>RefCell&lt;T&gt;</code> that provide
-access to its interior mutability so we can modify our data when we need to.
-The runtime checks of the borrowing rules protect us from data races, and it’s
-sometimes worth trading a bit of speed for this flexibility in our data
-structures. Note that <code>RefCell&lt;T&gt;</code> does not work for multithreaded code!
-<code>Mutex&lt;T&gt;</code> is the thread-safe version of <code>RefCell&lt;T&gt;</code> and we’ll discuss
-<code>Mutex&lt;T&gt;</code> in Chapter 16.</p>
+<p>Ushbu uslub juda jozibali! <code>RefCell&lt;T&gt;</code> dan foydalanib, biz tashqi o'zgarmas <code>List</code> qiymatiga ega bo'lamiz. Lekin biz <code>RefCell&lt;T&gt;</code> da uning ichki o'zgaruvchanligiga kirish/boshqarishni ta'minlaydigan metoddan foydalanishimiz mumkin, shunda kerak bo'lganda ma'lumotlarimizni o'zgartirishimiz mumkin. Runtime qarz olish (borrowing) qoidalari bizni ma'lumotlar o'zgaruvchanligidan (data races) himoya qilishini tekshiradi, va ba'zida ma'lumotlar tuzilmalarimizdagi bu moslashuvchanlik uchun biroz tezlikni oshirishga/o'zgaritishga (trading) arziydi. <code>RefCell&lt;T&gt;</code> ko'p oqimli (multithreaded) kod uchun ishlamaydi, shuni inobatga oling! <code>Mutex&lt;T&gt;</code> bu <code>RefCell&lt;T&gt;</code> ning xafsizroq versiyasidir va biz <code>Mutex&lt;T&gt;</code> ni 16-bobda muhokama qilamiz.</p>
 
                     </main>
 
