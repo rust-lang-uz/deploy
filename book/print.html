@@ -2798,7 +2798,7 @@ for it to be borrowed from
 <p>Keyinchalik, biz boshqa turdagi referenceni ko'rib chiqamiz: slicelar.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="slice-turi"><a class="header" href="#slice-turi">Slice turi</a></h2>
 <p><em>Slicelar</em> butun to'plamga emas, balki to'plamdagi elementlarning qo'shni ketma-ketligiga murojaat qilish imkonini beradi. Slice bir xil referencedir, shuning uchun u ownershipga ega emas.</p>
-<p>Bu erda kichik dasturlash muammosi: bo'shliqlar bilan ajratilgan so'zlar qatorini oladigan va shu qatorda topilgan birinchi so'zni qaytaradigan funksiya yozing.
+<p>Bu yerda kichik dasturlash muammosi: bo'shliqlar bilan ajratilgan so'zlar qatorini oladigan va shu qatorda topilgan birinchi so'zni qaytaradigan funksiya yozing.
 Agar funksiya satrda bo'sh joy topmasa, butun satr bitta so'zdan iborat bo'lishi kerak, shuning uchun butun satr qaytarilishi kerak.</p>
 <p>Keling, slicelar hal qiladigan muammoni tushunish uchun ushbu funksiyaning imzosini slicelardan foydalanmasdan qanday yozishni ko'rib chiqaylik:</p>
 <pre><code class="language-rust ignore">fn birinchi_soz(s: &amp;String) -&gt; ?</code></pre>
@@ -2892,8 +2892,7 @@ Aks holda, <code>s.len()</code> yordamida satr uzunligini qaytaramiz.</p>
 }</code></pre></pre>
 <p><span class="caption">Ro'yxat 4-8: <code>birinchi_soz</code> funksiyasini chaqirish natijasida olingan natijani saqlash va keyin <code>String</code> tarkibini o'zgartirish</span></p>
 <p>Bu dastur hech qanday xatosiz kompilyatsiya qiladi va agar biz <code>s.clear()</code> ga murojat qilgandan keyin <code>soz</code> ishlatgan bo'lsak ham shunday bo'lardi. Chunki <code>soz</code> <code>s</code> holatiga umuman bog‘lanmagan, <code>soz</code> hali ham <code>5</code> qiymatini o‘z ichiga oladi. Birinchi so‘zni chiqarish uchun biz ushbu <code>5</code> qiymatini <code>s</code> o‘zgaruvchisi bilan ishlatishimiz mumkin, ammo bu xato bo‘lishi mumkin, chunki <code>soz</code>da <code>5</code> ni saqlaganimizdan so‘ng <code>s</code> tarkibi o‘zgargan.</p>
-<p>Having to worry about the index in <code>word</code> getting out of sync with the data in
-<code>s</code> is tedious and error prone! Agar biz <code>ikkinchi_soz</code> funksiyasini yozsak, bu indekslarni boshqarish yanada mo'rt bo'ladi. Uning signaturesi quyidagicha ko'rinishi kerak:</p>
+<p><code>soz</code> da indeksning <code>s</code> dagi ma'lumotlar bilan muvofiqligi yo‘qolishidan xavotir olish juda zerikarli va xatoga yo‘l qo‘yishga moyil! Agar biz <code>ikkinchi_soz</code> funksiyasini yozsak, bu indekslarni boshqarish yanada mo'rt bo'ladi. Uning signaturesi quyidagicha ko'rinishi kerak:</p>
 <pre><code class="language-rust ignore">fn ikkinchi_soz(s: &amp;String) -&gt; (usize, usize) {</code></pre>
 <p>Endi biz boshlang'ich va tugash indeksini kuzatmoqdamiz va bizda ma'lum bir holatdagi ma'lumotlardan hisoblangan, ammo bu holatga umuman bog'liq bo'lmagan ko'proq qiymatlar mavjud. Bizda bir-biriga bog'liq bo'lmagan uchta o'zgaruvchi mavjud bo'lib, ular sinxronlashtirilishi kerak.</p>
 <p>Yaxshiyamki, Rust bu muammoni hal qildi: string slicelar.</p>
