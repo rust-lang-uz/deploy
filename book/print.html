@@ -3429,7 +3429,7 @@ fn area(olchamlari: (u32, u32)) -&gt; u32 {
 }</code></pre></pre>
 <p><span class="caption">Ro'yxat 5-9: To'rtburchakning kengligi va balandligini tuple yordamida aniqlash</span></p>
 <p>Bir tomondan, bu dastur yaxshiroq. Tuplar bizga biroz struct qo'shishga imkon beradi va biz hozir faqat bitta argumentni keltiramiz. Ammo boshqa yo'l bilan, bu versiya unchalik aniq emas: tuplelar o'z elementlarini nomlamaydi, shuning uchun biz hisob-kitobimizni kamroq aniq qilib, tuple qismlariga indeks qilishimiz kerak.</p>
-<p>Kenglik va balandlikni aralashtirish maydonni hisoblash uchun muhim emas, lekin agar biz ekranda to'rtburchak chizmoqchi bo'lsak, bu muhim bo'ladi! Shuni yodda tutishimiz kerakki, <code>kenglik</code> indeks <code>0</code> da, <code>balandlik</code> esa <code>1</code> indeksda. Agar kimdir bizning kodimizdan foydalansa, buni tushunish va yodda tutish qiyinroq bo'ladi. Kodimizda ma'lumotlarimizning ma'nosini etkazmaganimiz sababli, endi xatolarni kiritish osonroq.</p>
+<p>Kenglik va balandlikni aralashtirish maydonni hisoblash uchun muhim emas, lekin agar biz ekranda to'rtburchak chizmoqchi bo'lsak, bu muhim bo'ladi! Shuni yodda tutishimiz kerakki, <code>kenglik</code> indeks <code>0</code> da, <code>balandlik</code> esa <code>1</code> indeksda. Agar kimdir bizning kodimizdan foydalansa, buni tushunish va yodda tutish qiyinroq bo'ladi. Kodimizda ma'lumotlarimizning ma'nosini yetkazmaganimiz sababli, endi xatolarni kiritish osonroq.</p>
 <h3 id="struktuctlar-bilan-refaktoring-koproq-mano-qoshish"><a class="header" href="#struktuctlar-bilan-refaktoring-koproq-mano-qoshish">Struktuctlar bilan Refaktoring: ko'proq ma'no qo'shish</a></h3>
 <p>Biz ma'lumotlarni etiketlash orqali ma'no qo'shish uchun structlardan foydalanamiz. Biz foydalanayotgan tupleni 5-10 ro'yxatda ko'rsatilganidek, butun nomi bilan bir qatorda qismlar nomlari bilan tuzilishga aylantirishimiz mumkin.</p>
 <p><span class="filename">Fayl nomi: src/main.rs</span></p>
@@ -3455,7 +3455,7 @@ fn area(kvadrat: &amp;Kvadrat) -&gt; u32 {
 }</code></pre></pre>
 <p><span class="caption">Ro'yxat 5-10: <code>Kvadrat</code> strukturasini aniqlash</span></p>
 <p>Bu yerda biz structni aniqladik va uni <code>Kvadrat</code> deb nomladik. Jingalak qavslar ichida biz maydonlarni <code>kenglik</code> va <code>balandlik</code> sifatida belgiladik, ularning ikkalasi ham <code>u32</code> turiga ega. Keyin, <code>main</code> da biz <code>Kvadrat</code> ning ma'lum bir misolini yaratdik, uning kengligi <code>30</code> va balandligi <code>50</code>.</p>
-<p>Bizning <code>area</code> funksiyamiz endi biz <code>kvadrat</code> deb nomlagan bitta parametr bilan aniqlanadi, uning turi <code>Kvadrat</code> structi misolining o‘zgarmas borrowidir. 4-bobda aytib o'tilganidek, biz unga ownershiplik qilishdan ko'ra, structi borrow qilishni xohlaymiz. Shunday qilib, <code>main</code> o'z ownershipini saqlab qoladi va <code>kvadrat1</code> dan foydalanishni davom ettirishi mumkin, shuning uchun biz funktsiya signaturesida <code>&amp;</code> dan foydalanamiz va biz funktiyani chaqiramiz.</p>
+<p>Bizning <code>area</code> funksiyamiz endi biz <code>kvadrat</code> deb nomlagan bitta parametr bilan aniqlanadi, uning turi <code>Kvadrat</code> structi misolining o‘zgarmas borrowidir. 4-bobda aytib o'tilganidek, biz unga ownershiplik qilishdan ko'ra, structi borrow qilishni xohlaymiz. Shunday qilib, <code>main</code> o'z ownershipini saqlab qoladi va <code>kvadrat1</code> dan foydalanishni davom ettirishi mumkin, shuning uchun biz funktsiya signaturesida <code>&amp;</code> dan foydalanamiz va biz funksiyani chaqiramiz.</p>
 <p><code>area</code> funksiyasi <code>Kvadrat</code> misolining <code>kenglik</code> va <code>balandlik</code>  maydonlariga kiradi (esda tutingki, borrow qilingan struct misolining maydonlariga kirish maydon qiymatlarini ko'chirmaydi, shuning uchun siz ko'pincha structlarning borrowlarini ko'rasiz). Endi <code>area</code> funksiyasi signaturesi biz nimani nazarda tutayotganimizni aniq aytadi: <code>Kvadrat</code> maydonini uning <code>kenglik</code> va <code>balandlik</code> maydonlaridan foydalanib hisoblang. Bu kenglik va balandlik bir-biri bilan bog'liqligini bildiradi va <code>0</code> va <code>1</code> qator indeks qiymatlarini ishlatishdan ko'ra, qiymatlarga tavsiflovchi nomlar beradi. Bu aniqlik uchun g'alaba.</p>
 <h3 id="olingan-traitlar-bilan-foydali-funksionallikni-qoshish"><a class="header" href="#olingan-traitlar-bilan-foydali-funksionallikni-qoshish">Olingan Traitlar bilan foydali funksionallikni qo'shish</a></h3>
 <p>Dasturimizni debug qilish va uning barcha maydonlari uchun qiymatlarni ko'rish paytida <code>Kvadrat</code> misolini chop etish foydali bo'lar edi. 5-11 ro'yxatda biz avvalgi boblarda foydalanganimizdek <a href="../std/macro.println.html"><code>println!</code> makrosidan</a><!-- ignore --> foydalanishga harakat qiladi. Biroq, bu ishlamaydi.</p>
@@ -3475,7 +3475,7 @@ fn main() {
 <p><span class="caption">Ro'yxat 5-11: <code>Kvadrat</code>ni chop etishga urinish
 misoli</span></p>
 <p>Ushbu kodni kompilyatsiya qilishda, biz ushbu asosiy xabar bilan xatoga duch kelamiz:</p>
-<pre><code class="language-text">error[E0277]: `Rectangle` doesn't implement `std::fmt::Display`
+<pre><code class="language-text">error[E0277]: `Kvadrat` doesn't implement `std::fmt::Display`
 </code></pre>
 <p><code>println!</code> makrosi ko'plab formatlash turlarini amalga oshirishi mumkin va standart bo'yicha jingalak qavslar <code>println!</code>ga <code>Display</code> deb nomlanuvchi formatlashdan foydalanishni bildiradi: to'g'ridan-to'g'ri oxirgi foydalanuvchi iste'moli uchun mo'ljallangan chiqish. Biz hozirgacha ko'rgan primitiv turlar standart bo'yicha <code>Display</code> ni qo'llaydi, chunki foydalanuvchiga <code>1</code> yoki boshqa primitiv turni ko'rsatishning faqat bitta usuli bor. Lekin structlar bilan <code>println!</code> ning chiqishni formatlash metodi unchalik aniq emas, chunki koʻproq koʻrsatish imkoniyatlari mavjud: vergul qoʻyishni xohlaysizmi yoki yoʻqmi? Jingalak qavslarni chop qilmoqchimisiz? Barcha maydonlar ko'rsatilishi kerakmi? Ushbu noaniqlik tufayli Rust biz xohlagan narsani taxmin qilishga urinmaydi va structlarda <code>println!</code> va <code>{}</code> to'ldiruvchisi bilan foydalanish uchun <code>Display</code> ning taqdim etilgan ilovasi yo'q.</p>
 <p>Agar xatolarni o'qishda davom etsak, biz ushbu foydali eslatmani topamiz:</p>
@@ -3504,7 +3504,7 @@ fn main() {
         balandlik: 50,
     };
 
-    println!(&quot;kvadrat1 - {}&quot;, kvadrat1);
+    println!(&quot;kvadrat1 - {:?}&quot;, kvadrat1);
 }</code></pre></pre>
 <p><span class="caption">Ro'yxat 5-12: <code>Debug</code> traitini olish uchun atribut qo‘shish va debug formatlash yordamida <code>Kvadrat</code> misolini chop etish</span></p>
 <p>Endi dasturni ishga tushirganimizda, biz hech qanday xatolikka yo'l qo'ymaymiz va biz quyidagi natijani ko'ramiz:</p>
@@ -3753,7 +3753,7 @@ Biz allaqachon shunday funksiyadan foydalanganmiz: <code>String</code> turida an
 </span><span class="boring">fn main() {
 </span><span class="boring">    let kv = Kvadrat::kvadrat(3);
 </span><span class="boring">}</span></code></pre></pre>
-<p>Return turidagi va funksiya tanasidagi <code>Self</code> kalit so'zlari <code>impl</code> kalit so'zidan keyin paydo bo'ladigan turning taxalluslari bo'lib, bu holda <code>Kvadrat</code> bo'ladi.We’ll discuss modules in <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Chapter 7</a><!-- ignore -->.</p>
+<p>Return turidagi va funksiya tanasidagi <code>Self</code> kalit so'zlari <code>impl</code> kalit so'zidan keyin paydo bo'ladigan turning taxalluslari bo'lib, bu holda <code>Kvadrat</code> bo'ladi. Biz bularni <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">7-bobda</a><!-- ignore --> muhokama qilamiz.</p>
 <p>Ushbu associated funktsiyani chaqirish uchun biz struct nomi bilan <code>::</code> sintaksisidan foydalanamiz; <code>let kv = Kvadrat::kvadrat(3);</code> misol bo'la oladi. Bu funksiya struct tomonidan nom maydoniga ega: <code>::</code> sintaksisi ham associated funksiyalar, ham modullar tomonidan yaratilgan nomlar bo'shliqlari uchun ishlatiladi. Biz modullarni <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">7-bobda</a><!-- ignore --> muhokama qilamiz.</p>
 <h3 id="bir-nechta-impl-bloklari"><a class="header" href="#bir-nechta-impl-bloklari">Bir nechta <code>impl</code> bloklari</a></h3>
 <p>Har bir structga bir nechta <code>impl</code> bloklari ruxsat etiladi. Masalan, 5-15 ro'yxati 5-16 ro'yxatida ko'rsatilgan kodga ekvivalent bo'lib, har bir metod o'zining <code>impl</code> blokiga ega yani har bir metod o'z <code>impl</code> blokida.</p>
@@ -3978,7 +3978,8 @@ struct RangTanshlaXabar(i32, i32, i32); // tuple struct
     let m = Xabar::Yozish(String::from(&quot;salom&quot;));
     m.chaqiruv();
 <span class="boring">}</span></code></pre></pre>
-<p>Metod tanasi biz metod deb atagan qiymatni olish uchun <code>self</code> ishlatadi. Ushbu misolda biz <code>Xabar::Yozish(String::from(&quot;salom&quot;))</code> qiymatini o'z ichiga olgan <code>m</code> o'zgaruvchisini yaratdik va <code>m.chaqiruv()</code> ishga tushganda <code>chaqiruv</code> metodining tanasida aynan shunday bo<code>ladi. Keling, standart kutubxonadagi juda keng tarqalgan va foydali bo'lgan yana bir enumni ko'rib chiqaylik: </code>Option`.</p>
+<p>Metod tanasi biz metod deb atagan qiymatni olish uchun <code>self</code> ishlatadi. Ushbu misolda biz <code>Xabar::Yozish(String::from(&quot;salom&quot;))</code> qiymatini o'z ichiga olgan <code>m</code> o'zgaruvchisini yaratdik va <code>m.chaqiruv()</code> ishga tushganda <code>chaqiruv</code> metodining tanasida aynan shunday boʻladi.
+Keling, standart kutubxonadagi juda keng tarqalgan va foydali bo'lgan yana bir enumni ko'rib chiqaylik: <code>Option</code>.</p>
 <h3 id="option-enum-va-uning-null-qiymatlardan-ustunligi"><a class="header" href="#option-enum-va-uning-null-qiymatlardan-ustunligi"><code>Option</code> Enum va uning null qiymatlardan ustunligi</a></h3>
 <p>Ushbu bo'lim standart kutubxona tomonidan aniqlangan yana bir enum bo'lgan <code>Option</code> ning misolini o'rganadi.<code>Option</code> turi qiymat nimadir yoki hech narsa bo'lmasligi mumkin bo'lgan juda keng tarqalgan senariyni kodlaydi.</p>
 <p>Misol uchun, agar siz bo'sh bo'lmagan ro'yxatdagi birinchi elementni so'rasangiz, qiymat olasiz. Agar siz bo'sh ro'yxatdagi birinchi elementni so'rasangiz, hech narsa olmaysiz.

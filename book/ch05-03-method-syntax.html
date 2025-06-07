@@ -367,7 +367,7 @@ Biz allaqachon shunday funksiyadan foydalanganmiz: <code>String</code> turida an
 </span><span class="boring">fn main() {
 </span><span class="boring">    let kv = Kvadrat::kvadrat(3);
 </span><span class="boring">}</span></code></pre></pre>
-<p>Return turidagi va funksiya tanasidagi <code>Self</code> kalit so'zlari <code>impl</code> kalit so'zidan keyin paydo bo'ladigan turning taxalluslari bo'lib, bu holda <code>Kvadrat</code> bo'ladi.We’ll discuss modules in <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Chapter 7</a><!-- ignore -->.</p>
+<p>Return turidagi va funksiya tanasidagi <code>Self</code> kalit so'zlari <code>impl</code> kalit so'zidan keyin paydo bo'ladigan turning taxalluslari bo'lib, bu holda <code>Kvadrat</code> bo'ladi. Biz bularni <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">7-bobda</a><!-- ignore --> muhokama qilamiz.</p>
 <p>Ushbu associated funktsiyani chaqirish uchun biz struct nomi bilan <code>::</code> sintaksisidan foydalanamiz; <code>let kv = Kvadrat::kvadrat(3);</code> misol bo'la oladi. Bu funksiya struct tomonidan nom maydoniga ega: <code>::</code> sintaksisi ham associated funksiyalar, ham modullar tomonidan yaratilgan nomlar bo'shliqlari uchun ishlatiladi. Biz modullarni <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">7-bobda</a><!-- ignore --> muhokama qilamiz.</p>
 <h3 id="bir-nechta-impl-bloklari"><a class="header" href="#bir-nechta-impl-bloklari">Bir nechta <code>impl</code> bloklari</a></h3>
 <p>Har bir structga bir nechta <code>impl</code> bloklari ruxsat etiladi. Masalan, 5-15 ro'yxati 5-16 ro'yxatida ko'rsatilgan kodga ekvivalent bo'lib, har bir metod o'zining <code>impl</code> blokiga ega yani har bir metod o'z <code>impl</code> blokida.</p>
