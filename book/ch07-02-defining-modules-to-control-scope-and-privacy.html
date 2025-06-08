@@ -180,8 +180,7 @@
 <p>Ushbu bo'limda biz modullar va modul tizimining boshqa qismlari haqida gapiramiz, ya'ni elementlarni nomlash imkonini beruvchi <em>pathlar(yo'llar)</em>; pathni qamrab oluvchi <code>use</code> kalit so'zi; va obyektlarni hammaga ochiq qilish(public) uchun <code>pub</code> kalit so'zi. Shuningdek, biz <code>as</code> kalit so'zini, tashqi paketlarni va glob operatorini muhokama qilamiz.</p>
 <p>Birinchidan, kelajakda kodingizni tartibga solishda qulay foydalanish uchun qoidalar ro'yxatidan boshlaymiz. Keyin har bir qoidalarni batafsil tushuntiramiz.</p>
 <h3 id="modullar-qollanmasi"><a class="header" href="#modullar-qollanmasi">Modullar qo'llanmasi</a></h3>
-<p>Bu yerda biz modullar, pathlar, <code>use</code> kalit soʻzi va <code>pub</code> kalit soʻzining kompilyatorda qanday ishlashi va koʻpchilik ishlab chiquvchilar oʻz kodlarini qanday tashkil qilishlari haqida qisqacha maʼlumot beramiz. Ushbu bobda biz ushbu qoidalarning har biriga misollarni ko'rib chiqamiz va modullar qanday ishlashini takrorlash uchun yaxshi vaqt.
-work.</p>
+<p>Bu yerda biz modullar, pathlar, <code>use</code> kalit soʻzi va <code>pub</code> kalit soʻzining kompilyatorda qanday ishlashi va koʻpchilik ishlab chiquvchilar oʻz kodlarini qanday tashkil qilishlari haqida qisqacha maʼlumot beramiz. Ushbu bobda biz ushbu qoidalarning har biriga misollarni ko'rib chiqamiz va modullar qanday ishlashini takrorlash uchun yaxshi vaqt.</p>
 <ul>
 <li><strong>Cratening ildizidan boshlang</strong>: Crateni kompilyatsiya qilishda kompilyator kodni kompilyatsiya qilish uchun avval cratening ildiz fayliga (odatda kutubxona cratesi uchun <em>src/lib.rs</em> yoki binary crate uchun <em>src/main.rs</em>) qaraydi.</li>
 <li><strong>Modullarni e'lon qilish</strong>: Cratening ildiz faylida siz yangi modullarni e'lon qilishingiz mumkin; aytaylik, siz <code>mod poliz</code> bilan <code>poliz</code> modulini e'lon qilasiz; 
@@ -203,7 +202,7 @@ Kompilyator modul kodini quyidagi joylarda qidiradi:
 <li><strong>Private va Public</strong>: Modul ichidagi kod standart bo'yicha uning ota-modullaridan maxfiydir. Modulni public qilish uchun uni <code>mod</code> o'rniga <code>pub mod</code> bilan e’lon qiling. Public moduldagi elementlarni ham hammaga ochiq qilish uchun ularni e'lon qilishdan oldin <code>pub</code> dan foydalaning.</li>
 <li><strong><code>use</code> kalit so'zi</strong>: Bir doirada <code>use</code> kalit so'zidan foydalanish uzoq yo'llarning takrorlanishini kamaytirish uchun elementlar uchun taxalluslarni yaratadi. <code>Crate::poliz::sabzavotlar::Pomidor</code> ga murojaat qilishi mumkin bo'lgan har qanday sohada siz <code>use crate::poliz::sabzavotlar::Pomidor;</code> bilan taxallus yaratishingiz mumkin va shundan so'ng siz ushbu turdagi ushbu doirada foydalanish uchun <code>Pomidor </code>deb yozishingiz kerak.</li>
 </ul>
-<p>Bu erda biz ushbu qoidalarni aks ettiruvchi <code>orqa_hovli</code> nomli binary crate yaratamiz. Crate jildi, shuningdek, <code>orqa_hovli</code> deb nomlangan, quyidagi fayllar va jildlarni o'z ichiga oladi:</p>
+<p>Bu yerda biz ushbu qoidalarni aks ettiruvchi <code>orqa_hovli</code> nomli binary crate yaratamiz. Crate jildi, shuningdek, <code>orqa_hovli</code> deb nomlangan, quyidagi fayllar va jildlarni o'z ichiga oladi:</p>
 <pre><code class="language-text">orqa_hovli
 ├── Cargo.lock
 ├── Cargo.toml
@@ -226,7 +225,7 @@ fn main() {
 <p><code>pub mod poliz;</code> qatori kompilyatorga <em>src/poliz.rs</em> da topilgan kodni kiritishni aytadi, ya'ni:</p>
 <p><span class="filename">Fayl nomi: src/poliz.rs</span></p>
 <pre><code class="language-rust noplayground ignore">pub mod sabzavotlar;</code></pre>
-<p>Bu yerda <code>pub mod sabzavotlar;</code> <em>src/poliz/sabzavotlar.rs</em> dagi kod ham kiritilganligini bildiradi. That code is:</p>
+<p>Bu yerda <code>pub mod sabzavotlar;</code> <em>src/poliz/sabzavotlar.rs</em> dagi kod ham kiritilganligini bildiradi. Quyida misol uchun kod:</p>
 <pre><code class="language-rust noplayground ignore">#[derive(Debug)]
 pub struct Pomidor {}</code></pre>
 <p>Keling, ushbu qoidalarning tafsilotlari bilan tanishamiz va ularni amalda ko'rsatamiz!</p>
@@ -234,7 +233,7 @@ pub struct Pomidor {}</code></pre>
 <p><em>Modullar</em> kodni o'qish va qayta foydalanishni osonlashtirish uchun crate ichida tartibga solish imkonini beradi.
 Modullar bizga elementlarning <em>maxfiyligini</em> boshqarishga ham imkon beradi, chunki modul ichidagi kod standart boʻyicha shaxsiy(private) hisoblanadi. Private elementlar tashqi foydalanish uchun mavjud bo'lmagan ichki dastur tafsilotlari. Biz modullar va ulardagi elementlarni hammaga ochiq qilishni tanlashimiz mumkin, bu esa ularni tashqi koddan foydalanish va ularga bog'liq bo'lishiga imkon beradi.</p>
 <p>Misol tariqasida, restoranning funksionalligini ta'minlaydigan kutubxona cratesini yozamiz. Biz funksiyalarning signaturelarini aniqlaymiz, lekin restoranni implement qilishga emas, balki kodni tashkil etishga e'tibor qaratish uchun ularning tanasini bo'sh qoldiramiz.</p>
-<p>Restoran sanoatida restoranning ba'zi qismlari <em>uyning old tomoni</em> va boshqalari <em>uyning orqa tomoni</em> deb ataladi. Uyning old tomoni mijozlar joylashgan joy; Bu mezbonlar mijozlarni joylashtiradigan, serverlar buyurtma va to'lovlarni qabul qiladigan va barmenlar ichimliklar tayyorlaydigan joyni o'z ichiga oladi. Uyning orqa tomonida oshpazlar va oshpazlar oshxonada ishlaydi, idishlarni yuvish mashinalari tozalaydi va menejerlar ma'muriy ishlarni bajaradilar.</p>
+<p>Restoran sanoatida restoranning ba'zi qismlari <em>uyning old tomoni</em> va boshqalari <em>uyning orqa tomoni</em> deb ataladi. Uyning old tomoni mijozlar joylashgan joy; Bu mezbonlar mijozlarni joylashtiradigan, serverlar buyurtma va to'lovlarni qabul qiladigan va barmenlar ichimliklar tayyorlaydigan joyni o'z ichiga oladi. Uyning orqa tomonda oshpazlar va pishiruvchilar oshxonada ishlaydi, idish-tovoqlarni yuvuvchilar tozalaydi va menejerlar ma'muriy ishlarni bajaradi.</p>
 <p>Cratemizni shu tarzda tuzish uchun biz uning funksiyalarini ichki modullarga ajratishimiz mumkin. <code>cargo new restoran --lib</code> ishga tushirish orqali <code>restoran</code> nomli yangi kutubxona yarating; keyin ba'zi modullar va funksiya signaturelarini aniqlash uchun 7-1 ro'yxatidagi kodni <em>src/lib.rs</em> ichiga kiriting. Mana, uyning old qismi:
 <span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">mod uyning_oldi {
