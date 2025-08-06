@@ -176,31 +176,35 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="using-trait-objects-that-allow-for-values-of-different-types"><a class="header" href="#using-trait-objects-that-allow-for-values-of-different-types">Using Trait Objects That Allow for Values of Different Types</a></h2>
-<p>In Chapter 8, we mentioned that one limitation of vectors is that they can
-store elements of only one type. We created a workaround in Listing 8-9 where
-we defined a <code>SpreadsheetCell</code> enum that had variants to hold integers, floats,
-and text. This meant we could store different types of data in each cell and
-still have a vector that represented a row of cells. This is a perfectly good
-solution when our interchangeable items are a fixed set of types that we know
-when our code is compiled.</p>
-<p>However, sometimes we want our library user to be able to extend the set of
-types that are valid in a particular situation. To show how we might achieve
-this, we’ll create an example graphical user interface (GUI) tool that iterates
-through a list of items, calling a <code>draw</code> method on each one to draw it to the
-screen—a common technique for GUI tools. We’ll create a library crate called
-<code>gui</code> that contains the structure of a GUI library. This crate might include
-some types for people to use, such as <code>Button</code> or <code>TextField</code>. In addition,
-<code>gui</code> users will want to create their own types that can be drawn: for
-instance, one programmer might add an <code>Image</code> and another might add a
-<code>SelectBox</code>.</p>
-<p>We won’t implement a fully fledged GUI library for this example but will show
-how the pieces would fit together. At the time of writing the library, we can’t
-know and define all the types other programmers might want to create. But we do
-know that <code>gui</code> needs to keep track of many values of different types, and it
-needs to call a <code>draw</code> method on each of these differently typed values. It
-doesn’t need to know exactly what will happen when we call the <code>draw</code> method,
-just that the value will have that method available for us to call.</p>
+                        <h2 id="turli-xildagi-qiymatlarni-qabul-qila-oladigan-trait-yani-xususiyat-obyektlaridan-foydalanish"><a class="header" href="#turli-xildagi-qiymatlarni-qabul-qila-oladigan-trait-yani-xususiyat-obyektlaridan-foydalanish">Turli xildagi qiymatlarni qabul qila oladigan Trait ya'ni xususiyat obyektlaridan foydalanish</a></h2>
+<p>8-bobda biz vektorlarning faqat bir turdagi elementlarni saqlash
+imkoniyatiga ega ekanligini ta’kidlagan edik. 8-9-ro‘yxatda
+butun sonlar, kasr sonlar va matnlarni saqlash uchun variantlarga
+ega bo‘lgan ’SpreadsheetCell’ nomli sanab o‘tish turini yaratib,
+bu muammoni hal qilish ko'rsatilgan edi. Bu usul har bir katakda
+turli xil ma’lumotlarni saqlash va shu bilan birga kataklar
+qatorini ifodalovchi vektorga ega bo‘lish imkonini berdi. Agar
+o‘zaro almashtirilishi mumkin bo‘lgan elementlarni kodda tuzilayotgan
+paytda ma’lum bo‘lgan turlarning belgilangan to‘plamidan iborat
+bo‘lsa, bu juda yaxshi yechim hisoblanadi.</p>
+<p>Biroq, ba’zida kutubxonamiz foydalanuvchisi o‘zi uchun mos bo‘lgan, muayyan vaziyatda
+ishlatilishi mumkin bo‘lgan turlar to‘plamini kengaytira olishini xohlaymiz. Bu qanday 
+amalga oshirilishini ko‘rsatish uchun, grafik foydalanuvchi interfeysi (GUI) vositasi 
+misolini yaratamiz. Ushbu vosita elementlar ro‘yxatidan o‘tadi va har bir element uchun 
+<code>draw</code> metodini chaqiradi. Bu GUI vositalarida keng qo‘llaniladigan uslubdir.<code>gui</code> 
+nomli kutubxona crate yaratiladi. Ushbuu crate GUI kutubxonasining asosiy tuzilmasini o‘z 
+ichiga oladi. Unda, masalan, <code>Button</code> yoki <code>TextField</code> kabi foydalanishga tayyor ayrim 
+turlarni taqdim qilishi mumkin. Shu bilan birga, <code>gui</code> foydalanuvchilari o‘zlarining 
+chizilishi mumkin bo‘lgan turlarini ham yaratmoqchi bo‘lishadi: masalan, bir dasturchi
+<code>Image</code> turini qo‘shsa, boshqasi <code>SelectBox</code> turini qo‘shishi mumkin.</p>
+<p>Ushbu misolda biz to'laqonli grafik interfeyslik (GUI) kutubxona yozmaymiz, lekin
+qismlar bir-biri bilan qanday ulanishini ko'rsatamiz. Kutubxona yozish vaqtida
+biz boshqa dasturchilar nima va qanday qilib yozishini oldindan bilmaymiz.
+Lekin biz bilamizki, <code>gui</code> imkon qadar ko'p turlar qiymatidan xabardor bo'lishi
+kerak, va u <code>draw</code> (ya'ni chizish) metodini ana shu turlarning har birida
+chaqirishi lozim. Biz <code>draw</code> metodini chaqirgan vaqtimizda aynan nima ish sodir
+bo'lishini <code>gui</code> bilishi kerak emas, faqatgina <code>draw</code> metodi bizga chaqirish
+uchun mavjudligini biladi xolos.</p>
 <p>To do this in a language with inheritance, we might define a class named
 <code>Component</code> that has a method named <code>draw</code> on it. The other classes, such as
 <code>Button</code>, <code>Image</code>, and <code>SelectBox</code>, would inherit from <code>Component</code> and thus

@@ -189,7 +189,7 @@
 
 impl Drop for CustomSmartPointer {
     fn drop(&amp;mut self) {
-        println!(&quot;CustomSmartPointerni `{}` ma'lumot bilan Drop qilish!&quot;, self.data);
+        println!(&quot;CustomSmartPointerni `{}` ma'lumot bilan tashlab yuborish!&quot;, self.data);
     }
 }
 
@@ -210,9 +210,9 @@ fn main() {
    Compiling drop-example v0.1.0 (file:///projects/drop-example)
     Finished dev [unoptimized + debuginfo] target(s) in 0.60s
      Running `target/debug/drop-example`
-CustomSmartPointers created.
-Dropping CustomSmartPointer with data `other stuff`!
-Dropping CustomSmartPointer with data `my stuff`!
+CustomSmartPointerlar yaratildi.
+CustomSmartPointerni `menga tegishli` ma'lumot bilan tashlab yuborish!
+CustomSmartPointerni `boshqaga tegishli` ma'lumot bilan tashlab yuborish!
 </code></pre>
 <p>Rust avtomatik ravishda bizning o‘rnimizga biz ko‘rsatgan kodni instance doiradan (scope) chiqqanda <code>drop</code>ni chaqirdi. O‘zgaruvchilar yaratilish paytida teskari tartibda tushib qoldiriladi (drop qilinadi), shuning uchun <code>d</code> <code>c</code>dan oldin tushib qoldirildi (drop qilindi). Ushbu misolning maqsadi sizga <code>drop</code> metodining qanday ishlashining vizual ko‘rinishini berishdir; odatda xabarni print qilishning o‘rniga siz sizning turingizni ishga tushirish (run qilish) uchun tozalash kodini ko‘rsatasiz. </p>
 <h3 id="stdmemdrop-yordamida-qiymatni-erta-drop-qilish"><a class="header" href="#stdmemdrop-yordamida-qiymatni-erta-drop-qilish"><code>std::mem::drop</code> yordamida Qiymatni Erta Drop qilish</a></h3>
