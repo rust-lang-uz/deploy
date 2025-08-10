@@ -14754,8 +14754,8 @@ xatolarga olib kelishi mumkin, chunki metodlar quyi sinfga tatbiq etilmaydi. Bun
 quyi sinf faqat bitta sinfdan meros olishi mumkinligini anglatadi), bu esa dastur dizaynining moslashuvchanligini yanada cheklaydi.</p>
 <p>Ushbu sabablarga ko'ra, Rust meros olish o'rniga trait obyektlaridan foydalanish yo'lini tanlaydi. Keling, Rustda trait obyektlari qanday qilib
 polimorfizmni ta'minlashini ko'rib chiqaylik.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="turli-xildagi-qiymatlarni-qabul-qila-oladigan-trait-yani-xususiyat-obyektlaridan-foydalanish"><a class="header" href="#turli-xildagi-qiymatlarni-qabul-qila-oladigan-trait-yani-xususiyat-obyektlaridan-foydalanish">Turli xildagi qiymatlarni qabul qila oladigan Trait ya'ni xususiyat obyektlaridan foydalanish</a></h2>
-<p>8-bobda biz vektorlarning faqat bir turdagi elementlarni saqlash
+<div style="break-before: page; page-break-before: always;"></div><h2 id="turli-xildagi-qiymatlarni-qabul-qila-oladigan-trait-yani-xususiyat-obyektlaridan-foydalanish"><a class="header" href="#turli-xildagi-qiymatlarni-qabul-qila-oladigan-trait-yani-xususiyat-obyektlaridan-foydalanish">Turli xildagi qiymatlarni qabul qila oladigan <code>Trait</code> ya'ni xususiyat obyektlaridan foydalanish</a></h2>
+<p>8-bobda vektorlarning faqat bir turdagi elementlarni saqlash
 imkoniyatiga ega ekanligini ta’kidlagan edik. 8-9-ro‘yxatda
 butun sonlar, kasr sonlar va matnlarni saqlash uchun variantlarga
 ega bo‘lgan ’SpreadsheetCell’ nomli sanab o‘tish turini yaratib,
@@ -14766,55 +14766,62 @@ o‘zaro almashtirilishi mumkin bo‘lgan elementlarni kodda tuzilayotgan
 paytda ma’lum bo‘lgan turlarning belgilangan to‘plamidan iborat
 bo‘lsa, bu juda yaxshi yechim hisoblanadi.</p>
 <p>Biroq, ba’zida kutubxonamiz foydalanuvchisi o‘zi uchun mos bo‘lgan, muayyan vaziyatda
-ishlatilishi mumkin bo‘lgan turlar to‘plamini kengaytira olishini xohlaymiz. Bu qanday 
-amalga oshirilishini ko‘rsatish uchun, grafik foydalanuvchi interfeysi (GUI) vositasi 
-misolini yaratamiz. Ushbu vosita elementlar ro‘yxatidan o‘tadi va har bir element uchun 
-<code>draw</code> metodini chaqiradi. Bu GUI vositalarida keng qo‘llaniladigan uslubdir.<code>gui</code> 
-nomli kutubxona crate yaratiladi. Ushbuu crate GUI kutubxonasining asosiy tuzilmasini o‘z 
-ichiga oladi. Unda, masalan, <code>Button</code> yoki <code>TextField</code> kabi foydalanishga tayyor ayrim 
-turlarni taqdim qilishi mumkin. Shu bilan birga, <code>gui</code> foydalanuvchilari o‘zlarining 
+ishlatilishi mumkin bo‘lgan turlar to‘plamini kengaytira olishini xohlaymiz. Bu qanday
+amalga oshirilishini ko‘rsatish uchun, grafik foydalanuvchi interfeysi (GUI) vositasi
+misolini yaratamiz. Ushbu vosita elementlar ro‘yxatidan o‘tadi va har bir element uchun
+<code>draw</code> metodini chaqiradi. Bu GUI vositalarida keng qo‘llaniladigan uslubdir.<code>gui</code>
+nomli kutubxona crate yaratiladi. Ushbuu crate GUI kutubxonasining asosiy tuzilmasini o‘z
+ichiga oladi. Unda, masalan, <code>Button</code> yoki <code>TextField</code> kabi foydalanishga tayyor ayrim
+turlarni taqdim qilishi mumkin. Shu bilan birga, <code>gui</code> foydalanuvchilari o‘zlarining
 chizilishi mumkin bo‘lgan turlarini ham yaratmoqchi bo‘lishadi: masalan, bir dasturchi
 <code>Image</code> turini qo‘shsa, boshqasi <code>SelectBox</code> turini qo‘shishi mumkin.</p>
-<p>Ushbu misolda biz to'laqonli grafik interfeyslik (GUI) kutubxona yozmaymiz, lekin
-qismlar bir-biri bilan qanday ulanishini ko'rsatamiz. Kutubxona yozish vaqtida
-biz boshqa dasturchilar nima va qanday qilib yozishini oldindan bilmaymiz.
-Lekin biz bilamizki, <code>gui</code> imkon qadar ko'p turlar qiymatidan xabardor bo'lishi
-kerak, va u <code>draw</code> (ya'ni chizish) metodini ana shu turlarning har birida
-chaqirishi lozim. Biz <code>draw</code> metodini chaqirgan vaqtimizda aynan nima ish sodir
-bo'lishini <code>gui</code> bilishi kerak emas, faqatgina <code>draw</code> metodi bizga chaqirish
-uchun mavjudligini biladi xolos.</p>
-<p>To do this in a language with inheritance, we might define a class named
-<code>Component</code> that has a method named <code>draw</code> on it. The other classes, such as
-<code>Button</code>, <code>Image</code>, and <code>SelectBox</code>, would inherit from <code>Component</code> and thus
-inherit the <code>draw</code> method. They could each override the <code>draw</code> method to define
-their custom behavior, but the framework could treat all of the types as if
-they were <code>Component</code> instances and call <code>draw</code> on them. But because Rust
-doesn’t have inheritance, we need another way to structure the <code>gui</code> library to
-allow users to extend it with new types.</p>
-<h3 id="defining-a-trait-for-common-behavior"><a class="header" href="#defining-a-trait-for-common-behavior">Defining a Trait for Common Behavior</a></h3>
-<p>To implement the behavior we want <code>gui</code> to have, we’ll define a trait named
-<code>Draw</code> that will have one method named <code>draw</code>. Then we can define a vector that
-takes a <em>trait object</em>. A trait object points to both an instance of a type
-implementing our specified trait and a table used to look up trait methods on
-that type at runtime. We create a trait object by specifying some sort of
-pointer, such as a <code>&amp;</code> reference or a <code>Box&lt;T&gt;</code> smart pointer, then the <code>dyn</code>
-keyword, and then specifying the relevant trait. (We’ll talk about the reason
-trait objects must use a pointer in Chapter 19 in the section <a href="ch19-04-advanced-types.html#dynamically-sized-types-and-the-sized-trait">“Dynamically
-Sized Types and the <code>Sized</code> Trait.”</a><!-- ignore -->) We can
-use trait objects in place of a generic or concrete type. Wherever we use a
-trait object, Rust’s type system will ensure at compile time that any value
-used in that context will implement the trait object’s trait. Consequently, we
-don’t need to know all the possible types at compile time.</p>
-<p>We’ve mentioned that, in Rust, we refrain from calling structs and enums
-“objects” to distinguish them from other languages’ objects. In a struct or
-enum, the data in the struct fields and the behavior in <code>impl</code> blocks are
-separated, whereas in other languages, the data and behavior combined into one
-concept is often labeled an object. However, trait objects <em>are</em> more like
-objects in other languages in the sense that they combine data and behavior.
-But trait objects differ from traditional objects in that we can’t add data to
-a trait object. Trait objects aren’t as generally useful as objects in other
-languages: their specific purpose is to allow abstraction across common
-behavior.</p>
+<p>Ushbu misolda to‘laqonli grafik interfeyslik (GUI) kutubxona yozilmaydi lekin
+qismlar bir-biri bilan qanday ulanishini ko‘rsatiladi. Kutubxona yozish vaqtida
+boshqa dasturchilar nima va qanday qilib yozishini oldindan bilib bo‘lmaydi.
+Lekin bilamizki, <code>gui</code> imkon qadar ko‘p turlar qiymatidan xabardor bo‘lishi
+kerak, va u <code>draw</code> (ya’ni chizish) metodini ana shu turlarning har birida
+chaqirishi lozim. <code>draw</code> metodini chaqirgan vaqtida aynan nima ish sodir
+bo‘lishini <code>gui</code> bilishi kerak emas, faqatgina <code>draw</code> metodi chaqirish uchun
+mavjudligini biladi xolos.</p>
+<p>Obyektga yo‘naltirilgan tillarda (misol uchun Java, C# va h.k.), <code>Component</code> nomli
+klass ichida <code>draw</code> nomli metod bilan ifoda etiladi. <code>Button</code>, <code>Image</code> va
+<code>SelectBox</code> kabi klasslar <code>Component</code>dan nasil olishadi va shu tufayli ular
+ham <code>draw</code> metodini ifodalashadi. Ular, albatta, o‘zgacha <code>draw</code> metodini
+e’lon qilishlari mumkin lekin dasturlash tili ularni xuddi <code>Component</code>dek
+ko‘rishadi va <code>draw</code>ni chaqira olishadi. Rust dasturlash tilida nasl olish
+imkoniyati yo‘q, vaholanki <code>gui</code> kutubxonasi foydalanuvchilari uni
+kengaytira olishi uchun kutubxona boshqacha tuzilishi lozim.</p>
+<h3 id="umumiy-xatti-harakatlar-uchun-trait-ni-aniqlash-yani-xususiyatni"><a class="header" href="#umumiy-xatti-harakatlar-uchun-trait-ni-aniqlash-yani-xususiyatni">Umumiy xatti-harakatlar uchun <code>Trait</code> ni aniqlash ya'ni xususiyatni</a></h3>
+<p><code>Gui</code> uchun kerakli xatti-harakatni amalga oshirish maqsadida, <code>Draw</code> nomli
+trait'ni belgilaymiz. Bu trait <code>draw</code> deb nomlangan yagona usulni o‘z ichiga
+oladi. Shundan so‘ng <em>trait object</em> ni qabul qiladigan vektorni aniqlash mumkin.
+Trait obyekti ko‘rsatilgan xususiyatni amalga oshiruvchi turning nusxasiga ham,
+ishlash vaqtida ushbu turdagi trait usullarini qidirish uchun ishlatiladigan
+jadvalga ham ishora qiladi. Qandaydir ko‘rsatkichni, masalan <code>&amp;</code> havola yoki
+<code>Box&lt;T&gt;</code> aqlli ko‘rsatkichni, so‘ngra <code>dyn</code> kalit so‘zini va tegishli trait'ni
+ko‘rsatish orqali trait obyektini yaratamiz. (Trait obyektlarining nima uchun
+ko‘rsatkich ishlatishi kerakligi haqida 19-bobning
+[&quot;Dinamik o‘lchamliturlar va ’Sized’ belgisi&quot;][dinamik-olchamli]</p>
+<!-- e’tiborsiz qoldirish --> qismida batafsil to‘xtalamiz.) Trait
+<p>obyektlarini <code>generic</code> ya'ni turdosh yoki aniq tur o‘rnida ishlatishimiz mumkin.
+Trait obyektini qayerda ishlatishimizdan qat'iy nazar, Rustning turlar tizimi
+kompilyatsiya vaqtida ushbu kontekstda ishlatiladigan har qanday qiymat
+trait obyektining trait'ini amalga oshirishini ta’minlaydi. Natijada
+kompilyatsiya vaqtida barcha mumkin bo‘lgan turlarni bilish shart emas.</p>
+<p>Rust dasturlash tilida structlar va enumlar “obyekt” deb atalmaydi. 
+Bunday yondashuv, ularni boshqa dasturlash tillaridagi obyekt tushunchasidan 
+farqlash maqsadida qo‘llaniladi. Rust tilida struct yoki enum tarkibidagi 
+ma’lumotlar (ya’ni, maydonlar) va xatti-harakatlar <code>impl</code> bloklarida 
+alohida saqlanadi. Aksariyat boshqa dasturlash tillarida esa ma’lumotlar va 
+xatti-harakatlar yagona tuzilma sifatida birlashtirilib, odatda “obyekt” deb 
+ataladi. Biroq trait obyektlar (trait objects) boshqa dasturlash tillaridagi 
+obyektlarga o‘xshashlik kasb etadi. Chunki ular ma’lumot va xatti-harakatni 
+birgalikda ifodalash imkonini beradi. Shunga qaramay, trait obyektlar an’anaviy 
+obyektlardan farq qiladi: ular tarkibiga yangi ma’lumotlar qo‘shishga imkon 
+bermaydi. Shu bois, trait obyektlar boshqa tillardagi obyektlar kabi keng 
+maqsadlarda emas, balki faqat umumiy xatti-harakatni abstraktsiyalash, 
+ya’ni umumiy funksionallik asosida turli obyektlar bilan ishlash imkoniyatini 
+yaratish uchun qo‘llaniladi.</p>
 <p>Listing 17-3 shows how to define a trait named <code>Draw</code> with one method named
 <code>draw</code>:</p>
 <p><span class="filename">Filename: src/lib.rs</span></p>
@@ -14883,23 +14890,28 @@ where
         }
     }
 }</code></pre>
-<p><span class="caption">Listing 17-6: An alternate implementation of the <code>Screen</code>
-struct and its <code>run</code> method using generics and trait bounds</span></p>
-<p>This restricts us to a <code>Screen</code> instance that has a list of components all of
-type <code>Button</code> or all of type <code>TextField</code>. If you’ll only ever have homogeneous
-collections, using generics and trait bounds is preferable because the
-definitions will be monomorphized at compile time to use the concrete types.</p>
-<p>On the other hand, with the method using trait objects, one <code>Screen</code> instance
-can hold a <code>Vec&lt;T&gt;</code> that contains a <code>Box&lt;Button&gt;</code> as well as a
-<code>Box&lt;TextField&gt;</code>. Let’s look at how this works, and then we’ll talk about the
-runtime performance implications.</p>
-<h3 id="implementing-the-trait"><a class="header" href="#implementing-the-trait">Implementing the Trait</a></h3>
-<p>Now we’ll add some types that implement the <code>Draw</code> trait. We’ll provide the
-<code>Button</code> type. Again, actually implementing a GUI library is beyond the scope
-of this book, so the <code>draw</code> method won’t have any useful implementation in its
-body. To imagine what the implementation might look like, a <code>Button</code> struct
-might have fields for <code>width</code>, <code>height</code>, and <code>label</code>, as shown in Listing 17-7:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption"> 17-6 ro'yxat: <code>Screen</code> tuzilmasi va uning <code>run</code>
+usulining muqobil amalga oshirilishi, bunda generiklar va xususiyatlar
+chegaralari qo‘llaniladi</span></p>
+<p>Bu faqat <code>Button</code> yoki faqat <code>TextField</code> turidagi komponentlar ro‘yxatiga
+ega bo‘lgan <code>Screen</code> nusxasi bilan cheklaydi. Agar sizda faqat bir xil
+to‘plamlar bo‘lsa, <code>generic</code> umumiy va <code>trait</code> xususiyat chegaralaridan
+foydalanish afzalroq, chunki aniq turlardan foydalanish uchun ta’riflar
+tuzish vaqtida har bir tur uchun birlashtiradi.</p>
+<p>Boshqa tomondan, <code>trait</code> obyektlaridan foydalanadigan usul bilan bitta
+<code>Screen</code> nusxasi <code>Box&lt;Button&gt;</code>, shuningdek <code>Box&lt;TextField&gt;</code> ni o‘z ichiga
+olgan <code>Vec&lt;T&gt;</code> ni saqlash imkoniyatiga ega bo‘ladi. Keling, bu qanday
+ishlashini ko‘rib chiqaylik, so‘ngra dasturning ishlash vaqtidagi
+unumdorlik ta’sirlari haqida suhbatlashamiz.</p>
+<h3 id="traitni-amalga-oshirish"><a class="header" href="#traitni-amalga-oshirish">Traitni amalga oshirish</a></h3>
+<p>Endi <code>Draw</code> traitini amalga oshiradigan ba'zi turlarni qo‘shamiz. <code>Button</code> 
+turini taqdim etamiz. Yana, haqiqiy GUI kutubxonasini yaratish kitobimiz 
+doirasidan tashqarida, shuning uchun <code>draw</code> metodi tanasida hech qanday 
+foydali amalga oshirish bo‘lmaydi. Amalga oshirish qanday ko‘rinishi 
+mumkinligini tasavvur qilish uchun, <code>Button</code> tuzilmasi <code>width</code> (kenglik), 
+<code>height</code> (bo‘yi) va <code>label</code> (yorliq) kabi maydonlarga ega bo‘lishi mumkin, 
+bu 17-7 ro'yxatdada ko‘rsatilgan:</p>
+<p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
 </span><span class="boring">    fn draw(&amp;self);
 </span><span class="boring">}
@@ -14927,21 +14939,19 @@ impl Draw for Button {
         // code to actually draw a button
     }
 }</code></pre>
-<p><span class="caption">Listing 17-7: A <code>Button</code> struct that implements the
-<code>Draw</code> trait</span></p>
-<p>The <code>width</code>, <code>height</code>, and <code>label</code> fields on <code>Button</code> will differ from the
-fields on other components; for example, a <code>TextField</code> type might have those
-same fields plus a <code>placeholder</code> field. Each of the types we want to draw on
-the screen will implement the <code>Draw</code> trait but will use different code in the
-<code>draw</code> method to define how to draw that particular type, as <code>Button</code> has here
-(without the actual GUI code, as mentioned). The <code>Button</code> type, for instance,
-might have an additional <code>impl</code> block containing methods related to what
-happens when a user clicks the button. These kinds of methods won’t apply to
-types like <code>TextField</code>.</p>
-<p>If someone using our library decides to implement a <code>SelectBox</code> struct that has
-<code>width</code>, <code>height</code>, and <code>options</code> fields, they implement the <code>Draw</code> trait on the
-<code>SelectBox</code> type as well, as shown in Listing 17-8:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Ro'yxat 17-7: <code>Draw</code> traitini amalga oshiradigan <code>Button</code> strukti</span></p>
+<p><code>Button</code>ning <code>width</code>, <code>height</code> va <code>label</code> maydonlari boshqa komponentlarga
+nisbatan farq qiladi; misol uchun <code>TextField</code>ning turi avvalgi maydonlar va
+qo‘shimcha <code>placeholder</code> maydonidan tashkil topgan bo‘lishi mumkin. Har bir
+ekranga chizilishi kerak bo‘lgan turlar <code>Draw</code> trait’ini joriy qilishadi ammo
+ularning <code>draw</code> metodlari bir-birlaridan farq qiladi chunki har bir turning
+o‘ziga xos shakli yoki boshqa xususiyati chizilishi mumkin. Misol uchun
+<code>Button</code> bosganda sodir bo‘ladigan metod <code>impl</code> bloki ichida qo‘shimcha
+kiritilishi mumkin. <code>TextField</code> uchun esa bunday funksional talab etilmaydi.</p>
+<p><code>width</code>, <code>height</code> va <code>options</code> maydonlardan tashkil topgan <code>SelectBox</code>ni
+amalga oshirmoqchi bo‘lgan dasturchi <code>SelectBox</code> uchun <code>Draw</code> trait’ini
+ham Ro‘yxat 17-8 da ko‘rsatilgandek yozishi kerak bo‘ladi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore">use gui::Draw;
 
 struct SelectBox {
@@ -14957,14 +14967,15 @@ impl Draw for SelectBox {
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre>
-<p><span class="caption">Listing 17-8: Another crate using <code>gui</code> and implementing
-the <code>Draw</code> trait on a <code>SelectBox</code> struct</span></p>
-<p>Our library’s user can now write their <code>main</code> function to create a <code>Screen</code>
-instance. To the <code>Screen</code> instance, they can add a <code>SelectBox</code> and a <code>Button</code>
-by putting each in a <code>Box&lt;T&gt;</code> to become a trait object. They can then call the
-<code>run</code> method on the <code>Screen</code> instance, which will call <code>draw</code> on each of the
-components. Listing 17-9 shows this implementation:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="caption">Ro‘yxat 17-8: <code>gui</code>dan foydalanuvchi va undagi <code>Draw</code>
+trait’ini <code>SelectBox</code> struct’i uchun amalga oshiradigan crate</span></p>
+<p>Kutubxona foydalanuvchisi endi o‘z <code>main</code> funksiyasi ichida <code>Screen</code> nusxasini
+yaratish imkoniga ega. <code>Screen</code> nusxasiga foydalanuvchi <code>SelectBox</code> va <code>Button</code>
+nusxalarini har birini <code>Box&lt;T&gt;</code> ichiga joylash orqali ularni trait’ga o‘girib
+qo‘shib chiqishi mumkin. Undan keyin <code>Screen</code> nusxasida <code>run</code> metodi chaqirgan
+vaqtda har bir ichki komponentlarning <code>draw</code> metodi birma-bir chaqiriladi.
+Ro‘yxat 17-9 xuddi shuni namoyish etadi:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use gui::Draw;
 </span><span class="boring">
 </span><span class="boring">struct SelectBox {
@@ -15003,27 +15014,27 @@ fn main() {
 
     screen.run();
 }</code></pre>
-<p><span class="caption">Listing 17-9: Using trait objects to store values of
-different types that implement the same trait</span></p>
+<p><span class="caption">Ro‘yxat 17-9: Bir trait’ni amalga oshiruvchi turli xil
+turlarni saqlash uchun trait obyektlar ishlatilishi</span></p>
 <p>When we wrote the library, we didn’t know that someone might add the
 <code>SelectBox</code> type, but our <code>Screen</code> implementation was able to operate on the
 new type and draw it because <code>SelectBox</code> implements the <code>Draw</code> trait, which
 means it implements the <code>draw</code> method.</p>
-<p>This concept—of being concerned only with the messages a value responds to
-rather than the value’s concrete type—is similar to the concept of <em>duck
-typing</em> in dynamically typed languages: if it walks like a duck and quacks
-like a duck, then it must be a duck! In the implementation of <code>run</code> on <code>Screen</code>
-in Listing 17-5, <code>run</code> doesn’t need to know what the concrete type of each
-component is. It doesn’t check whether a component is an instance of a <code>Button</code>
-or a <code>SelectBox</code>, it just calls the <code>draw</code> method on the component. By
-specifying <code>Box&lt;dyn Draw&gt;</code> as the type of the values in the <code>components</code>
-vector, we’ve defined <code>Screen</code> to need values that we can call the <code>draw</code>
-method on.</p>
-<p>The advantage of using trait objects and Rust’s type system to write code
-similar to code using duck typing is that we never have to check whether a
-value implements a particular method at runtime or worry about getting errors
-if a value doesn’t implement a method but we call it anyway. Rust won’t compile
-our code if the values don’t implement the traits that the trait objects need.</p>
+<p>Bu tushuncha — ya’ni, qiymatning aniq tipi emas, balki qanday xabarlarga 
+javob bera olishi muhim bo‘lishi — dinamik tiplangan tillardagi <em>duck typing</em> 
+tushunchasiga o‘xshaydi: agar u o‘rdakdek yursa va o‘rdakdek ovoz chiqarsa, 
+demak u o‘rdak! 17-5-ro‘yxatdagi <code>Screen</code> uchun <code>run</code> funksiyasi 
+implementatsiyasida <code>run</code> har bir komponentning aniq tipi nima ekanini 
+bilishga muhtoj emas. Komponent <code>Button</code> yoki <code>SelectBox</code> ekanligini 
+tekshirmaydi, shunchaki uning <code>draw</code> metodini chaqiradi. <code>components</code> vektoridagi 
+qiymatlar turi sifatida <code>Box&lt;dyn Draw&gt;</code>ni ko‘rsatish orqali,<code>Screen</code>dan <code>draw</code> 
+metodini chaqira olishimiz mumkin bo‘lgan qiymatlarni talab qiladigan qilib belgiladik.</p>
+<p>Trait obyektlar va Rustning turlar tizimidan foydalanib, <code>duck typing</code> uslubiga
+o‘xshash kod yozishning afzalligi shundaki, qiymatning ma’lum bir usulni
+bajarishini ishga tushirish vaqtida tekshirishimiz shart emas. Bundan tashqari,
+agar qiymat usulni amalga oshirmasa-yu, lekin u chaqirilsa ham, xatolar yuzaga
+kelishidan xavotirlanishimizga hojat yo‘q. Agar qiymatlar trait obyektlariga
+kerak bo'lgan trait'larni amalga oshirmasa, Rust bu kodni kompilatsiya qilmaydi.</p>
 <p>For example, Listing 17-10 shows what happens if we try to create a <code>Screen</code>
 with a <code>String</code> as a component:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
@@ -19041,17 +19052,33 @@ and do one more project!</p>
 </ol>
 <p>Boshlashdan oldin bir narsani aytib o‘tishimiz kerak: biz foydalanadigan usul Rust tilida veb-server qurishning eng yaxshi usuli bo‘lmaydi. Rust hamjamiyati 
 <a href="https://crates.io/">crates.io</a> saytida chop etilgan, to‘liq funksiyali veb-server va oqimlar to‘plami (thread pool) kutubxonalarini yaratgan. Bu kutubxonalar biz quradigan versiyadan ko‘ra ancha mukammal. Biroq, ushbu bobdagi maqsadimiz – sizni o‘rgatish, eng oson yo‘lni tanlash emas. Rust tizim dasturlash tili bo‘lganligi sababli, biz o‘zimiz ishlamoqchi bo‘lgan abstraktsiya darajasini tanlashimiz mumkin va boshqa tillarda amalga oshirish qiyin yoki imkonsiz bo‘lgan chuqur darajadagi ishlarni bajarish imkoniyatiga egamiz. Shuning uchun biz HTTP server va oqimlar to‘plamini qo‘lda yozamiz, shunda siz kelajakda foydalanishingiz mumkin bo‘lgan kutubxonalar ortida qanday g‘oya va texnikalar yotganini tushunib olasiz.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="bitta-oqimli-single-threaded-veb-server-yaratish"><a class="header" href="#bitta-oqimli-single-threaded-veb-server-yaratish">Bitta oqimli (single-threaded) veb-server yaratish</a></h2>
-<p>Avval bitta oqimli veb-serverni ishga tushirishdan boshlaymiz. Ishni boshlashdan oldin, veb-serverlarni qurishda ishtirok etadigan protokollar haqida qisqacha ko‘rib chiqamiz. Ushbu protokollarning batafsil tafsilotlari ushbu kitob doirasidan tashqarida, ammo qisqacha tushuntirish sizga zarur bo‘lgan asosiy ma’lumotlarni beradi.</p>
-<p>Veb-serverlarda ishtirok etadigan ikkita asosiy protokol bu <em>Gipermatn uzatish protokoli</em> <em>(HTTP)</em> va <em>Uzatishni boshqarish protokoli</em> <em>(TCP)</em> hisoblanadi. Har ikkala protokol ham <em>so‘rov-javob</em> (request-response) protokollari bo‘lib, bunda <em>mijoz</em> (client) so‘rov yuboradi, <em>server</em> esa bu so‘rovlarni tinglaydi va mijozga javob qaytaradi. Ushbu so‘rovlar va javoblarning mazmuni protokollar tomonidan aniqlanadi.</p>
-<p>TCP bu past darajadagi (lower-level) protokol bo‘lib, ma’lumotlar bir serverdan boshqasiga qanday uzatilishini belgilaydi, lekin bu ma’lumotlarning mazmuni qanday bo‘lishi kerakligini aniqlamaydi. HTTP esa TCP ustida qurilgan bo‘lib, so‘rovlar va javoblarning tarkibini belgilaydi. Texnik jihatdan HTTP’ni boshqa protokollar bilan ham ishlatish mumkin, ammo aksariyat hollarda HTTP o‘z ma’lumotlarini TCP orqali uzatadi. Biz esa TCP va HTTP so‘rov hamda javoblarining xom baytlari (raw bytes) bilan ishlaymiz.</p>
-<h3 id="tcp-ulanishni-tinglash"><a class="header" href="#tcp-ulanishni-tinglash">TCP ulanishni tinglash</a></h3>
-<p>Veb-serverimiz TCP ulanishini tinglashi kerak, shuning uchun birinchi navbatda shu qism ustida ishlaymiz. Rust’ning standart kutubxonasi buni amalga oshirish imkonini beruvchi <code>std::net</code> modulini taklif qiladi. Keling, odatdagidek yangi loyiha yaratamiz:</p>
-<pre><code class="language-console">$ cargo new salom
-     Created binary (application) `salom` project
-$ cd salom
+<div style="break-before: page; page-break-before: always;"></div><h2 id="building-a-single-threaded-web-server"><a class="header" href="#building-a-single-threaded-web-server">Building a Single-Threaded Web Server</a></h2>
+<p>We’ll start by getting a single-threaded web server working. Before we begin,
+let’s look at a quick overview of the protocols involved in building web
+servers. The details of these protocols are beyond the scope of this book, but
+a brief overview will give you the information you need.</p>
+<p>The two main protocols involved in web servers are <em>Hypertext Transfer
+Protocol</em> <em>(HTTP)</em> and <em>Transmission Control Protocol</em> <em>(TCP)</em>. Both protocols
+are <em>request-response</em> protocols, meaning a <em>client</em> initiates requests and a
+<em>server</em> listens to the requests and provides a response to the client. The
+contents of those requests and responses are defined by the protocols.</p>
+<p>TCP is the lower-level protocol that describes the details of how information
+gets from one server to another but doesn’t specify what that information is.
+HTTP builds on top of TCP by defining the contents of the requests and
+responses. It’s technically possible to use HTTP with other protocols, but in
+the vast majority of cases, HTTP sends its data over TCP. We’ll work with the
+raw bytes of TCP and HTTP requests and responses.</p>
+<h3 id="listening-to-the-tcp-connection"><a class="header" href="#listening-to-the-tcp-connection">Listening to the TCP Connection</a></h3>
+<p>Our web server needs to listen to a TCP connection, so that’s the first part
+we’ll work on. The standard library offers a <code>std::net</code> module that lets us do
+this. Let’s make a new project in the usual fashion:</p>
+<pre><code class="language-console">$ cargo new hello
+     Created binary (application) `hello` project
+$ cd hello
 </code></pre>
-<p>Endi <em>src/main.rs</em> fayliga 20-1 ro‘yxatdagi (Listing 20-1) kodni kiriting. Bu kod <code>127.0.0.1:7878</code> lokal manzilida kiruvchi TCP oqimlarini tinglaydi. Har safar yangi oqim kelganda, <code>Connection established!</code> (Ulanish o‘rnatildi!) deb chop etadi.</p>
+<p>Now enter the code in Listing 20-1 in <em>src/main.rs</em> to start. This code will
+listen at the local address <code>127.0.0.1:7878</code> for incoming TCP streams. When it
+gets an incoming stream, it will print <code>Connection established!</code>.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust no_run">use std::net::TcpListener;
 
@@ -19064,23 +19091,79 @@ fn main() {
         println!(&quot;Connection established!&quot;);
     }
 }</code></pre></pre>
-<p><span class="caption">20-1 ro‘yxat: Kiruvchi oqimlarni tinglash va oqim qabul qilinganda xabar chop etish</span></p>
-<p><code>TcpListener</code> yordamida <code>127.0.0.1:7878</code> manzilida TCP ulanishlarini tinglashimiz mumkin. Manzilda ikki nuqtadan (:) oldingi qism - bu kompyuteringizni ifodalovchi IP manzil (bu barcha kompyuterlarda bir xil bo‘ladi va mualliflarning kompyuteriga xos emas), <code>7878</code> esa port raqami. Bu portni ikki sababga ko‘ra tanladik: odatda HTTP bu portda ishlatilmaydi, shuning uchun serverimiz kompyuteringizda ishlayotgan boshqa veb-serverlar bilan to‘qnash kelmaydi; ikkinchidan, telefon klaviaturasida <em>rust</em> so‘zini terishda 7878 raqamlari ishlatiladi.</p>
-<p>Ushbu holatda <code>bind</code> funksiyasi <code>new</code> funksiyasiga o‘xshab ishlaydi, ya’ni u yangi <code>TcpListener</code> obyektini qaytaradi. Funksiya <code>bind</code> deb nomlangan, chunki tarmoqlarda portga ulanib tinglash jarayoni “portga bog‘lanish” (binding) deb ataladi.</p>
-<p><code>bind</code> funksiyasi <code>Result&lt;T, E&gt;</code> turini qaytaradi, bu esa bog‘lanish (binding) muvaffaqiyatsiz bo‘lishi mumkinligini bildiradi. Masalan, 80-portga ulanish uchun administrator huquqlari talab qilinadi (administrator bo‘lmagan foydalanuvchilar faqat 1023 dan yuqori portlarni tinglashi mumkin). Shuning uchun, agar biz administrator bo‘lmasak va 80-portga ulanishga harakat qilsak, bog‘lanish amalga oshmaydi. Bundan tashqari, agar dasturimizning ikkita nusxasini ishga tushirsak va ular bir xil portni tinglashga harakat qilsa, bog‘lanish yana amalga oshmaydi. Bu yerda faqat o‘rganish maqsadida oddiy server yozayotganimiz uchun bunday xatoliklarni oldini olish haqida hozircha qayg‘urmaymiz; uning o‘rniga dasturimizda xatolik yuz bersa dasturni to'xtatadigan <code>unwrap</code> funksiyasidan foydalanamiz.</p>
-<p><code>TcpListener</code> ustidagi <code>incoming</code> metodi oqimlar ketma-ketligini (ya’ni, <code>TcpStream</code> turidagi oqimlar) taqdim etuvchi iteratorni qaytaradi. Har bir <em>oqim</em> (stream) mijoz (client) va server o‘rtasidagi ochiq ulanishni ifodalaydi. <em>Ulanish</em> (connection) deganda, mijoz serverga ulanadigan, server javob tayyorlab qaytaradigan va so‘ng ulanishni yopadigan to‘liq so‘rov-javob (request response) jarayoni tushuniladi. Shunday ekan, <code>TcpStream</code> dan o‘qib, mijoz nimani yuborganini bilamiz va javobimizni aynan shu oqim orqali yozib, mijozga yuboramiz. Umuman olganda, bu <code>for</code> sikli har bir ulanishni navbati bilan qayta ishlaydi va boshqarish uchun bir nechta oqimlar beradi.</p>
-<p>Hozircha oqimni (stream) qayta ishlashimiz faqat <code>unwrap</code> chaqirishdan iborat: agar oqimda xatolik yuz bersa, dastur to‘xtaydi; xatolik bo‘lmasa, dastur xabar chop etadi. Keyingi ro‘yxatda muvaffaqiyatli holatlar uchun ko‘proq funksionallik qo‘shamiz. Mijoz serverga ulanganida <code>incoming</code> metodidan xatoliklar chiqishi mumkin, chunki aslida ulanishlarning o‘zini emas, <em>ulanishga urinishlarni</em> (connection attemps) ko‘rib chiqayapmiz (iterating). Har bir urinish muvaffaqiyatli bo‘lavermasligi mumkin, va buning sabablari ko‘pincha operatsion tizimga bog‘liq bo‘ladi. Masalan, ko‘plab operatsion tizimlarda bir vaqtning o‘zida ochiq bo‘lishi mumkin bo‘lgan ulanishlar soni cheklangan bo‘ladi; bu limitdan oshib ketilganida, yangi ulanishga urinishlar xatolik chiqaradi, toki mavjud ulanishlardan ba’zilari yopilmaguncha.</p>
-<p>Keling, ushbu kodni ishga tushirib ko‘ramiz! Terminalda <code>cargo run</code> buyrug‘ini invoke qiling (yurg'azing) va so‘ng brauzeringizda <em>127.0.0.1:7878</em> manzilini oching. Brauzer “Connection reset” (Ulanish tiklandi) kabi xatolik xabarini ko‘rsatishi mumkin, chunki hozircha server hech qanday ma’lumot qaytarayotgani yo‘q. Biroq terminalingizga qarasangiz, brauzer serverga ulanganida chiqarilgan bir nechta xabarlarni ko‘rishingiz mumkin bo‘ladi!</p>
-<pre><code class="language-text">     Running `target/debug/salom`
+<p><span class="caption">Listing 20-1: Listening for incoming streams and printing
+a message when we receive a stream</span></p>
+<p>Using <code>TcpListener</code>, we can listen for TCP connections at the address
+<code>127.0.0.1:7878</code>. In the address, the section before the colon is an IP address
+representing your computer (this is the same on every computer and doesn’t
+represent the authors’ computer specifically), and <code>7878</code> is the port. We’ve
+chosen this port for two reasons: HTTP isn’t normally accepted on this port so
+our server is unlikely to conflict with any other web server you might have
+running on your machine, and 7878 is <em>rust</em> typed on a telephone.</p>
+<p>The <code>bind</code> function in this scenario works like the <code>new</code> function in that it
+will return a new <code>TcpListener</code> instance. The function is called <code>bind</code>
+because, in networking, connecting to a port to listen to is known as “binding
+to a port.”</p>
+<p>The <code>bind</code> function returns a <code>Result&lt;T, E&gt;</code>, which indicates that it’s
+possible for binding to fail. For example, connecting to port 80 requires
+administrator privileges (nonadministrators can listen only on ports higher
+than 1023), so if we tried to connect to port 80 without being an
+administrator, binding wouldn’t work. Binding also wouldn’t work, for example,
+if we ran two instances of our program and so had two programs listening to the
+same port. Because we’re writing a basic server just for learning purposes, we
+won’t worry about handling these kinds of errors; instead, we use <code>unwrap</code> to
+stop the program if errors happen.</p>
+<p>The <code>incoming</code> method on <code>TcpListener</code> returns an iterator that gives us a
+sequence of streams (more specifically, streams of type <code>TcpStream</code>). A single
+<em>stream</em> represents an open connection between the client and the server. A
+<em>connection</em> is the name for the full request and response process in which a
+client connects to the server, the server generates a response, and the server
+closes the connection. As such, we will read from the <code>TcpStream</code> to see what
+the client sent and then write our response to the stream to send data back to
+the client. Overall, this <code>for</code> loop will process each connection in turn and
+produce a series of streams for us to handle.</p>
+<p>For now, our handling of the stream consists of calling <code>unwrap</code> to terminate
+our program if the stream has any errors; if there aren’t any errors, the
+program prints a message. We’ll add more functionality for the success case in
+the next listing. The reason we might receive errors from the <code>incoming</code> method
+when a client connects to the server is that we’re not actually iterating over
+connections. Instead, we’re iterating over <em>connection attempts</em>. The
+connection might not be successful for a number of reasons, many of them
+operating system specific. For example, many operating systems have a limit to
+the number of simultaneous open connections they can support; new connection
+attempts beyond that number will produce an error until some of the open
+connections are closed.</p>
+<p>Let’s try running this code! Invoke <code>cargo run</code> in the terminal and then load
+<em>127.0.0.1:7878</em> in a web browser. The browser should show an error message
+like “Connection reset,” because the server isn’t currently sending back any
+data. But when you look at your terminal, you should see several messages that
+were printed when the browser connected to the server!</p>
+<pre><code class="language-text">     Running `target/debug/hello`
 Connection established!
 Connection established!
 Connection established!
 </code></pre>
-<p>Ba’zan brauzerning bitta so‘rovi uchun bir nechta xabarlar chiqishini ko‘rishingiz mumkin; buning sababi shundaki, brauzer sahifa uchun so‘rov yuborish bilan birga, brauzer tab da (yorlig‘ida) ko‘rinadigan <em>favicon.ico</em> kabi boshqa resurslar uchun ham so‘rov yuboradi.</p>
-<p>Brauzer bir necha marta serverga ulanishga harakat qilayotgan bo‘lishi ham mumkin, chunki server hech qanday ma’lumot yubormayapti. <code>stream</code> sikl oxirida ko‘lam (scope) dan chiqib ketganda, <code>drop</code> implementatsiyasi orqali ulanish yopiladi. Brauzerlar ba’zida yopilgan ulanishlarga qayta urinish qiladi, chunki muammo vaqtincha bo‘lishi mumkin. Muhim jihati shuki — biz TCP ulanishni muvaffaqiyatli qo‘lga kiritdik!</p>
-<p>Dasturdan foydalanishni tugatganingizda, uni <span class="keystroke">ctrl-c</span> tugmasi yordamida to‘xtatishni unutmang. Har safar kodga o‘zgartirish kiritganingizdan so‘ng, eng so‘nggi versiyasi ishga tushirilayotganiga ishonch hosil qilish uchun <code>cargo run</code> buyrug‘ini qayta ishga tushuring.</p>
-<h3 id="sorovni-oqish"><a class="header" href="#sorovni-oqish">So'rovni o'qish</a></h3>
-<p>Brauzerdan yuborilgan so‘rovni o‘qish funksiyasini ishlab chiqamiz! Avval ulanishni (connection) qabul qilish va keyin ular bilan ishlash bosqichlarini bir-biridan ajratish uchun, ulanishni qayta ishlovchi yangi funksiya yozamiz. Bu yangi <code>handle_connection</code> funksiyasida TCP oqimidan (stream) ma’lumotlarni o‘qiymiz va brauzer yuborayotgan ma’lumotlarni ko‘rish uchun ularni chop etamiz. Kodni 20-02 ro‘yxatdagidek qilib o‘zgartiring.</p>
+<p>Sometimes, you’ll see multiple messages printed for one browser request; the
+reason might be that the browser is making a request for the page as well as a
+request for other resources, like the <em>favicon.ico</em> icon that appears in the
+browser tab.</p>
+<p>It could also be that the browser is trying to connect to the server multiple
+times because the server isn’t responding with any data. When <code>stream</code> goes out
+of scope and is dropped at the end of the loop, the connection is closed as
+part of the <code>drop</code> implementation. Browsers sometimes deal with closed
+connections by retrying, because the problem might be temporary. The important
+factor is that we’ve successfully gotten a handle to a TCP connection!</p>
+<p>Remember to stop the program by pressing <span class="keystroke">ctrl-c</span>
+when you’re done running a particular version of the code. Then restart the
+program by invoking the <code>cargo run</code> command after you’ve made each set of code
+changes to make sure you’re running the newest code.</p>
+<h3 id="reading-the-request"><a class="header" href="#reading-the-request">Reading the Request</a></h3>
+<p>Let’s implement the functionality to read the request from the browser! To
+separate the concerns of first getting a connection and then taking some action
+with the connection, we’ll start a new function for processing connections. In
+this new <code>handle_connection</code> function, we’ll read data from the TCP stream and
+print it so we can see the data being sent from the browser. Change the code to
+look like Listing 20-2.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust no_run">use std::{
     io::{prelude::*, BufReader},
@@ -19107,11 +19190,26 @@ fn handle_connection(mut stream: TcpStream) {
 
     println!(&quot;Request: {:#?}&quot;, http_request);
 }</code></pre></pre>
-<p><span class="caption">20-02 ro‘yxat: TcpStream dan o‘qish va yuborilgan ma’lumotni chop etish</span></p>
-<p><code>std::io::prelude</code> va <code>std::io::BufReader</code> ni ko‘lamga (scope) olib kiramiz - bu bizga oqimdan (streamdan) o‘qish va yozish imkonini beradigan trait va tiplardan foydalanish imkonini beradi. Endi <code>main</code> funksiyasidagi <code>for</code> siklida ulanish o‘rnatilgani haqida xabar chiqarish o‘rniga, yangi <code>handle_connection</code> funksiyasini chaqiramiz va unga stream <code>ni</code> uzatamiz.</p>
-<p><code>handle_connection</code> funksiyasida biz <code>oqimga (stream)</code> o‘zgaruvchan (mutable) murojaatni o‘rab oladigan yangi <code>BufReader</code> obyektini yaratamiz. <code>BufReader</code> buferlashni qo‘shadi — ya’ni u <code>std::io::Read</code> traitining metodlariga murojaat qilishni boshqaradi.</p>
-<p>Brauzer serverimizga yuboradigan so‘rov satrlarini yig‘ish uchun <code>http_request</code> nomli o‘zgaruvchi yaratamiz. Bu satrlarni vector (vektor) ko‘rinishida yig‘moqchi ekanligimizni ko‘rsatish uchun <code>Vec&lt;_&gt;</code> tip annotatsiyasini qo‘shamiz.</p>
-<p><code>BufReader</code>  <code>std::io::BufRead</code> traitini amalga oshiradi va shu orqali <code>lines</code> metodini taqdim etadi. <code>Lines</code> metodi har gal yangi qatordan ajratib, oqimdagi ma’lumotlarni <code>Result&lt;String, std::io::Error&gt;</code> ko‘rinishidagi iterator sifatida qaytaradi. Har bir String qiymatni olish uchun har bir Natija (Result) ustida map va <code>uwrap</code> amallarini bajaramiz. Agar ma’lumotlar yaroqli UTF-8 formatda bo‘lmasa yoki oqimdan o‘qishda muammo yuz bersa, Result xatolik (error) bo‘lishi mumkin. Aslida Ishlab chiqarish (Production) darajasidagi dastur bu xatolarni ancha ehtiyotkorlik bilan boshqarishi kerak, ammo soddalashtirish uchun agar xatolik yuz bersa, dasturni to‘xtatamiz.</p>
+<p><span class="caption">Listing 20-2: Reading from the <code>TcpStream</code> and printing
+the data</span></p>
+<p>We bring <code>std::io::prelude</code> and <code>std::io::BufReader</code> into scope to get access
+to traits and types that let us read from and write to the stream. In the <code>for</code>
+loop in the <code>main</code> function, instead of printing a message that says we made a
+connection, we now call the new <code>handle_connection</code> function and pass the
+<code>stream</code> to it.</p>
+<p>In the <code>handle_connection</code> function, we create a new <code>BufReader</code> instance that
+wraps a mutable reference to the <code>stream</code>. <code>BufReader</code> adds buffering by
+managing calls to the <code>std::io::Read</code> trait methods for us.</p>
+<p>We create a variable named <code>http_request</code> to collect the lines of the request
+the browser sends to our server. We indicate that we want to collect these
+lines in a vector by adding the <code>Vec&lt;_&gt;</code> type annotation.</p>
+<p><code>BufReader</code> implements the <code>std::io::BufRead</code> trait, which provides the <code>lines</code>
+method. The <code>lines</code> method returns an iterator of <code>Result&lt;String, std::io::Error&gt;</code> by splitting the stream of data whenever it sees a newline
+byte. To get each <code>String</code>, we map and <code>unwrap</code> each <code>Result</code>. The <code>Result</code>
+might be an error if the data isn’t valid UTF-8 or if there was a problem
+reading from the stream. Again, a production program should handle these errors
+more gracefully, but we’re choosing to stop the program in the error case for
+simplicity.</p>
 <p>The browser signals the end of an HTTP request by sending two newline
 characters in a row, so to get one request from the stream, we take lines until
 we get a line that is the empty string. Once we’ve collected the lines into the
