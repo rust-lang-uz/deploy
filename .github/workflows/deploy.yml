@@ -18,7 +18,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-
 jobs:
   deploy:
     environment:
@@ -30,21 +29,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-  
+
       - name: Clean up repository
         run: |
           find . -maxdepth 1 ! -name '.github' ! -name '.git' ! -name '.' ! -name '..' -exec rm -rf {} \;
-  
+
       - name: Clone rust-lang-uz/book
         run: git clone https://github.com/rust-lang-uz/book rust-book --depth 1
-  
+
       - name: Clone rust-lang-uz/rust-by-example
         run: git clone https://github.com/rust-lang-uz/rust-by-example rust-example --depth 1
 
       - name: Install mdbook
         run: |
           mkdir -p .tools
-          curl -Lf https://github.com/rust-lang/mdBook/releases/download/v0.4.35/mdbook-v0.4.35-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./.tools
+          curl -Lf https://github.com/rust-lang/mdBook/releases/download/v0.4.52/mdbook-v0.4.52-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./.tools
           ls -la .tools
           echo `pwd`/.tools >> $GITHUB_PATH
 
@@ -53,7 +52,7 @@ jobs:
           mdbook build
           mv book ../../book
         working-directory: rust-book/rustbook-uz
-  
+
       - name: Build rust-example
         run: |
           mdbook build
@@ -65,7 +64,7 @@ jobs:
           rm -rf rust-book
           rm -rf rust-example
           rm -rf .tools
-  
+
       - name: Copy files from base
         run: |
           ls -la .github/base
@@ -77,24 +76,22 @@ jobs:
           # Use github actions default username and email
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    
+
       - name: Commit and Push changes
         run: |
           git add .
           [[ -z $(git status -uno --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
           git commit -m "[BOT] Updating $GITHUB_SHA content"
           git push origin main --force
-    
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: "."
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-
