@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light" dir="ltr">
+<html lang="en" class="light sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-        
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -24,28 +24,43 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
 
-    </head>
-    <body class="sidebar-visible no-js">
-    <div id="body-container">
-        <!-- Provide site root to javascript -->
-        <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
-        </script>
 
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -59,68 +74,51 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
+            const html = document.documentElement;
             html.classList.remove('light')
             html.classList.add(theme);
-            var body = document.querySelector('body');
-            body.classList.remove('no-js')
-            body.classList.add('js');
+            html.classList.add("js");
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var body = document.querySelector('body');
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            body.classList.remove('sidebar-visible');
-            body.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">Rust dasturlash tili</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Muqaddima</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Kirish</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Ishni boshlash</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> O'rnatish</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> Hello, World!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> Hello, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Taxmin qilish o'yinini dasturlash</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Umumiy dasturlash tushunchalari</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> O'zgaruvchilar va o'zgaruvchanlik</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Ma'lumotlar turlari</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funksiyalar</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Izohlar</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Control Flow</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Ownershipni tushunish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> Ownership nima?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencelar va  Borrowing</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> Slice turi</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Tegishli ma'lumotlarni tuzish uchun Structdan foydalanish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Structlarni aniqlash va yaratish</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Structs yordamida namunaviy dastur</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Metod sintaksisi</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enumlar va patternlarni moslashtirish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Enumni aniqlash</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> match Control Flow konstruksiyasi</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> if let bilan qisqacha Control Flow</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> O'sib borayotgan loyihalarni Paketlar, Cratelar va Modullar bilan boshqarish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paketlar va Cratelar</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Qo'llanish doirasi va maxfiylikni nazorat qilish uchun modullarni aniqlash</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Modul daraxtidagi elementga murojaat qilish yo'llari</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> use kalit so'zi bilan yo'llarni qamrab olish</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Modullarni turli fayllarga ajratish</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Umumiy to'plamlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Vectorlar bilan qiymatlar ro'yxatini saqlash</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> UTF-8 kodlangan matnni Stringlar bilan saqlash</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Hash Mapda bog'langan qiymatlarga ega kalitlarni saqlash</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Xatolar bilan ishlash</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> panic! bilan tuzatib bo'lmaydigan xatolar</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Result bilan tiklanadigan xatolar</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! yoki panic! emas</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Umumiy turlar, traitlar va lifetime</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Generik ma'lumotlar turlari</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traitlar: umumiy xatti-harakatni aniqlash</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Referencelarni lifetime bilan tekshirish</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Avtomatlashtirilgan testlarni yozish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Testlarni qanday yozish kerak</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Sinovlar qanday o'tkazilishini nazorat qilish</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Test tashkil etish</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> I/O loyihasi: Buyruqlar qatori dasturini yaratish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Buyruqlar qatori argumentini qabul qilishs</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Faylni o'qish</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Modullikni yaxshilash va xatolarni qayta ishlash uchun refactoring</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Sinovga asoslangan ishlab chiqish bilan kutubxonaning funksionalligini rivojlantirish</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Environment o'zgaruvchilari bilan ishlash</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Xato xabarlarini standart chiqish o'rniga standart xatoga yozish</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Funksional til xususiyatlari: iteratorlar va closurelar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closurelar: Environmentni qamrab oladigan anonim funksiyalar</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Iteratorlar bilan bir qator elementlarga ishlov berish</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> I/O loyihamizni takomillashtirish</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Ishlash samaradorligini solishtirish: Looplar va iteratorlar</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Cargo va Crates.io haqida ko'proq</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Reliz profillari bilan structlarni moslashtirish</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Crateni Crates.io-ga nashr qilish</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspacelar</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Binary fayllarni Crates.io'dan cargo install bilan o'rnatish</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Maxsus buyruqlar bilan Cargoni kengaytirish</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointerlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Heapdagi ma'lumotlarni ko'rsatish uchun Box&lt;T&gt; dan foydalanish</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Deref Traitidan foydalangan holda oddiy referencelar kabi Smart Pointerlar bilan ishlash</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Drop Traiti bilan tozalashda kodni ishga tushirish</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, reference hisoblangan Smart Pointer</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; va ichki o'zgaruvchanlik namunasi</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html" class="active"><strong aria-hidden="true">15.6.</strong> Reference Cycles Can Leak Memory</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Qo'rqmas parallellik</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Kodni bir vaqtning o'zida ishga tushirish uchun threadlardan foydalanish</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Threadlar orasidagi ma'lumotlarni uzatish uchun Message Passing(xabar uzatish)dan foydalanish</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Shared-State Concurrency</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Sync va Send traitlari bilan kengaytiriladigan parallellik</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rustning ob'ektga yo'naltirilgan dasturlash xususiyatlari- OOP</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Ob'ektga yo'naltirilgan tillarning xususiyatlari</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Har xil turdagi qiymatlarga ruxsat beruvchi trait ob'ektlaridan foydalanish</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Ob'ektga yo'naltirilgan dizayn patternini implement qilish</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patternlar va Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> All the Places Patterns Can Be Used</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutability: Whether a Pattern Might Fail to Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Pattern Sintaksisi</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Kengaytirilgan Xususiyatlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Xavfsiz Rust</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Murakkab Traitlar</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Kengaytirilgan Turlar</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Kengaytirilgan funksiyalar va closurelar</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Makrolar</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Yakuniy loyiha: Ko'p tarmoqli veb-serverni qurish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Yagona tarmoqli veb-serverni qurish</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Bizning yagona tarmoqli serverimizni ko'p tarmoqli serverga aylantirish</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Ajoyib o'chirish va tozalash</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Ilova</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Kalit so'zlar</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operatorlar va Symbollar</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Hosilaviy Traitlar</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Foydali Development Toollar</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Nashrlar</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Kitobning tarjimalari</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Rust qanday yasaladi va “Nightly Rust”</a></li></ol></li></ol>
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
-
-        <!-- Track and set sidebar scroll position -->
-        <script>
-            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
-            sidebarScrollbox.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
-                }
-            }, { passive: true });
-            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
-            sessionStorage.removeItem('sidebar-scroll');
-            if (sidebarScrollTop) {
-                // preserve sidebar scroll position when navigating via links within sidebar
-                sidebarScrollbox.scrollTop = sidebarScrollTop;
-            } else {
-                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
-                var activeSection = document.querySelector('#sidebar .active');
-                if (activeSection) {
-                    activeSection.scrollIntoView({ block: 'center' });
-                }
-            }
-        </script>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -130,13 +128,14 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -156,7 +155,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -214,10 +218,10 @@ fn main() {}</code></pre></pre>
 <code>RefCell&lt;T&gt;</code> so we can modify what a <code>Cons</code> variant is referring to</span></p>
 <p>Biz 15-5 roʻyxatdagi “Roʻyxat” taʼrifining boshqa variantidan foydalanmoqdamiz. The
 <code>Cons</code> variantidagi ikkinchi element endi <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, ya`ni
-Biz Listingda bo'lgani kabi &quot;i32&quot; qiymatini o'zgartirish imkoniyatiga ega bo'lish o'rniga
+Biz Listingda bo'lgani kabi "i32" qiymatini o'zgartirish imkoniyatiga ega bo'lish o'rniga
 15-24, biz 'Kasalliklar' varianti ko'rsatayotgan 'Ro'yxat' qiymatini o'zgartirmoqchimiz.
-Bizga kirishni qulay qilish uchun biz &quot;quyruq&quot; usulini ham qo'shmoqdamiz
-ikkinchi element, agar bizda &quot;Kasalliklar&quot; varianti bo'lsa.</p>
+Bizga kirishni qulay qilish uchun biz "quyruq" usulini ham qo'shmoqdamiz
+ikkinchi element, agar bizda "Kasalliklar" varianti bo'lsa.</p>
 <p>15-26 roʻyxatda biz “asosiy” funksiyani qoʻshmoqdamiz.
 Ro'yxat 15-25. Bu kod <code>a</code> ro<code>yxatini va </code>b<code> ga ishora qiluvchi ro</code>yxatni yaratadi
 <code>a</code> ichidagi ro'yxat. Keyin u <code>a</code> ro<code>yxatini </code>b<code> ga ishora qilib o</code>zgartiradi va a ni yaratadi
@@ -246,35 +250,35 @@ mos yozuvlar soni bu jarayonning turli nuqtalarida.</p>
 </span>fn main() {
     let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
 
-    println!(&quot;a initial rc count = {}&quot;, Rc::strong_count(&amp;a));
-    println!(&quot;a next item = {:?}&quot;, a.tail());
+    println!("a initial rc count = {}", Rc::strong_count(&amp;a));
+    println!("a next item = {:?}", a.tail());
 
     let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&amp;a))));
 
-    println!(&quot;a rc count after b creation = {}&quot;, Rc::strong_count(&amp;a));
-    println!(&quot;b initial rc count = {}&quot;, Rc::strong_count(&amp;b));
-    println!(&quot;b next item = {:?}&quot;, b.tail());
+    println!("a rc count after b creation = {}", Rc::strong_count(&amp;a));
+    println!("b initial rc count = {}", Rc::strong_count(&amp;b));
+    println!("b next item = {:?}", b.tail());
 
     if let Some(link) = a.tail() {
         *link.borrow_mut() = Rc::clone(&amp;b);
     }
 
-    println!(&quot;b rc count after changing a = {}&quot;, Rc::strong_count(&amp;b));
-    println!(&quot;a rc count after changing a = {}&quot;, Rc::strong_count(&amp;a));
+    println!("b rc count after changing a = {}", Rc::strong_count(&amp;b));
+    println!("a rc count after changing a = {}", Rc::strong_count(&amp;a));
 
     // Uncomment the next line to see that we have a cycle;
     // it will overflow the stack
-    // println!(&quot;a next item = {:?}&quot;, a.tail());
+    // println!("a next item = {:?}", a.tail());
 }</code></pre></pre>
 <p><span class="caption">Listing 15-26: Creating a reference cycle of two <code>List</code>
 values pointing to each other</span></p>
 <p>Biz “a” o‘zgaruvchisida “Ro‘yxat” qiymatiga ega “Rc<List>” misolini yaratamiz.
-boshlang'ich ro'yxati &quot;5, Nil&quot; bilan. Keyin biz <code>Rc&lt;List&gt;</code> misol xoldingini yaratamiz
-10 qiymati va nuqtalarni o'z ichiga olgan &quot;b&quot; o'zgaruvchisidagi boshqa &quot;Ro'yxat&quot; qiymati
+boshlang'ich ro'yxati "5, Nil" bilan. Keyin biz <code>Rc&lt;List&gt;</code> misol xoldingini yaratamiz
+10 qiymati va nuqtalarni o'z ichiga olgan "b" o'zgaruvchisidagi boshqa "Ro'yxat" qiymati
 <code>a</code> ro'yxatiga.</p>
-<p>Biz &quot;a&quot; ni o'zgartiramiz, shuning uchun u &quot;Nil&quot; o'rniga &quot;b&quot; ga ishora qiladi va sikl hosil qiladi. Biz qilamiz
+<p>Biz "a" ni o'zgartiramiz, shuning uchun u "Nil" o'rniga "b" ga ishora qiladi va sikl hosil qiladi. Biz qilamiz
 <code>RefCell&lt;Rc&lt;List&gt;&gt;</code> ga havola olish uchun <code>tail</code> usuli yordamida
-&quot;a&quot; da, biz &quot;link&quot; o'zgaruvchisini qo'yamiz. Keyin biz &quot;borrow_mut&quot; dan foydalanamiz
+"a" da, biz "link" o'zgaruvchisini qo'yamiz. Keyin biz "borrow_mut" dan foydalanamiz
 <code>RefCell&lt;Rc&lt;List&gt;&gt;</code> ichidagi qiymatni <code>Rc&lt;List&gt;</code>dan oʻzgartirish uchun usul
 Bu <code>b</code> dagi <code>Rc&lt;List&gt;</code> uchun <code>Nil</code> qiymatiga ega.</p>
 <p>Ushbu kodni ishga tushirganimizda, oxirgi <code>println!</code> uchun izoh berilgan
@@ -292,7 +296,7 @@ b rc count after changing a = 2
 a rc count after changing a = 2
 </code></pre>
 <p><code>a</code> va <code>b</code>dagi <code>Rc&lt;List&gt;</code> misollarining mos yozuvlar soni 2 dan keyin
-biz <code>a</code> ro<code>yxatini </code>b<code> ga ishora qilish uchun o</code>zgartiramiz. &quot;Asosiy&quot; oxirida Rust ni tushiradi
+biz <code>a</code> ro<code>yxatini </code>b<code> ga ishora qilish uchun o</code>zgartiramiz. "Asosiy" oxirida Rust ni tushiradi
 <code>b</code> o'zgaruvchisi, bu <code>b</code> <code>Rc&lt;List&gt;</code> misolining mos yozuvlar sonini kamaytiradi
 2 dan 1 gacha. <code>Rc&lt;List&gt;</code> to'plamida bo'lgan xotira o'chirilmaydi.
 bu nuqta, chunki uning mos yozuvlar soni 0 emas, 1. Keyin Rust <code>a</code> tushiradi, qaysi
@@ -324,15 +328,15 @@ minimallashtirish.</p>
 tuzilmalar shunday qilib, ba'zi havolalar egalik huquqini bildiradi, ba'zi havolalar esa bildirmaydi.
 Natijada, siz ba'zi egalik munosabatlaridan tashkil topgan davrlarga ega bo'lishingiz mumkin va
 ba'zi mulkiy bo'lmagan munosabatlar va faqat mulkchilik munosabatlari ta'sir qiladi
-qiymat tushirilishi mumkinmi yoki yo'qmi. 15-25 ro'yxatda biz har doim &quot;Kasalliklar&quot; ni xohlaymiz
+qiymat tushirilishi mumkinmi yoki yo'qmi. 15-25 ro'yxatda biz har doim "Kasalliklar" ni xohlaymiz
 o'z ro'yxatiga egalik qilish variantlari mavjud, shuning uchun ma'lumotlar strukturasini qayta tashkil qilish mumkin emas.
 Keling, ota-ona va tugunlardan tashkil topgan grafiklardan foydalangan holda misolni ko'rib chiqaylik
 egalik bo'lmagan munosabatlar qachon oldini olish uchun to'g'ri yo'l ekanligini ko'rish
 mos yozuvlar davrlari.</p>
 <h3 id="preventing-reference-cycles-turning-an-rct-into-a-weakt"><a class="header" href="#preventing-reference-cycles-turning-an-rct-into-a-weakt">Preventing Reference Cycles: Turning an <code>Rc&lt;T&gt;</code> into a <code>Weak&lt;T&gt;</code></a></h3>
-<p>Hozirgacha biz &quot;Rc::clone&quot; ni chaqirish ko'rsatkichni oshirishini ko'rsatdik
+<p>Hozirgacha biz "Rc::clone" ni chaqirish ko'rsatkichni oshirishini ko'rsatdik
 <code>Rc&lt;T&gt;</code> misolining <code>kuchli_hisobchasi</code> va <code>Rc&lt;T&gt;</code> misoli faqat tozalanadi
-yuqoriga, agar uning &quot;kuchli_hisoblash&quot; qiymati 0 bo'lsa. Shuningdek, &quot;kuchli_hisob&quot; ga * zaif havola* yaratishingiz mumkin
+yuqoriga, agar uning "kuchli_hisoblash" qiymati 0 bo'lsa. Shuningdek, "kuchli_hisob" ga * zaif havola* yaratishingiz mumkin
 <code>Rc&lt;T&gt;</code> misolidagi qiymatni <code>Rc::downgrade</code> deb chaqirish va
 <code>Rc&lt;T&gt;</code> ga havola. Kuchli havolalar egalik huquqini baham ko'rishingiz mumkin
 <code>Rc&lt;T&gt;</code> misoli. Zaif havolalar egalik munosabatlarini bildirmaydi,
@@ -340,12 +344,12 @@ va <code>Rc&lt;T&gt;</code> namunasi tozalanganda ularning soni ta'sir qilmaydi.
 mos yozuvlar aylanishiga olib kelmaydi, chunki ba'zi zaif havolalarni o'z ichiga olgan har qanday tsikl
 jalb qilingan qiymatlarning kuchli mos yozuvlar soni 0 bo'lsa, buziladi.</p>
 <p><code>Rc::downgrade</code> ga qo<code>ng</code>iroq qilganingizda, siz <code>Zaif&lt;T&gt;</code> tipidagi aqlli ko<code>rsatgichga ega bo</code>lasiz.
-<code>Rc&lt;T&gt;</code> misolidagi <code>strong_count</code> ni 1 ga oshirish o<code>rniga, </code>Rc::downgrade<code> </code>zaif_hisobni<code>1 ga oshiradi.</code>Rc<T><code>turi foydalanadi Qancha</code>Zaif<T><code>havolalari mavjudligini kuzatish uchun</code>zaif_hisob<code></code>kuchli_hisob<code>. Farqi shundaki, &quot;zaif_hisob&quot; uchun 0 bo'lishi shart emas </code>Rc<T>` namunasi tozalanadi.</p>
+<code>Rc&lt;T&gt;</code> misolidagi <code>strong_count</code> ni 1 ga oshirish o<code>rniga, </code>Rc::downgrade<code> </code>zaif_hisobni<code>1 ga oshiradi.</code>Rc<T><code>turi foydalanadi Qancha</code>Zaif<T><code>havolalari mavjudligini kuzatish uchun</code>zaif_hisob<code> </code>kuchli_hisob<code>. Farqi shundaki, "zaif_hisob" uchun 0 bo'lishi shart emas </code>Rc<T>` namunasi tozalanadi.</p>
 <p>Chunki <code>Zaif&lt;T&gt;</code> havola qiladigan qiymat oʻchirilgan boʻlishi mumkin
 <code>Zaif&lt;T&gt;</code> ko'rsatayotgan qiymatga ega bo'lgan har qanday narsaga ishonch hosil qilishingiz kerak
 qiymati hali ham mavjud. Buni “Zaif<T>” da “yangilash” usulini chaqirish orqali bajaring
-misol, bu <code>Option&lt;Rc&lt;T&gt;&gt;</code>ni qaytaradi. Siz &quot;Ba'zi&quot; natijasini olasiz
-agar &quot;Rc<T>&quot; qiymati hali tushirilmagan bo'lsa va &quot;Yo'q&quot; natijasi, agar
+misol, bu <code>Option&lt;Rc&lt;T&gt;&gt;</code>ni qaytaradi. Siz "Ba'zi" natijasini olasiz
+agar "Rc<T>" qiymati hali tushirilmagan bo'lsa va "Yo'q" natijasi, agar
 <code>Rc&lt;T&gt;</code> qiymati olib tashlandi. Chunki <code>yangilash</code> <code>Option&lt;Rc&lt;T&gt;&gt;</code>ni qaytaradi,
 Rust <code>Some</code> ishi va <code>None</code> ishi ko'rib chiqilishini ta'minlaydi va
 yaroqsiz ko'rsatgich bo'lmaydi.</p>
@@ -354,7 +358,7 @@ elementi boʻlsa, biz daraxt yaratamiz, uning obʼyektlari oʻz bolalari buyumla
 ularning ota-onalari.</p>
 <h4 id="creating-a-tree-data-structure-a-node-with-child-nodes"><a class="header" href="#creating-a-tree-data-structure-a-node-with-child-nodes">Creating a Tree Data Structure: a <code>Node</code> with Child Nodes</a></h4>
 <p>Boshlash uchun biz ularning tugunlari haqida biladigan tugunlari bo'lgan daraxt quramiz.
-Biz o'zining &quot;i32&quot; qiymatiga ega bo'lgan &quot;tugun&quot; nomli tuzilmani yaratamiz.
+Biz o'zining "i32" qiymatiga ega bo'lgan "tugun" nomli tuzilmani yaratamiz.
 uning bolalar 'Tugun' qiymatlariga havolalar:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::cell::RefCell;
@@ -377,12 +381,12 @@ struct Node {
 </span><span class="boring">        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
 </span><span class="boring">    });
 </span><span class="boring">}</span></code></pre></pre>
-<p>Biz &quot;Tugun&quot; o'z farzandlariga ega bo'lishini istaymiz va biz bu egalikni baham ko'rmoqchimiz
-o'zgaruvchilar, shuning uchun biz daraxtdagi har bir &quot;Tugun&quot; ga to'g'ridan-to'g'ri kirishimiz mumkin. Buning uchun biz
+<p>Biz "Tugun" o'z farzandlariga ega bo'lishini istaymiz va biz bu egalikni baham ko'rmoqchimiz
+o'zgaruvchilar, shuning uchun biz daraxtdagi har bir "Tugun" ga to'g'ridan-to'g'ri kirishimiz mumkin. Buning uchun biz
 <code>Vec&lt;T&gt;</code> elementlarini <code>Rc&lt;Node&gt;</code> tipidagi qiymatlar sifatida belgilang. Biz ham xohlaymiz
 qaysi tugunlar boshqa tugunning bolalari ekanligini o'zgartiring, shuning uchun bizda <code>RefCell&lt;T&gt;</code> mavjud
 <code>Vec&lt;Rc&lt;tugun&gt;&gt;</code> atrofidagi <code>bolalar</code>.</p>
-<p>Keyinchalik, biz strukturaning ta'rifidan foydalanamiz va bitta &quot;Tugun&quot; nomini yaratamiz
+<p>Keyinchalik, biz strukturaning ta'rifidan foydalanamiz va bitta "Tugun" nomini yaratamiz
 <code>barg</code> qiymati 3 va bolalari yo'q va boshqa misol <code>filial</code>
 15-27 roʻyxatda koʻrsatilganidek, qiymati 5 va “barg” uning farzandlaridan biri sifatida:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
@@ -412,9 +416,9 @@ and a <code>branch</code> node with <code>leaf</code> as one of its children</sp
 aloqadorligini bilmaydi. Biz “barg” “filial” uning ekanligini bilishini istaymiz
 ota-ona. Biz buni keyin qilamiz.</p>
 <h4 id="bolaning-ota-onasiga-havolani-qoshish"><a class="header" href="#bolaning-ota-onasiga-havolani-qoshish">Bolaning ota-onasiga havolani qo'shish</a></h4>
-<p>Bola tugunni ota-onasidan xabardor qilish uchun biz &quot;ota-ona&quot; maydonini qo'shishimiz kerak
-bizning &quot;tugun&quot; tuzilmasining ta'rifi. Muammo nima turini tanlashda
-&quot;ota-ona&quot; bo'lishi kerak. Biz bilamizki, unda <code>Rc&lt;T&gt;</code> bo'lishi mumkin emas, chunki bu bo'lar edi
+<p>Bola tugunni ota-onasidan xabardor qilish uchun biz "ota-ona" maydonini qo'shishimiz kerak
+bizning "tugun" tuzilmasining ta'rifi. Muammo nima turini tanlashda
+"ota-ona" bo'lishi kerak. Biz bilamizki, unda <code>Rc&lt;T&gt;</code> bo'lishi mumkin emas, chunki bu bo'lar edi
 <code>leaf.parent</code> <code>filial</code>ga ishora qiluvchi mos yozuvlar siklini yarating va
 <code>barg</code>ga ishora qiluvchi <code>filial.bolalar</code>, bu ularning <code>kuchli_hisobiga</code> olib keladi
 qiymatlar hech qachon 0 bo'lmasligi kerak.</p>
@@ -422,8 +426,8 @@ qiymatlar hech qachon 0 bo'lmasligi kerak.</p>
 bolalar: agar ota-ona tugunlari tushirilsa, uning tugunlari sifatida tushirilishi kerak
 yaxshi. Biroq, bola o'z ota-onasiga egalik qilmasligi kerak: agar biz bola tugunini tashlasak,
 ota-ona hali ham mavjud bo'lishi kerak. Bu zaif havolalar uchun holat!</p>
-<p>Shunday qilib, &quot;Rc<T>&quot; o'rniga, &quot;ota-ona&quot; turini &quot;Zaif<T>&quot; dan foydalanamiz,
-xususan <code>RefCell&lt;Zaif&lt;tugun&gt;&gt;</code>. Endi bizning &quot;tugun&quot; tuzilmasining ta'rifi ko'rinadi
+<p>Shunday qilib, "Rc<T>" o'rniga, "ota-ona" turini "Zaif<T>" dan foydalanamiz,
+xususan <code>RefCell&lt;Zaif&lt;tugun&gt;&gt;</code>. Endi bizning "tugun" tuzilmasining ta'rifi ko'rinadi
 shunga o'xshash:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust">use std::cell::RefCell;
@@ -443,7 +447,7 @@ struct Node {
 </span><span class="boring">        children: RefCell::new(vec![]),
 </span><span class="boring">    });
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;leaf parent = {:?}&quot;, leaf.parent.borrow().upgrade());
+</span><span class="boring">    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
 </span><span class="boring">
 </span><span class="boring">    let branch = Rc::new(Node {
 </span><span class="boring">        value: 5,
@@ -453,11 +457,11 @@ struct Node {
 </span><span class="boring">
 </span><span class="boring">    *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
 </span><span class="boring">
-</span><span class="boring">    println!(&quot;leaf parent = {:?}&quot;, leaf.parent.borrow().upgrade());
+</span><span class="boring">    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
 </span><span class="boring">}</span></code></pre></pre>
 <p>Tugun o'zining asosiy tuguniga murojaat qilishi mumkin, lekin uning ota-onasiga ega emas.
-15-28 ro'yxatda biz ushbu yangi ta'rifdan foydalanish uchun &quot;asosiy&quot; ni yangilaymiz, shuning uchun &quot;barg&quot;
-tugun o'zining ota-onasi &quot;filial&quot; ga murojaat qilish usuliga ega bo'ladi:</p>
+15-28 ro'yxatda biz ushbu yangi ta'rifdan foydalanish uchun "asosiy" ni yangilaymiz, shuning uchun "barg"
+tugun o'zining ota-onasi "filial" ga murojaat qilish usuliga ega bo'ladi:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::cell::RefCell;
 </span><span class="boring">use std::rc::{Rc, Weak};
@@ -476,7 +480,7 @@ tugun o'zining ota-onasi &quot;filial&quot; ga murojaat qilish usuliga ega bo'la
         children: RefCell::new(vec![]),
     });
 
-    println!(&quot;leaf parent = {:?}&quot;, leaf.parent.borrow().upgrade());
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
 
     let branch = Rc::new(Node {
         value: 5,
@@ -486,28 +490,28 @@ tugun o'zining ota-onasi &quot;filial&quot; ga murojaat qilish usuliga ega bo'la
 
     *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
 
-    println!(&quot;leaf parent = {:?}&quot;, leaf.parent.borrow().upgrade());
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
 }</code></pre></pre>
 <p><span class="caption">Listing 15-28: A <code>leaf</code> node with a weak reference to its
 parent node <code>branch</code></span></p>
 <p>“Yaproq” tugunini yaratish 15-27 roʻyxatga oʻxshaydi, bundan tashqari
-&quot;ota-ona&quot; maydoni: &quot;barg&quot; ota-onasiz boshlanadi, shuning uchun biz yangisini yaratamiz,
+"ota-ona" maydoni: "barg" ota-onasiz boshlanadi, shuning uchun biz yangisini yaratamiz,
 bo'sh <code>Zaif&lt;tugun&gt;</code> mos yozuvlar misoli.</p>
 <p>Shu nuqtada, biz yordamida <code>barg</code> ota-onasiga havola olishga harakat qilganimizda
-&quot;yangilash&quot; usulida biz &quot;Yo'q&quot; qiymatini olamiz. Buni biz dan chiqishda ko'ramiz
+"yangilash" usulida biz "Yo'q" qiymatini olamiz. Buni biz dan chiqishda ko'ramiz
 birinchi <code>println!</code> bayonoti:</p>
 <pre><code class="language-matn">barg ota-onasi = Yo'q
 </code></pre>
 <p>Biz <code>filial</code> tugunini yaratganimizda, u ham yangi <code>Zaif&lt;tugun&gt;</code>ga ega bo'ladi.
-&quot;ota&quot; maydonida havola, chunki &quot;filial&quot; da asosiy tugun yo'q.
+"ota" maydonida havola, chunki "filial" da asosiy tugun yo'q.
 Bizda hamon “barg” “filial” farzandlaridan biri. Bir marta bizda
 “Filial”dagi “tugun” misolida biz “barg”ni “zaif<tugun>” qilish uchun o‘zgartirishimiz mumkin.
-uning ota-onasiga havola. Biz &quot;borrow_mut&quot; usulidan foydalanamiz
+uning ota-onasiga havola. Biz "borrow_mut" usulidan foydalanamiz
 <code>barg</code>ning <code>ota</code> maydonida <code>RefCell&lt;Zaif&lt;tugun&gt;&gt;</code> va keyin biz
 <code>Rc::downgrade</code> funksiyasidan <code>filial</code>ga <code>Zaif&lt;tugun&gt;</code> havolasini yaratish
 <code>filialdagi </code>Rc<tugun>`</p>
 <p>Biz “barg” ning ota-onasini yana chop qilsak, bu safar “Ba’zi” variantini olamiz
-&quot;filial&quot; ni ushlab turish: endi &quot;barg&quot; ota-onasiga kira oladi! Biz &quot;barg&quot; ni chop etganda, biz
+"filial" ni ushlab turish: endi "barg" ota-onasiga kira oladi! Biz "barg" ni chop etganda, biz
 Shuningdek, oxir-oqibat bizda bo'lgani kabi stekning to'lib ketishi bilan yakunlangan tsikldan qoching
 Ro'yxat 15-26; <code>Zaif&lt;tugun&gt;</code> havolalari <code>(Zaif)</code> sifatida chop etiladi:</p>
 <pre><code class="language-matn">barg ota = Ba'zi(tugun {qiymat: 5, ota: RefCell {qiymat: (zaif)},
@@ -517,10 +521,10 @@ bolalar: RefCell { qiymat: [] } }] } })
 <p>Cheksiz chiqishning yo'qligi ushbu kod mos yozuvlar yaratmaganligini ko'rsatadi
 tsikl. Buni biz qo'ng'iroq qilishdan olgan qadriyatlarimizga qarab ham aytishimiz mumkin
 <code>Rc::strong_count</code> va <code>Rc::weak_count</code>.</p>
-<h4 id="kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish"><a class="header" href="#kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish">&quot;Kuchli_hisob&quot; va &quot;zaif_hisob&quot; dagi o'zgarishlarni vizualizatsiya qilish</a></h4>
+<h4 id="kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish"><a class="header" href="#kuchli_hisob-va-zaif_hisob-dagi-ozgarishlarni-vizualizatsiya-qilish">"Kuchli_hisob" va "zaif_hisob" dagi o'zgarishlarni vizualizatsiya qilish</a></h4>
 <p>Keling, <code>Rc&lt;tugun&gt;</code> <code>kuchli_hisoblash</code> va <code>zaif_hisoblash</code> qiymatlari qanday ekanligini ko'rib chiqamiz.
 misollar yangi ichki doirani yaratish va yaratishni ko'chirish orqali o'zgaradi
-<code>filial</code> shu doiraga kiradi. Shunday qilib, biz &quot;filial&quot; bo'lganda nima sodir bo'lishini ko'rishimiz mumkin
+<code>filial</code> shu doiraga kiradi. Shunday qilib, biz "filial" bo'lganda nima sodir bo'lishini ko'rishimiz mumkin
 yaratilgan va keyin u ko'lamdan chiqib ketganda tushib ketgan. O'zgartirishlar ko'rsatilgan
 15-29 ro'yxatda:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
@@ -542,7 +546,7 @@ yaratilgan va keyin u ko'lamdan chiqib ketganda tushib ketgan. O'zgartirishlar k
     });
 
     println!(
-        &quot;leaf strong = {}, weak = {}&quot;,
+        "leaf strong = {}, weak = {}",
         Rc::strong_count(&amp;leaf),
         Rc::weak_count(&amp;leaf),
     );
@@ -557,21 +561,21 @@ yaratilgan va keyin u ko'lamdan chiqib ketganda tushib ketgan. O'zgartirishlar k
         *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
 
         println!(
-            &quot;branch strong = {}, weak = {}&quot;,
+            "branch strong = {}, weak = {}",
             Rc::strong_count(&amp;branch),
             Rc::weak_count(&amp;branch),
         );
 
         println!(
-            &quot;leaf strong = {}, weak = {}&quot;,
+            "leaf strong = {}, weak = {}",
             Rc::strong_count(&amp;leaf),
             Rc::weak_count(&amp;leaf),
         );
     }
 
-    println!(&quot;leaf parent = {:?}&quot;, leaf.parent.borrow().upgrade());
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
     println!(
-        &quot;leaf strong = {}, weak = {}&quot;,
+        "leaf strong = {}, weak = {}",
         Rc::strong_count(&amp;leaf),
         Rc::weak_count(&amp;leaf),
     );
@@ -579,16 +583,16 @@ yaratilgan va keyin u ko'lamdan chiqib ketganda tushib ketgan. O'zgartirishlar k
 <p><span class="caption">Listing 15-29: Creating <code>branch</code> in an inner scope and
 examining strong and weak reference counts</span></p>
 <p>'barg' yaratilgandan so'ng, uning 'Rc<tugun>' kuchli soni 1 va zaif bo'ladi.
-0 ning soni. Ichki doirada biz &quot;filial&quot; yaratamiz va uni bog'laymiz.
+0 ning soni. Ichki doirada biz "filial" yaratamiz va uni bog'laymiz.
 <code>barg</code>, biz hisoblarni chop etganda, <code>filialdagi </code>Rc<tugun><code>kuchli soni 1 va zaif soni 1 bo‘ladi (“leaf.parent” ko‘rsatish uchun</code>zaif<tugun><code>bilan</code>filial<code>ga). Hisoblarni “barg”da chop etganimizda, biz ko'ramiz uning kuchli soni 2 ga teng bo'ladi, chunki </code>filial<code>endi kloniga ega</code>barg<code>ning </code>Rc<tugun><code> </code>branch.children` da saqlanadi, lekin baribir zaif bo'ladi.
 soni 0.</p>
-<p>Ichki qamrov tugagach, &quot;filial&quot; doiradan chiqib ketadi va kuchli soni
+<p>Ichki qamrov tugagach, "filial" doiradan chiqib ketadi va kuchli soni
 <code>Rc&lt;Node&gt;</code> 0 ga kamayadi, shuning uchun uning <code>Tugun</code> tushiriladi. Zaif hisob 1
-'leaf.parent' dan &quot;tugun&quot; tushirilgan yoki yo'qligiga ta'sir qilmaydi, shuning uchun biz
+'leaf.parent' dan "tugun" tushirilgan yoki yo'qligiga ta'sir qilmaydi, shuning uchun biz
 hech qanday xotira oqishiga yo'l qo'ymang!</p>
-<p>Qo'llanish doirasi tugagandan so'ng &quot;barg&quot; ning ota-onasiga kirishga harakat qilsak, biz olamiz
+<p>Qo'llanish doirasi tugagandan so'ng "barg" ning ota-onasiga kirishga harakat qilsak, biz olamiz
 Yana 'Yo'q'. Dastur oxirida <code>barg</code>dagi <code>Rc&lt;tugun&gt;</code> kuchli
-soni 1 va kuchsiz soni 0, chunki &quot;barg&quot; o'zgaruvchisi endi yagona
+soni 1 va kuchsiz soni 0, chunki "barg" o'zgaruvchisi endi yagona
 yana <code>Rc&lt;tugun&gt;</code> ga murojaat qiling.</p>
 <p>Hisoblash va qiymatni pasaytirishni boshqaradigan barcha mantiq o'rnatilgan
 <code>Rc&lt;T&gt;</code> va <code>Zaif&lt;T&gt;</code> va ularning <code>Drop</code> xususiyatini amalga oshirish. tomonidan
@@ -605,7 +609,7 @@ bu ma'lumotlar bir nechta egalariga ega bo'lishi mumkin. <code>RefCell&lt;T&gt;<
 o'zgaruvchanlik bizga o'zgarmas tur kerak bo'lganda foydalanishimiz mumkin bo'lgan turni beradi, lekin
 ushbu turdagi ichki qiymatni o'zgartirish kerak; u qarz olishni ham majbur qiladi
 kompilyatsiya vaqtida emas, balki ish vaqtidagi qoidalar.</p>
-<p>Shuningdek, ko'plab imkoniyatlarni beradigan &quot;Deref&quot; va &quot;Drop&quot; xususiyatlari ham muhokama qilindi
+<p>Shuningdek, ko'plab imkoniyatlarni beradigan "Deref" va "Drop" xususiyatlari ham muhokama qilindi
 aqlli ko'rsatkichlarning funksionalligi. Biz sabab bo'lishi mumkin bo'lgan mos yozuvlar davrlarini o'rganib chiqdik
 xotira oqishi va ularni <code>Zaif&lt;T&gt;</code> yordamida qanday qilib oldini olish mumkin.</p>
 <p>Agar ushbu bob sizni qiziqtirgan bo'lsa va siz o'zingiznikini amalga oshirmoqchi bo'lsangiz
@@ -661,6 +665,7 @@ aqlli ko'rsatkichlar.</p>
 
         <!-- Custom JS scripts -->
         <script src="ferris.js"></script>
+
 
 
     </div>

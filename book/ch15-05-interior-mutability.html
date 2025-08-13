@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light" dir="ltr">
+<html lang="en" class="light sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-        
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -24,28 +24,43 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="ferris.css">
         <link rel="stylesheet" href="theme/2018-edition.css">
 
-    </head>
-    <body class="sidebar-visible no-js">
-    <div id="body-container">
-        <!-- Provide site root to javascript -->
-        <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
-        </script>
 
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -59,68 +74,51 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
+            const html = document.documentElement;
             html.classList.remove('light')
             html.classList.add(theme);
-            var body = document.querySelector('body');
-            body.classList.remove('no-js')
-            body.classList.add('js');
+            html.classList.add("js");
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var body = document.querySelector('body');
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            body.classList.remove('sidebar-visible');
-            body.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">Rust dasturlash tili</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Muqaddima</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Kirish</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Ishni boshlash</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> O'rnatish</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> Hello, World!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> Hello, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Taxmin qilish o'yinini dasturlash</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Umumiy dasturlash tushunchalari</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> O'zgaruvchilar va o'zgaruvchanlik</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Ma'lumotlar turlari</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funksiyalar</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Izohlar</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Control Flow</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Ownershipni tushunish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> Ownership nima?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencelar va  Borrowing</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> Slice turi</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Tegishli ma'lumotlarni tuzish uchun Structdan foydalanish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Structlarni aniqlash va yaratish</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Structs yordamida namunaviy dastur</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Metod sintaksisi</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enumlar va patternlarni moslashtirish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Enumni aniqlash</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> match Control Flow konstruksiyasi</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> if let bilan qisqacha Control Flow</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> O'sib borayotgan loyihalarni Paketlar, Cratelar va Modullar bilan boshqarish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paketlar va Cratelar</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Qo'llanish doirasi va maxfiylikni nazorat qilish uchun modullarni aniqlash</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Modul daraxtidagi elementga murojaat qilish yo'llari</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> use kalit so'zi bilan yo'llarni qamrab olish</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Modullarni turli fayllarga ajratish</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Umumiy to'plamlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Vectorlar bilan qiymatlar ro'yxatini saqlash</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> UTF-8 kodlangan matnni Stringlar bilan saqlash</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Hash Mapda bog'langan qiymatlarga ega kalitlarni saqlash</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Xatolar bilan ishlash</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> panic! bilan tuzatib bo'lmaydigan xatolar</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Result bilan tiklanadigan xatolar</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! yoki panic! emas</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Umumiy turlar, traitlar va lifetime</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Generik ma'lumotlar turlari</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traitlar: umumiy xatti-harakatni aniqlash</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Referencelarni lifetime bilan tekshirish</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Avtomatlashtirilgan testlarni yozish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Testlarni qanday yozish kerak</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Sinovlar qanday o'tkazilishini nazorat qilish</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Test tashkil etish</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> I/O loyihasi: Buyruqlar qatori dasturini yaratish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Buyruqlar qatori argumentini qabul qilishs</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Faylni o'qish</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Modullikni yaxshilash va xatolarni qayta ishlash uchun refactoring</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Sinovga asoslangan ishlab chiqish bilan kutubxonaning funksionalligini rivojlantirish</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Environment o'zgaruvchilari bilan ishlash</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Xato xabarlarini standart chiqish o'rniga standart xatoga yozish</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Funksional til xususiyatlari: iteratorlar va closurelar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closurelar: Environmentni qamrab oladigan anonim funksiyalar</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Iteratorlar bilan bir qator elementlarga ishlov berish</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> I/O loyihamizni takomillashtirish</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Ishlash samaradorligini solishtirish: Looplar va iteratorlar</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Cargo va Crates.io haqida ko'proq</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Reliz profillari bilan structlarni moslashtirish</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Crateni Crates.io-ga nashr qilish</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspacelar</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Binary fayllarni Crates.io'dan cargo install bilan o'rnatish</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Maxsus buyruqlar bilan Cargoni kengaytirish</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointerlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Heapdagi ma'lumotlarni ko'rsatish uchun Box&lt;T&gt; dan foydalanish</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Deref Traitidan foydalangan holda oddiy referencelar kabi Smart Pointerlar bilan ishlash</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Drop Traiti bilan tozalashda kodni ishga tushirish</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, reference hisoblangan Smart Pointer</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html" class="active"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; va ichki o'zgaruvchanlik namunasi</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Reference Cycles Can Leak Memory</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Qo'rqmas parallellik</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Kodni bir vaqtning o'zida ishga tushirish uchun threadlardan foydalanish</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Threadlar orasidagi ma'lumotlarni uzatish uchun Message Passing(xabar uzatish)dan foydalanish</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Shared-State Concurrency</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Sync va Send traitlari bilan kengaytiriladigan parallellik</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rustning ob'ektga yo'naltirilgan dasturlash xususiyatlari- OOP</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Ob'ektga yo'naltirilgan tillarning xususiyatlari</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Har xil turdagi qiymatlarga ruxsat beruvchi trait ob'ektlaridan foydalanish</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Ob'ektga yo'naltirilgan dizayn patternini implement qilish</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patternlar va Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> All the Places Patterns Can Be Used</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutability: Whether a Pattern Might Fail to Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Pattern Sintaksisi</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Kengaytirilgan Xususiyatlar</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Xavfsiz Rust</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Murakkab Traitlar</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Kengaytirilgan Turlar</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Kengaytirilgan funksiyalar va closurelar</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Makrolar</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Yakuniy loyiha: Ko'p tarmoqli veb-serverni qurish</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Yagona tarmoqli veb-serverni qurish</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Bizning yagona tarmoqli serverimizni ko'p tarmoqli serverga aylantirish</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Ajoyib o'chirish va tozalash</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Ilova</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Kalit so'zlar</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operatorlar va Symbollar</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Hosilaviy Traitlar</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Foydali Development Toollar</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Nashrlar</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Kitobning tarjimalari</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Rust qanday yasaladi va “Nightly Rust”</a></li></ol></li></ol>
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
-
-        <!-- Track and set sidebar scroll position -->
-        <script>
-            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
-            sidebarScrollbox.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
-                }
-            }, { passive: true });
-            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
-            sessionStorage.removeItem('sidebar-scroll');
-            if (sidebarScrollTop) {
-                // preserve sidebar scroll position when navigating via links within sidebar
-                sidebarScrollbox.scrollTop = sidebarScrollTop;
-            } else {
-                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
-                var activeSection = document.querySelector('#sidebar .active');
-                if (activeSection) {
-                    activeSection.scrollIntoView({ block: 'center' });
-                }
-            }
-        </script>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -130,13 +128,14 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -156,7 +155,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -181,9 +185,9 @@
 <p>Biz ichki o'zgaruvchanlik shakli/patterni ishlatadigan turlardan faqatgina borrowing qoidalari runtimeda amal qilingaligi paytida ishlatishimiz mumkin, kompilyator bunga kafolat bera olmaydi. Keyin <code>unsafe</code> kod xavfsiz APIga ulanadi va tashqi tur o'zgarmasligicha qoladi.</p>
 <p>Keling ushbu tushunchani ichki o'zgaruvchanlik shakliga amal qiluvchi quyidagi <code>RefCell&lt;T&gt;</code> turiga qarab ko'rib chiqaylik.</p>
 <h3 id="enforcing-borrowing-rules-at-runtime-with-refcellt-yordamida-borrowing-qoidalarini-runtime-vaqtida-kuch-bilan-ishlatish"><a class="header" href="#enforcing-borrowing-rules-at-runtime-with-refcellt-yordamida-borrowing-qoidalarini-runtime-vaqtida-kuch-bilan-ishlatish">Enforcing Borrowing Rules at Runtime with <code>RefCell&lt;T&gt;</code> yordamida Borrowing qoidalarini Runtime vaqtida kuch bilan ishlatish</a></h3>
-<p><code>Rc&lt;T&gt;</code>lidan faqrli o'laroq, <code>RefCell&lt;T&gt;</code> turi o'zi egalik qilib turgan ma'lumotda yagona egalikni namoyish etadi. Xo'sh, <code>RefCell&lt;T&gt;</code> turi <code>Box&lt;T&gt;</code> turidan nimasi bilan farq qiladi? 4-bo'limda o'tilgan borrowing qoidalarini esga olaylik: </p>
+<p><code>Rc&lt;T&gt;</code>lidan faqrli o'laroq, <code>RefCell&lt;T&gt;</code> turi o'zi egalik qilib turgan ma'lumotda yagona egalikni namoyish etadi. Xo'sh, <code>RefCell&lt;T&gt;</code> turi <code>Box&lt;T&gt;</code> turidan nimasi bilan farq qiladi? 4-bo'limda o'tilgan borrowing qoidalarini esga olaylik:</p>
 <ul>
-<li>Xohlagan belgilangan vaqtda, siz <em>yoki</em> (ikkalasini bir vaqtda ega bo'lish mumkin emas)bitta        o'zgaruvchan referens yoki xohlagan sondagi o'zgarmas referenslarga ega bo'lishingiz mumkin. </li>
+<li>Xohlagan belgilangan vaqtda, siz <em>yoki</em> (ikkalasini bir vaqtda ega bo'lish mumkin emas)bitta        o'zgaruvchan referens yoki xohlagan sondagi o'zgarmas referenslarga ega bo'lishingiz mumkin.</li>
 <li>Referenslar har doim yaroqli bo'lishi shart</li>
 </ul>
 <p>Referenslar va <code>Box&lt;T&gt;</code> bilan, borrowing qoidalarining kompilyatsiya vaqtida o'zgarmaslar kuchga kiradi. <code>RefCell&lt;T&gt;</code> bilan esa ushbu o'zgarmaslar <em>runtime paytida</em> kuchga kiradi. Referenslar bilan, agar siz ushbu qoidalarni buzsangiz, sizda kompilyator xatoligi yuzaga keladi. <code>RefCell&lt;T&gt;</code> bilan suhbu qoidalarni buzganingizda, sizning dasturingizda panic vujudga kelib, dastur chiqib ketadi.</p>
@@ -192,7 +196,7 @@ will be caught sooner in the development process, and there is no impact on
 runtime performance because all the analysis is completed beforehand. For those
 reasons, checking the borrowing rules at compile time is the best choice in the
 majority of cases, which is why this is Rust’s default.</p>
-<p>Borrowing qoidalarini kompilyatsiay vaqtida tekshirishning yaxshi tarafi xatolarni development vaqtida tezroq topishdir, va runtime unumdorligiga ta'sir ko'rsatmaydi chunki hamma analizlar oldindan qilingan bo'ladi. Ko'p hollarda borrowing qoidalarini kompilyatsiya vaqtida tekshirish eng yaxshi tanlovdir, sababi ushbu xususiyat Rustda odatiy  xususiyatidir. </p>
+<p>Borrowing qoidalarini kompilyatsiay vaqtida tekshirishning yaxshi tarafi xatolarni development vaqtida tezroq topishdir, va runtime unumdorligiga ta'sir ko'rsatmaydi chunki hamma analizlar oldindan qilingan bo'ladi. Ko'p hollarda borrowing qoidalarini kompilyatsiya vaqtida tekshirish eng yaxshi tanlovdir, sababi ushbu xususiyat Rustda odatiy  xususiyatidir.</p>
 <p>Borrowing qoidalarini runtime vaqtida tekshrishning afzalligi shundaki, kompilyatsiya vaqtidagi tekshiruvlar tomonidan ruxsat etilmaganda ba'zi xotira uchun xavfsizlik ssenariylarga ruxsat beriladi. Rust kompilyatoriga o'xshagan statik analizlar o'z-o'zidan konservativdir. Kodni tahlil qilayotganda kodning ba'zi bir xususiyatlarini aniqlash qiyindir: bunga  Halting Problem mashxur misol bo'la oladi, bu kitob doirasidan tashqarida bo'lsada lekin izlanib o'rganish uchun qiziq mavzu</p>
 <p>Agar Rust kompilyatori egalik (ownership) qoidalari asosida kompilyatsiya qilayotganini aqiqlay olmasa, bu to'g'ri, ya'ni ishlab turgan dasturni rad etishi mumkin, shuning uchun ham konservativ hisoblanadi va bu ba'zi tahlillar uchun qiyindir. Agar Rust xatolikka ega bo'lgan dasturni qabul qilsa, foydalanuvchilar Rust beradigan kafolatlarga ishona olmaydilar. Agarda, Rust ishlab turgan dasturni rad etsa, dasturchi uchun noqulaylik tug'diradi, lekin hech qanday qo'rqinchli narsa bo'lmaydi. <code>RefCell&lt;T&gt;</code> turi sizning kodingiz borrowing qoidlariga amal qilayotganiga ishonchingiz komil bo'lganda lekin kompilyator buni tushuna olmayotganda va kafolat bera olmaganda foydalidir.</p>
 <p><code>RefCell&lt;T&gt;</code> <code>Rc&lt;T&gt;</code>ga o'xshab bitta potokli (oqimli) ssenariylarda ishlatilinadi va agar siz ko'p potokli (oqimli) holatda ishlatsangiz kompilyatsiya vaqtidagi xatolikni yuzaga keltiradi. Biz <code>RefCell&lt;T&gt;</code>ni ko'p potokli (oqimli) dasturda qanday qilib funksionalligini olishni 16-bo'limda ko'rib chiqamiz.</p>
@@ -201,7 +205,7 @@ majority of cases, which is why this is Rust’s default.</p>
 <li><code>Rc&lt;T&gt;</code> bitta ma'lumotga ko'p egalarga ega bo'lish imkonini beradi; <code>Box&lt;T&gt;</code> va <code>RefCell&lt;T&gt;</code>
 esa yagona egaga egadirlar;</li>
 <li><code>Box&lt;T&gt;</code> kompilyatsiya vaqtida o'zgaruvchan va o'zgarmas borrowlarni tekshrilishini ta'minlaydi;
-<code>Rc&lt;T&gt;</code> kompilyatsiya vaqtida faqat o'zgarmas borrowlarni tekshrilishini ta'minlaydi; 
+<code>Rc&lt;T&gt;</code> kompilyatsiya vaqtida faqat o'zgarmas borrowlarni tekshrilishini ta'minlaydi;
 <code>RefCell&lt;T&gt;</code> runtimeda o'zgaruvchan va o'zgarmas borrowlarni tekshrilishini ta'minlaydi.</li>
 <li>Because <code>RefCell&lt;T&gt;</code> runtimeda o'zgaruvchan borrowlar tekshirilishi ta'minlaydi, agar
 <code>RefCell&lt;T&gt;</code> o'zgarmas bo'lsada <code>RefCell&lt;T&gt;</code> ichida qiymatni o'zgaruvchan qilishingiz mumkin.</li>
@@ -232,22 +236,22 @@ error: could not compile `borrowing` due to previous error
 <p>Shunday vaziyatlar borki qiymat o'zini-o'zi o'zining metodlarida o'zgarivchan qilishi
 foydali hisoblanadi, lekin boshqa kodda o'zgarmas shaklda bo'ladi. Kodning doirasidan
 tashqaridagi qiymat metodi qiymatni o'zgaruvchan qila olmaydi. <code>RefCell&lt;T&gt;</code>ni ishlatish ichki
-o'zgaruvchanlikga ega bo'lishning bir yo'li hisoblanadi, lekin <code>RefCell&lt;T&gt;</code> borrowing 
+o'zgaruvchanlikga ega bo'lishning bir yo'li hisoblanadi, lekin <code>RefCell&lt;T&gt;</code> borrowing
 qoidalarini to'liq aylanib o'tmaydi: kompilyatorda borrow tekshiruvchisi shu ichki o'zgaruvchanlikka
 ruxsat beradi, va borrowing qoidalari runtimes tekshiriladi. Agar qoidalarni rad etsangiz,
-kompilyator xatoligini o'rniga <code>panic!</code> ko'rasiz. </p>
+kompilyator xatoligini o'rniga <code>panic!</code> ko'rasiz.</p>
 <p><code>RefCell&lt;T&gt;</code>ni o'zgarmas qiymatni o'zgaruvchanga aylantirishni, hamda nimaga <code>RefCell&lt;T&gt;</code>ni
 ishlatish foydali ekanligini amaliy misollarda ko'rib chiqaylik.</p>
 <h4 id="ichki-ozgaruvchanlik-uchun-foydalanish-holatimisoli-soxta-obyektlar"><a class="header" href="#ichki-ozgaruvchanlik-uchun-foydalanish-holatimisoli-soxta-obyektlar">Ichki o'zgaruvchanlik uchun foydalanish holati/misoli: Soxta Obyektlar</a></h4>
 <p>Ayrim hollarda test vaqti dasturchi boshqa turni o'rniga kerakli hatti-harakatni kuzatish
 uchun va to'g'ri kompilyatsiya amalga oshirilganligini tasdiqlash uchun boshqa bir turni
 ishlatib ko'radi. Ushbu to'ldiruvchi tur <em>test double</em> deb ataladi. Qiyin bo'lgan sahna ko'rinishida
-aktyorning o'rniga chiqib, sahna ko'rinishi amalga oshirib beruvchi, ya'nikino yaratishda &quot;kaskadyor&quot;
+aktyorning o'rniga chiqib, sahna ko'rinishi amalga oshirib beruvchi, ya'nikino yaratishda "kaskadyor"
 misolida ko'rib chiqaylik. Test doublelari boshqa turlarda test o'tkazayotganimizda xizmat qiladi.
 <em>Soxta obyektlar</em> test paytida nimalar sodir bo'lishini qayd etuvchi test doublelar o'ziga xos turlardan biri bo'lib, siz to'g'ri amallar amalga oshirilayotganini ko'zdan kechirishingiz mumkin.</p>
 <p>Rustda boshqa dasturlash tillari kabi bir xil ma'noli obyektlarga ega emas,
-va soxta obyekt funksionalligini olgan standart kutubxonasi yo'q. Aksincha, soxta 
-obyektlar kabi ish bajaruvchi struct yaratishingiz mumkin. </p>
+va soxta obyekt funksionalligini olgan standart kutubxonasi yo'q. Aksincha, soxta
+obyektlar kabi ish bajaruvchi struct yaratishingiz mumkin.</p>
 <p>Ushbu ssenariyni ko'rib chiqaylik: qiymatni maksimal qiymatga nisbatan kuzatuvchi
 kutubxona yaratamiz va joriy qiymat maksimal qiymatga qanchalik yaqinligiga qarab bizga
 xabar jo'natib turadi. Ushbu kutubxona foydalanuvchi uchun ruxsat etilgan API 'call'lar sonini
@@ -288,32 +292,32 @@ where
         let percentage_of_max = self.value as f64 / self.max as f64;
 
         if percentage_of_max &gt;= 1.0 {
-            self.messenger.send(&quot;Error: You are over your quota!&quot;);
+            self.messenger.send("Error: You are over your quota!");
         } else if percentage_of_max &gt;= 0.9 {
             self.messenger
-                .send(&quot;Urgent warning: You've used up over 90% of your quota!&quot;);
+                .send("Urgent warning: You've used up over 90% of your quota!");
         } else if percentage_of_max &gt;= 0.75 {
             self.messenger
-                .send(&quot;Warning: You've used up over 75% of your quota!&quot;);
+                .send("Warning: You've used up over 75% of your quota!");
         }
     }
 }</code></pre>
-<p><span class="caption">15-20-ro'yxat: Qiymatni qanchalik maksimal qiymatga yaqinligini kuzatish va kerakli darajaga 
+<p><span class="caption">15-20-ro'yxat: Qiymatni qanchalik maksimal qiymatga yaqinligini kuzatish va kerakli darajaga
 yetganda ogohlantiruvchi kutubxona</span></p>
-<p>Ushbu kodning e'tiborli tomoni shundaki <code>Messenger</code> traitining <code>send</code> nomli metodi 
-xabarning matni hamda<code>self</code>ga o'zgarmas referensni oladi. Ushbu trait bizning soxta 
-obyektimizning implementatisiyasi uchun kerak bo'lgan interfeys hisoblanadi, shu 
-holatda soxta obyekt haqiqiy obyektga o'xshab ishlatilishi mumkin. Yana bir muhim 
+<p>Ushbu kodning e'tiborli tomoni shundaki <code>Messenger</code> traitining <code>send</code> nomli metodi
+xabarning matni hamda<code>self</code>ga o'zgarmas referensni oladi. Ushbu trait bizning soxta
+obyektimizning implementatisiyasi uchun kerak bo'lgan interfeys hisoblanadi, shu
+holatda soxta obyekt haqiqiy obyektga o'xshab ishlatilishi mumkin. Yana bir muhim
 tomoni shundaki, biz <code>set_value</code>ni ko'rinishini <code>LimitTracker</code> orqali ko'rishimiz mumkin.<br />
-Biz xohlaganimizcha o'tkazayotganimizni <code>value</code> parametri uchun o'zgartirishimiz mumkin, 
-lekin <code>set_value</code> biz da'vo qilishimiz mumkin bo'lgan narsani return qilmaydi. Agar biz 
-<code>Messenger</code> traitini implementatisiya qiladigan va ma'lum bir qiymatga ega bo'lgan <code>LimitTracker</code> 
-yaratsak, <code>value</code> uchun turli raqamlar berganimizda, xabar kerakli xabar ko'rinishida jo'natildi 
+Biz xohlaganimizcha o'tkazayotganimizni <code>value</code> parametri uchun o'zgartirishimiz mumkin,
+lekin <code>set_value</code> biz da'vo qilishimiz mumkin bo'lgan narsani return qilmaydi. Agar biz
+<code>Messenger</code> traitini implementatisiya qiladigan va ma'lum bir qiymatga ega bo'lgan <code>LimitTracker</code>
+yaratsak, <code>value</code> uchun turli raqamlar berganimizda, xabar kerakli xabar ko'rinishida jo'natildi
 deya olishni xohlaymiz.</p>
-<p>Pochta orqali yoki matn xabar orqali xabar jo'natish o'rniga biz <code>send</code> ni ishga tushurib yuborilishi kerak bo'lgan xabarni 
-kuzatish uchun soxta obyekt kerak bo'ladi. Obyektning yangi namunasini yaratishimiz mumkin, soxta obyektdan foydalanadigan 
-<code>LimitTracker</code> yaratib, <code>LimitTracker</code>da <code>set_value</code> metodini qo'llashimiz va soxta obyekt biz kutgan xabar bor yoki yo'qligin 
-tekshirib ko'ramiz. 15-21-ro'yxat soxta obyekt implementatsiya qilishga urinishi, lekin borrow tekshiruvchi ruxsat bermasligi ko'rsatilgan: </p>
+<p>Pochta orqali yoki matn xabar orqali xabar jo'natish o'rniga biz <code>send</code> ni ishga tushurib yuborilishi kerak bo'lgan xabarni
+kuzatish uchun soxta obyekt kerak bo'ladi. Obyektning yangi namunasini yaratishimiz mumkin, soxta obyektdan foydalanadigan
+<code>LimitTracker</code> yaratib, <code>LimitTracker</code>da <code>set_value</code> metodini qo'llashimiz va soxta obyekt biz kutgan xabar bor yoki yo'qligin
+tekshirib ko'ramiz. 15-21-ro'yxat soxta obyekt implementatsiya qilishga urinishi, lekin borrow tekshiruvchi ruxsat bermasligi ko'rsatilgan:</p>
 <p><span class="filename">Faylnomi: src/lib.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">pub trait Messenger {
 </span><span class="boring">    fn send(&amp;self, msg: &amp;str);
@@ -343,13 +347,13 @@ tekshirib ko'ramiz. 15-21-ro'yxat soxta obyekt implementatsiya qilishga urinishi
 </span><span class="boring">        let percentage_of_max = self.value as f64 / self.max as f64;
 </span><span class="boring">
 </span><span class="boring">        if percentage_of_max &gt;= 1.0 {
-</span><span class="boring">            self.messenger.send(&quot;Error: You are over your quota!&quot;);
+</span><span class="boring">            self.messenger.send("Error: You are over your quota!");
 </span><span class="boring">        } else if percentage_of_max &gt;= 0.9 {
 </span><span class="boring">            self.messenger
-</span><span class="boring">                .send(&quot;Urgent warning: You've used up over 90% of your quota!&quot;);
+</span><span class="boring">                .send("Urgent warning: You've used up over 90% of your quota!");
 </span><span class="boring">        } else if percentage_of_max &gt;= 0.75 {
 </span><span class="boring">            self.messenger
-</span><span class="boring">                .send(&quot;Warning: You've used up over 75% of your quota!&quot;);
+</span><span class="boring">                .send("Warning: You've used up over 75% of your quota!");
 </span><span class="boring">        }
 </span><span class="boring">    }
 </span><span class="boring">}
@@ -387,7 +391,7 @@ mod tests {
     }
 }</code></pre>
 <p><span class="caption">15-21-ro'yxat: <code>MockMessenger</code>ning implementatsiya qilishga urinishi, ammo borrow checker bunga ruxsat bermayotgaligi ko'rsatilgan</span></p>
-<p>Ushbu test kodimiz <code>Sent_messages</code> maydoniga ega boʻlgan <code>MockMessenger</code> strukturasini belgilaydi va u <code>Vec</code>ga ega bo'lgan <code>String</code> qiymatlari bilan joʻnatilishi kerak boʻlgan xabarlarni kuzatib boradi. Shuningdek, biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi <code>MockMessenger</code> qiymatlarini yaratishni qulay qilish uchun <code>yangi</code> funksiyasini aniqlaymiz. Biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi MockMessenger qiymatlarini yaratamiz. Keyin biz <code>LimitTracker</code> ga <code>MockMessenger</code>ni berishimiz uchun <code>MockMessenger</code> uchun “Messenger” xususiyatini amalga oshiramiz. <code>send</code> usulining taʼrifida biz uzatilgan xabarni parametr sifatida qabul qilamiz va uni <code>sent_messages</code>ning <code>MockMessenger</code> roʻyxatida saqlaymiz. </p>
+<p>Ushbu test kodimiz <code>Sent_messages</code> maydoniga ega boʻlgan <code>MockMessenger</code> strukturasini belgilaydi va u <code>Vec</code>ga ega bo'lgan <code>String</code> qiymatlari bilan joʻnatilishi kerak boʻlgan xabarlarni kuzatib boradi. Shuningdek, biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi <code>MockMessenger</code> qiymatlarini yaratishni qulay qilish uchun <code>yangi</code> funksiyasini aniqlaymiz. Biz bo'sh xabarlar ro'yxati bilan boshlanadigan yangi MockMessenger qiymatlarini yaratamiz. Keyin biz <code>LimitTracker</code> ga <code>MockMessenger</code>ni berishimiz uchun <code>MockMessenger</code> uchun “Messenger” xususiyatini amalga oshiramiz. <code>send</code> usulining taʼrifida biz uzatilgan xabarni parametr sifatida qabul qilamiz va uni <code>sent_messages</code>ning <code>MockMessenger</code> roʻyxatida saqlaymiz.</p>
 <p>Sinovda biz <code>LimitTracker</code>ga <code>value</code>ni <code>max</code> qiymatining 75 foizidan ko‘prog‘iga o‘rnatish buyurilganda nima sodir bo‘lishini sinab ko‘ramiz. Birinchidan, biz yangi <code>MockMessenger</code> ni yaratamiz, u xabarlarning bo'sh ro'yxati bilan boshlanadi. Keyin biz yangi <code>LimitTracker</code> yaratamiz va unga yangi <code>MockMessenger</code> va <code>max</code> qiymati 100 ga teng reference beramiz. 100dan 75dan katta bo'lgan, 80ga teng bo'lgan qiymatli <code>LimitTracker</code>dagi <code>set_value</code> metodini ishga tushiramiz. Keyin biz <code>MockMessenger</code> kuzatayotgan xabarlar roʻyxatida bitta xabar boʻlishi kerakligini taʼkidlaymiz.</p>
 <p>Biroq, bu testda ko'rsatilganidek, bitta muammo bor:</p>
 <pre><code class="language-console">$ cargo test
@@ -436,13 +440,13 @@ warning: build failed, waiting for other jobs to finish...
 </span><span class="boring">        let percentage_of_max = self.value as f64 / self.max as f64;
 </span><span class="boring">
 </span><span class="boring">        if percentage_of_max &gt;= 1.0 {
-</span><span class="boring">            self.messenger.send(&quot;Error: You are over your quota!&quot;);
+</span><span class="boring">            self.messenger.send("Error: You are over your quota!");
 </span><span class="boring">        } else if percentage_of_max &gt;= 0.9 {
 </span><span class="boring">            self.messenger
-</span><span class="boring">                .send(&quot;Urgent warning: You've used up over 90% of your quota!&quot;);
+</span><span class="boring">                .send("Urgent warning: You've used up over 90% of your quota!");
 </span><span class="boring">        } else if percentage_of_max &gt;= 0.75 {
 </span><span class="boring">            self.messenger
-</span><span class="boring">                .send(&quot;Warning: You've used up over 75% of your quota!&quot;);
+</span><span class="boring">                .send("Warning: You've used up over 75% of your quota!");
 </span><span class="boring">        }
 </span><span class="boring">    }
 </span><span class="boring">}
@@ -482,7 +486,7 @@ mod tests {
     }
 }</code></pre>
 <p><span class="caption">15-22-ro'yxat: tashqi qiymat o'zgarmas bo'lganida <code>RefCell&lt;T&gt;</code> yordamida ichki qiymatni o'zgaruvchan qilish</span></p>
-<p><code>sent_messages</code> maydoni endi <code>Vec&lt;String&gt;</code> oʻrniga <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> turiga ega. 
+<p><code>sent_messages</code> maydoni endi <code>Vec&lt;String&gt;</code> oʻrniga <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> turiga ega.
 <code>new</code> funksiyada biz yangisini yaratamiz <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> bo'sh vektor atrofidagi misol.
 <code>new</code> funksiyasida biz yangi <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> instancesini bo'sh vektor atrofida yaratib olamiz.</p>
 <p><code>send</code> metodini ishga tushirishda, traitning ma'no/tarifiga o'xshash bo'lgan birinchi parametr <code>self</code>ning o'zgarmas borrowi bo'lib qolaveradi. Vvektor hisoblangan <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>ninig ichidagi qiymatga o'zgaruvchan reference olish uchun <code>self.sent_messages</code>ning <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>dagi <code>borrow_mut</code>ni ishga tushuramiz. Keyin test paytida yuborilgan xabarlarni kuzatib borish uchun vektorga o'zgaruvchan referenceda <code>push</code> ni ishga tushirishimiz mumkin.</p>
@@ -521,13 +525,13 @@ mod tests {
 </span><span class="boring">        let percentage_of_max = self.value as f64 / self.max as f64;
 </span><span class="boring">
 </span><span class="boring">        if percentage_of_max &gt;= 1.0 {
-</span><span class="boring">            self.messenger.send(&quot;Error: You are over your quota!&quot;);
+</span><span class="boring">            self.messenger.send("Error: You are over your quota!");
 </span><span class="boring">        } else if percentage_of_max &gt;= 0.9 {
 </span><span class="boring">            self.messenger
-</span><span class="boring">                .send(&quot;Urgent warning: You've used up over 90% of your quota!&quot;);
+</span><span class="boring">                .send("Urgent warning: You've used up over 90% of your quota!");
 </span><span class="boring">        } else if percentage_of_max &gt;= 0.75 {
 </span><span class="boring">            self.messenger
-</span><span class="boring">                .send(&quot;Warning: You've used up over 75% of your quota!&quot;);
+</span><span class="boring">                .send("Warning: You've used up over 75% of your quota!");
 </span><span class="boring">        }
 </span><span class="boring">    }
 </span><span class="boring">}
@@ -595,11 +599,11 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 error: test failed, to rerun pass `--lib`
 </code></pre>
 <p>E'tibor bering ushbu kod quyidagi panicni keltirib chiqardi <code>already borrowed: BorrowMutError</code>. Bu <code>RefCell&lt;T&gt;</code>runtime vaqtida borrowing qoidalari buzilishini boshqariishini ko'rsak bo'ladi</p>
-<p>Ko'p marta qilganimizdek, ya'ni kompilyatsiya vaqtida emas, balki ish vaqtida borriwing 
-xatolarini ko'rish, ishlab chiqish jarayonida keyinchalik kodingizda 
-xatolar topishingiz mumkinligini anglatadi, ya'ni sizning kodingiz productionga 
-deploy qilinmagungacha. Bundan tashqari, sizning kodingiz kompilyatsiya vaqtida emas, aksincha runtime 
-vaqtida borrowlarni kuzatib borishi natijasida kichik runtime xatolik bo'lishi mumkin. 
+<p>Ko'p marta qilganimizdek, ya'ni kompilyatsiya vaqtida emas, balki ish vaqtida borriwing
+xatolarini ko'rish, ishlab chiqish jarayonida keyinchalik kodingizda
+xatolar topishingiz mumkinligini anglatadi, ya'ni sizning kodingiz productionga
+deploy qilinmagungacha. Bundan tashqari, sizning kodingiz kompilyatsiya vaqtida emas, aksincha runtime
+vaqtida borrowlarni kuzatib borishi natijasida kichik runtime xatolik bo'lishi mumkin.
 Lekin, <code>RefCell&lt;T&gt;</code>dan foydalanish faqat o'zgaruvchan qiymatlar mumkin bo'lgan kontekstdan foydalanayotgan
 vaqtingizdagi xabarlarni kuzatish uchun o'zini o'zgaritira oladigan soxta obyektni yaratish imkonini beradi. Doimiy referencelardan ko'ra ko'proq funksionallikni olishni xohlasangiz <code>RefCell&lt;T&gt;</code>dan foydalanishingiz mumkin, uning farqli tomomnlariga qaramasdan ham.</p>
 <h3 id="rct-va-refcelltni-birlashtirish-orqali-ozgaruvchan-malumotlarning-bir-nechta-egalariga-ega-bolish"><a class="header" href="#rct-va-refcelltni-birlashtirish-orqali-ozgaruvchan-malumotlarning-bir-nechta-egalariga-ega-bolish"><code>Rc&lt;T&gt;</code> va <code>RefCell&lt;T&gt;</code>ni birlashtirish orqali o<code>zgaruvchan ma</code>lumotlarning bir nechta egalariga ega bo`lish</a></h3>
@@ -626,9 +630,9 @@ fn main() {
 
     *value.borrow_mut() += 10;
 
-    println!(&quot;a after = {:?}&quot;, a);
-    println!(&quot;b after = {:?}&quot;, b);
-    println!(&quot;c after = {:?}&quot;, c);
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
 }</code></pre></pre>
 <p><span class="caption">15-24-ro'yxat: <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> yordamida o'zgaruvchan <code>List</code> yaratish</span></p>
 <p>Keyinchalik to'g'ridan-to'g'ri foydalana olishimiz mumkin bo'lgan <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> namunasi (instance) bo'lgan qiymatni yaratamiz <code>value</code> nomli o'zgaruvchiga joylashtiramiz. Keyin <code>a</code> bilan birga <code>value</code>ni o'z ichiga olgan <code>Cons</code> variantida <code>List</code> yaratamiz. <code>value</code>ni klonlashimiz kerak bo'ladi, shunda <code>value</code>dan <code>a</code>ga ownershipni (egalik) berishdan yoki <code>value</code>dan <code>a</code> borrowga ega bo;lishdan ko'ra <code>a</code> va <code>value</code>ning ikkalasi ham ichki <code>5</code>ga ownershipga (egalikka) ega bo'ladilar.</p>
@@ -692,6 +696,7 @@ c after = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
 
         <!-- Custom JS scripts -->
         <script src="ferris.js"></script>
+
 
 
     </div>
