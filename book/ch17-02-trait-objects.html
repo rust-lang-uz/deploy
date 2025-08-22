@@ -196,7 +196,7 @@ ishlatilishi mumkin bo‘lgan turlar to‘plamini kengaytira olishini xohlaymiz.
 amalga oshirilishini ko‘rsatish uchun, grafik foydalanuvchi interfeysi (GUI) vositasi
 misolini yaratamiz. Ushbu vosita elementlar ro‘yxatidan o‘tadi va har bir element uchun
 <code>draw</code> metodini chaqiradi. Bu GUI vositalarida keng qo‘llaniladigan uslubdir.<code>gui</code>
-nomli kutubxona crate yaratiladi. Ushbuu crate GUI kutubxonasining asosiy tuzilmasini o‘z
+nomli kutubxona crate yaratiladi. Ushbu crate GUI kutubxonasining asosiy tuzilmasini o‘z
 ichiga oladi. Unda, masalan, <code>Button</code> yoki <code>TextField</code> kabi foydalanishga tayyor ayrim
 turlarni taqdim qilishi mumkin. Shu bilan birga, <code>gui</code> foydalanuvchilari o‘zlarining
 chizilishi mumkin bo‘lgan turlarini ham yaratmoqchi bo‘lishadi: masalan, bir dasturchi
@@ -461,21 +461,21 @@ bajarishini ishga tushirish vaqtida tekshirishimiz shart emas. Bundan tashqari,
 agar qiymat usulni amalga oshirmasa-yu, lekin u chaqirilsa ham, xatolar yuzaga
 kelishidan xavotirlanishimizga hojat yo‘q. Agar qiymatlar trait obyektlariga
 kerak bo'lgan trait'larni amalga oshirmasa, Rust bu kodni kompilatsiya qilmaydi.</p>
-<p>For example, Listing 17-10 shows what happens if we try to create a <code>Screen</code>
-with a <code>String</code> as a component:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p>Masalan, 17-10-ro'yxatda <code>String</code> komponentli <code>Screen</code> yaratishga harakat
+qilsa, nima sodir bo‘lishi ko‘rsatilgan:</p>
+<p><span class="filename">Fayl nomi: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">use gui::Screen;
 
 fn main() {
     let screen = Screen {
-        components: vec![Box::new(String::from("Hi"))],
+        components: vec![Box::new(String::from("Salom"))],
     };
 
     screen.run();
 }</code></pre>
-<p><span class="caption">Listing 17-10: Attempting to use a type that doesn’t
-implement the trait object’s trait</span></p>
-<p>We’ll get this error because <code>String</code> doesn’t implement the <code>Draw</code> trait:</p>
+<p><span class="caption">17-10-ro'yxat: Trait obyektining xususiyatini amalga
+oshirmaydigan turdan foydalanishga urinish</span></p>
+<p><code>String</code> funksiyasi <code>Draw</code> trait'ni amalga oshirmagani uchun quyidagi xatolik yuz berdi:</p>
 <pre><code class="language-console">$ cargo run
    Compiling gui v0.1.0 (file:///projects/gui)
 error[E0277]: the trait bound `String: Draw` is not satisfied
@@ -490,21 +490,20 @@ error[E0277]: the trait bound `String: Draw` is not satisfied
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `gui` due to previous error
 </code></pre>
-<p>This error lets us know that either we’re passing something to <code>Screen</code> we
-didn’t mean to pass and so should pass a different type or we should implement
-<code>Draw</code> on <code>String</code> so that <code>Screen</code> is able to call <code>draw</code> on it.</p>
+<p>Bu xato quyidagi ikki holatdan birini ko‘rsatadi: yoki o‘tkazmoqchi
+bo‘lmagan biror narsani <code>Screen</code>ga o‘tkazilayapti va shuning uchun boshqa turda
+o‘tkazish kerak, yoki <code>String</code>ga <code>Draw</code>ni amalga oshirishimiz kerak, shunda
+<code>Screen</code> <code>draw</code>ni chaqira oladi.</p>
 <h3 id="trait-objects-perform-dynamic-dispatch"><a class="header" href="#trait-objects-perform-dynamic-dispatch">Trait Objects Perform Dynamic Dispatch</a></h3>
-<p>Recall in the <a href="ch10-01-syntax.html#performance-of-code-using-generics">“Performance of Code Using
-Generics”</a><!-- ignore --> section in
-Chapter 10 our discussion on the monomorphization process performed by the
-compiler when we use trait bounds on generics: the compiler generates
-nongeneric implementations of functions and methods for each concrete type that
-we use in place of a generic type parameter. The code that results from
-monomorphization is doing <em>static dispatch</em>, which is when the compiler knows
-what method you’re calling at compile time. This is opposed to <em>dynamic
-dispatch</em>, which is when the compiler can’t tell at compile time which method
-you’re calling. In dynamic dispatch cases, the compiler emits code that at
-runtime will figure out which method to call.</p>
+<p><a href="ch10-01-syntax.html#generiklar-yordamida-kodning-ishlashi">"Generiklar yordamida kodning ishlashi"</a><!-- ignore-->
+bo‘limidagi muhokamadagi kompilyator monomorfizatsiya qismini eslaymiz. Kompilyator
+umumiy turlarning trait chegaralari ustida ishlash jarayonida u har bir umumiy tur
+o‘rnida ishlatilgan aniq turlarni funksiya va metodlarga joriy etadi.
+Monomorfizatsiya natijasidagi kod <em>static dispatch</em> (ya’ni statik yo‘naltirish) deb
+ataladi. Bu degani kompilyatsiya vaqtida kompilyator qaysi turga oid funksiya yoki
+metod qayerda chaqirilishini biladi. Kompilyator bilmagan holat esa dynamic dispatch
+(ya’ni dinamik yo‘naltirish) deb ataladi va kompilyatsiya jarayonida dastur o‘zi
+ishga tushish vaqtida yo‘naltira oladigan kod yaratiladi.</p>
 <p>When we use trait objects, Rust must use dynamic dispatch. The compiler doesn’t
 know all the types that might be used with the code that’s using trait objects,
 so it doesn’t know which method implemented on which type to call. Instead, at
