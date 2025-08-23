@@ -15156,21 +15156,25 @@ write tests for this example.</p>
 <code>content</code> to return an empty string while waiting for the review. When the post
 receives approval, it should get published, meaning the text of the post will
 be returned when <code>content</code> is called.</p>
-<p>Notice that the only type we’re interacting with from the crate is the <code>Post</code>
-type. This type will use the state pattern and will hold a value that will be
-one of three state objects representing the various states a post can be
-in—draft, waiting for review, or published. Changing from one state to another
-will be managed internally within the <code>Post</code> type. The states change in
-response to the methods called by our library’s users on the <code>Post</code> instance,
-but they don’t have to manage the state changes directly. Also, users can’t
-make a mistake with the states, like publishing a post before it’s reviewed.</p>
-<h3 id="defining-post-and-creating-a-new-instance-in-the-draft-state"><a class="header" href="#defining-post-and-creating-a-new-instance-in-the-draft-state">Defining <code>Post</code> and Creating a New Instance in the Draft State</a></h3>
-<p>Let’s get started on the implementation of the library! We know we need a
-public <code>Post</code> struct that holds some content, so we’ll start with the
-definition of the struct and an associated public <code>new</code> function to create an
-instance of <code>Post</code>, as shown in Listing 17-12. We’ll also make a private
-<code>State</code> trait that will define the behavior that all state objects for a <code>Post</code>
-must have.</p>
+<p>E’tibor bering, biz crate ichidan faqat bitta tur (type) bilan ishlayapmiz - bu
+<code>Post</code> turi. Ushbu tur holat (state) andozasi (pattern) dan foydalanadi va u
+postning uch xil holatidan birini ifodalovchi obyekt qiymatini saqlaydi:
+qoralama (draft), ko‘rib chiqishni kutayotgan (waiting for review) yoki nashr
+qilingan (published).
+Bir holatdan boshqasiga o‘tish jarayoni <code>Post</code> turining o‘zida ichki tarzda
+boshqariladi. Holatlar, kutubxonamiz foydalanuvchilari <code>Post</code> obyektida
+metodlarni chaqirganida o‘zgaradi, lekin foydalanuvchilar bu holat
+almashuvlarini bevosita boshqarishga majbur emaslar. Bundan tashqari,
+foydalanuvchilar holatlar bilan xato qilolmaydi, masalan, postni
+tekshirilmasdan turib nashr qilish kabi.</p>
+<h2 id="post-ni-aniqlash-va-qoralama-holatida-yangi-nusxa-yaratish"><a class="header" href="#post-ni-aniqlash-va-qoralama-holatida-yangi-nusxa-yaratish"><code>Post</code> ni aniqlash va qoralama holatida yangi nusxa yaratish</a></h2>
+<p>Keling, kutubxona implementatsiyasini boshlaymiz! Umumiy (public) <code>Post</code>
+strukturasiga ehtiyoj borligini bilamiz, u kontentni saqlaydi. Shunday ekan,
+avval Post strukturasini va unga bog‘langan umumiy <code>new</code> funksiyasini
+ta’riflashdan boshlaymiz. Ushbu funksiya <code>Post</code> ning yangi nusxasini yaratadi
+(rasmda ko‘rsatilganidek — Listing 17-12). Bundan tashqari, xususiy (private)
+<code>State</code> trait'ini ham yaratamiz. Bu trait <code>Post</code> uchun barcha holat obyektlari
+bajarishi kerak bo‘lgan xatti-harakatlarni belgilab beradi.</p>
 <p>Keyin ’Post’ o‘z ichida ’state’ nomli maxfiy maydonida ’Option<T>’ orqali
 o‘ralgan ’Box<dyn State>’ trait obyektini saqlaydi, bu esa state obyektini
 ushlab turish uchun xizmat qiladi. Option<T> nima uchun kerakligini birozdan
@@ -19044,8 +19048,10 @@ you to solutions.</p>
 <p>Next, we’ll put everything we’ve discussed throughout the book into practice
 and do one more project!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="songi-loyiha-kop-oqimli-multithreaded-veb-server-qurish"><a class="header" href="#songi-loyiha-kop-oqimli-multithreaded-veb-server-qurish">So'ngi Loyiha: Ko'p oqimli (Multithreaded) Veb Server qurish</a></h1>
-<p>Bu uzoq safar bo‘ldi, lekin nihoyat kitobning oxiriga yetdik. Ushbu bobda biz yakuniy boblarda o‘rganilgan ba’zi tushunchalarni amalda qo‘llash uchun yana bir loyihani birga quramiz, shuningdek, avvalgi darslarni ham eslab o‘tamiz.</p>
-<p>Yakuniy loyihamizda biz “salom” deb javob beradigan va veb-brauzerda 20-1-rasmga o‘xshash ko‘rinadigan veb-server yaratamiz.</p>
+<p>Bu uzoq safar bo‘ldi, lekin nihoyat kitobning oxiriga yetdik. Ushbu bobda biz yakuniy boblarda o‘rganilgan ba’zi tushunchalarni amalda qo‘llash uchun
+yana bir loyihani birga quramiz, shuningdek, avvalgi darslarni ham eslab o‘tamiz.</p>
+<p>Yakuniy loyihamizda biz “salom” deb javob beradigan va veb-brauzerda
+20-1-rasmga o‘xshash ko‘rinadigan veb-server yaratamiz.</p>
 <p><img src="img/trpl20-01.png" alt="hello from rust" /></p>
 <p><span class="caption">20-rasm: Bizning yakuniy umumiy loyihamiz</span></p>
 <p>Veb-serverni yaratish bo‘yicha rejamiz quyidagicha:</p>
@@ -19056,35 +19062,50 @@ and do one more project!</p>
 <li>To‘g‘ri HTTP javobini (response) yaratish.</li>
 <li>Serverimiz unumdorligini oqimlar to‘plami (thread pool) yordamida oshirish.</li>
 </ol>
-<p>Boshlashdan oldin bir narsani aytib o‘tishimiz kerak: biz foydalanadigan usul Rust tilida veb-server qurishning eng yaxshi usuli bo‘lmaydi. Rust hamjamiyati
-<a href="https://crates.io/">crates.io</a> saytida chop etilgan, to‘liq funksiyali veb-server va oqimlar to‘plami (thread pool) kutubxonalarini yaratgan. Bu kutubxonalar biz quradigan versiyadan ko‘ra ancha mukammal. Biroq, ushbu bobdagi maqsadimiz – sizni o‘rgatish, eng oson yo‘lni tanlash emas. Rust tizim dasturlash tili bo‘lganligi sababli, biz o‘zimiz ishlamoqchi bo‘lgan abstraktsiya darajasini tanlashimiz mumkin va boshqa tillarda amalga oshirish qiyin yoki imkonsiz bo‘lgan chuqur darajadagi ishlarni bajarish imkoniyatiga egamiz. Shuning uchun biz HTTP server va oqimlar to‘plamini qo‘lda yozamiz, shunda siz kelajakda foydalanishingiz mumkin bo‘lgan kutubxonalar ortida qanday g‘oya va texnikalar yotganini tushunib olasiz.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="building-a-single-threaded-web-server"><a class="header" href="#building-a-single-threaded-web-server">Building a Single-Threaded Web Server</a></h2>
-<p>We’ll start by getting a single-threaded web server working. Before we begin,
-let’s look at a quick overview of the protocols involved in building web
-servers. The details of these protocols are beyond the scope of this book, but
-a brief overview will give you the information you need.</p>
-<p>The two main protocols involved in web servers are <em>Hypertext Transfer
-Protocol</em> <em>(HTTP)</em> and <em>Transmission Control Protocol</em> <em>(TCP)</em>. Both protocols
-are <em>request-response</em> protocols, meaning a <em>client</em> initiates requests and a
-<em>server</em> listens to the requests and provides a response to the client. The
-contents of those requests and responses are defined by the protocols.</p>
-<p>TCP is the lower-level protocol that describes the details of how information
-gets from one server to another but doesn’t specify what that information is.
-HTTP builds on top of TCP by defining the contents of the requests and
-responses. It’s technically possible to use HTTP with other protocols, but in
-the vast majority of cases, HTTP sends its data over TCP. We’ll work with the
-raw bytes of TCP and HTTP requests and responses.</p>
-<h3 id="listening-to-the-tcp-connection"><a class="header" href="#listening-to-the-tcp-connection">Listening to the TCP Connection</a></h3>
-<p>Our web server needs to listen to a TCP connection, so that’s the first part
-we’ll work on. The standard library offers a <code>std::net</code> module that lets us do
-this. Let’s make a new project in the usual fashion:</p>
-<pre><code class="language-console">$ cargo new hello
-     Created binary (application) `hello` project
-$ cd hello
+<p>Boshlashdan oldin bir narsani aytib o‘tishimiz kerak: biz foydalanadigan usul
+Rust tilida veb-server qurishning eng yaxshi usuli bo‘lmaydi. Rust hamjamiyati
+<a href="https://crates.io/">crates.io</a> saytida chop etilgan, to‘liq funksiyali
+veb-server va oqimlar to‘plami (thread pool) kutubxonalarini yaratgan. Bu
+kutubxonalar biz quradigan versiyadan ko‘ra ancha mukammal. Biroq, ushbu
+bobdagi maqsadimiz – sizni o‘rgatish, eng oson yo‘lni tanlash emas. Rust tizim
+dasturlash tili bo‘lganligi sababli, biz o‘zimiz ishlamoqchi bo‘lgan
+abstraktsiya darajasini tanlashimiz mumkin va boshqa tillarda amalga oshirish
+qiyin yoki imkonsiz bo‘lgan chuqur darajadagi ishlarni bajarish imkoniyatiga
+egamiz. Shuning uchun biz HTTP server va oqimlar to‘plamini qo‘lda yozamiz,
+shunda siz kelajakda foydalanishingiz mumkin bo‘lgan kutubxonalar ortida qanday
+g‘oya va texnikalar yotganini tushunib olasiz.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="bitta-oqimli-single-threaded-veb-server-yaratish"><a class="header" href="#bitta-oqimli-single-threaded-veb-server-yaratish">Bitta oqimli (single-threaded) veb-server yaratish</a></h2>
+<p>Avval bitta oqimli veb-serverni ishga tushirishdan boshlaymiz. Ishni
+boshlashdan oldin, veb-serverlarni qurishda ishtirok etadigan protokollar
+haqida qisqacha ko‘rib chiqamiz. Ushbu protokollarning batafsil tafsilotlari
+ushbu kitob doirasidan tashqarida, ammo qisqacha tushuntirish sizga zarur
+bo‘lgan asosiy ma’lumotlarni beradi.</p>
+<p>Veb-serverlarda ishtirok etadigan ikkita asosiy protokol bu <em>Gipermatn uzatish
+protokoli</em> <em>(HTTP)</em> va <em>Uzatishni boshqarish protokoli</em> <em>(TCP)</em> hisoblanadi.
+Har ikkala protokol ham <em>so‘rov-javob</em> (request-response) protokollari bo‘lib,
+bunda <em>mijoz</em> (client) so‘rov yuboradi, <em>server</em> esa bu so‘rovlarni tinglaydi
+va mijozga javob qaytaradi. Ushbu so‘rovlar va javoblarning mazmuni protokollar
+tomonidan aniqlanadi.</p>
+<p>TCP bu past darajadagi (lower-level) protokol bo‘lib, ma’lumotlar bir serverdan
+boshqasiga qanday uzatilishini belgilaydi, lekin bu ma’lumotlarning mazmuni
+qanday bo‘lishi kerakligini aniqlamaydi. HTTP esa TCP ustida qurilgan bo‘lib,
+so‘rovlar va javoblarning tarkibini belgilaydi. Texnik jihatdan HTTP’ni boshqa
+protokollar bilan ham ishlatish mumkin, ammo aksariyat hollarda HTTP o‘z
+ma’lumotlarini TCP orqali uzatadi. Biz esa TCP va HTTP so‘rov hamda
+javoblarining xom baytlari (raw bytes) bilan ishlaymiz.</p>
+<h3 id="tcp-ulanishni-tinglash"><a class="header" href="#tcp-ulanishni-tinglash">TCP ulanishni tinglash</a></h3>
+<p>Veb-serverimiz TCP ulanishini tinglashi kerak, shuning uchun birinchi navbatda
+shu qism ustida ishlaymiz. Rust’ning standart kutubxonasi buni amalga oshirish
+imkonini beruvchi <code>std::net</code> modulini taklif qiladi. Keling, odatdagidek yangi
+loyiha yaratamiz:</p>
+<pre><code class="language-console">$ cargo new salom
+     Created binary (application) `salom` project
+$ cd salom
 </code></pre>
-<p>Now enter the code in Listing 20-1 in <em>src/main.rs</em> to start. This code will
-listen at the local address <code>127.0.0.1:7878</code> for incoming TCP streams. When it
-gets an incoming stream, it will print <code>Connection established!</code>.</p>
+<p>Endi <em>src/main.rs</em> fayliga 20-1 ro‘yxatdagi (Listing 20-1) kodni kiriting. Bu
+kod <code>127.0.0.1:7878</code> lokal manzilida kiruvchi TCP oqimlarini tinglaydi. Har
+safar yangi oqim kelganda, <code>Connection established!</code> (Ulanish o‘rnatildi!) deb
+chop etadi.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust no_run">use std::net::TcpListener;
 
@@ -19097,79 +19118,84 @@ fn main() {
         println!("Connection established!");
     }
 }</code></pre></pre>
-<p><span class="caption">Listing 20-1: Listening for incoming streams and printing
-a message when we receive a stream</span></p>
-<p>Using <code>TcpListener</code>, we can listen for TCP connections at the address
-<code>127.0.0.1:7878</code>. In the address, the section before the colon is an IP address
-representing your computer (this is the same on every computer and doesn’t
-represent the authors’ computer specifically), and <code>7878</code> is the port. We’ve
-chosen this port for two reasons: HTTP isn’t normally accepted on this port so
-our server is unlikely to conflict with any other web server you might have
-running on your machine, and 7878 is <em>rust</em> typed on a telephone.</p>
-<p>The <code>bind</code> function in this scenario works like the <code>new</code> function in that it
-will return a new <code>TcpListener</code> instance. The function is called <code>bind</code>
-because, in networking, connecting to a port to listen to is known as “binding
-to a port.”</p>
-<p>The <code>bind</code> function returns a <code>Result&lt;T, E&gt;</code>, which indicates that it’s
-possible for binding to fail. For example, connecting to port 80 requires
-administrator privileges (nonadministrators can listen only on ports higher
-than 1023), so if we tried to connect to port 80 without being an
-administrator, binding wouldn’t work. Binding also wouldn’t work, for example,
-if we ran two instances of our program and so had two programs listening to the
-same port. Because we’re writing a basic server just for learning purposes, we
-won’t worry about handling these kinds of errors; instead, we use <code>unwrap</code> to
-stop the program if errors happen.</p>
-<p>The <code>incoming</code> method on <code>TcpListener</code> returns an iterator that gives us a
-sequence of streams (more specifically, streams of type <code>TcpStream</code>). A single
-<em>stream</em> represents an open connection between the client and the server. A
-<em>connection</em> is the name for the full request and response process in which a
-client connects to the server, the server generates a response, and the server
-closes the connection. As such, we will read from the <code>TcpStream</code> to see what
-the client sent and then write our response to the stream to send data back to
-the client. Overall, this <code>for</code> loop will process each connection in turn and
-produce a series of streams for us to handle.</p>
-<p>For now, our handling of the stream consists of calling <code>unwrap</code> to terminate
-our program if the stream has any errors; if there aren’t any errors, the
-program prints a message. We’ll add more functionality for the success case in
-the next listing. The reason we might receive errors from the <code>incoming</code> method
-when a client connects to the server is that we’re not actually iterating over
-connections. Instead, we’re iterating over <em>connection attempts</em>. The
-connection might not be successful for a number of reasons, many of them
-operating system specific. For example, many operating systems have a limit to
-the number of simultaneous open connections they can support; new connection
-attempts beyond that number will produce an error until some of the open
-connections are closed.</p>
-<p>Let’s try running this code! Invoke <code>cargo run</code> in the terminal and then load
-<em>127.0.0.1:7878</em> in a web browser. The browser should show an error message
-like “Connection reset,” because the server isn’t currently sending back any
-data. But when you look at your terminal, you should see several messages that
-were printed when the browser connected to the server!</p>
-<pre><code class="language-text">     Running `target/debug/hello`
+<p><span class="caption">20-1 ro‘yxat: Kiruvchi oqimlarni tinglash va oqim qabul qilinganda xabar chop etish</span></p>
+<p><code>TcpListener</code> yordamida <code>127.0.0.1:7878</code> manzilida TCP ulanishlarini
+tinglashimiz mumkin. Manzilda ikki nuqtadan (:) oldingi qism — bu
+kompyuteringizni ifodalovchi IP manzil (bu barcha kompyuterlarda bir xil
+bo‘ladi va mualliflarning kompyuteriga xos emas), <code>7878</code> esa port raqami. Bu
+portni ikki sababga ko‘ra tanladik: odatda HTTP bu portda ishlatilmaydi,
+shuning uchun serverimiz kompyuteringizda ishlayotgan boshqa veb-serverlar
+bilan to‘qnash kelmaydi; ikkinchidan, telefon klaviaturasida <em>rust</em> so‘zini
+terishda 7878 raqamlari ishlatiladi.</p>
+<p>Ushbu holatda <code>bind</code> funksiyasi <code>new</code> funksiyasiga o‘xshab ishlaydi, ya’ni u
+yangi <code>TcpListener</code> obyektini qaytaradi. Funksiya <code>bind</code> deb nomlangan, chunki
+tarmoqlarda portga ulanib tinglash jarayoni “portga bog‘lanish” (binding) deb
+ataladi.</p>
+<p><code>bind</code> funksiyasi <code>Result&lt;T, E&gt;</code> turini qaytaradi, bu esa bog‘lanish (binding)
+muvaffaqiyatsiz bo‘lishi mumkinligini bildiradi. Masalan, 80-portga ulanish
+uchun administrator huquqlari talab qilinadi (administrator bo‘lmagan
+foydalanuvchilar faqat 1023 dan yuqori portlarni tinglashi mumkin). Shuning
+uchun, agar biz administrator bo‘lmasak va 80-portga ulanishga harakat qilsak,
+bog‘lanish amalga oshmaydi. Bundan tashqari, agar dasturimizning ikkita
+nusxasini ishga tushirsak va ular bir xil portda tinglashga harakat qilsa,
+bog‘lanish yana amalga oshmaydi. Bu yerda faqat o‘rganish maqsadida oddiy
+server yozayotganimiz uchun bunday xatoliklarni oldini olish haqida hozircha
+qayg‘urmaymiz; uning o‘rniga dasturimizda xatolik yuz bersa dasturni
+to'xtatadigan <code>unwrap</code> funksiyasidan foydalanamiz.</p>
+<p><code>TcpListener</code> ustidagi <code>incoming</code> metodi oqimlar ketma-ketligini (ya’ni,
+<code>TcpStream</code> turidagi oqimlar) taqdim etuvchi iteratorni qaytaradi. Har bir
+<em>oqim</em> (stream) mijoz (client) va server o‘rtasidagi ochiq ulanishni
+ifodalaydi. <em>Ulanish</em> (connection) deganda, mijoz serverga ulanadigan, server
+javob tayyorlab qaytaradigan va so‘ng ulanishni yopadigan to‘liq so‘rov-javob
+(request response) jarayoni tushuniladi. Shunday ekan, <code>TcpStream</code> dan o‘qib,
+mijoz nimani yuborganini bilamiz va javobimizni aynan shu oqim orqali yozib,
+mijozga yuboramiz. Umuman olganda, bu <code>for</code> sikli har bir ulanishni navbati
+bilan qayta ishlaydi va bizga boshqarish uchun bir nechta oqimlar beradi.</p>
+<p>Hozircha oqim (stream) bilan ishlashimiz, agar oqimda xatolar bo‘lsa,
+dasturimizni tugatish uchun <code>unwrap</code> funcsiyasini chaqirishdan iborat; xatolik
+bo‘lmasa, dastur xabar chop etadi. Kelasi ro‘yxatda muvaffaqiyatli holatlar
+uchun ko‘proq funksionallik qo‘shamiz. Mijoz serverga ulanganida <code>incoming</code>
+metodidan xatoliklar chiqishi mumkin, chunki biz aslida ulanishlarning o‘zini
+emas, <em>ulanishga urinishlarni</em> (connection attemps) ko‘rib chiqayapmiz
+(iterating). Har bir urinish muvaffaqiyatli bo‘lavermasligi mumkin, va buning
+sabablari ko‘pincha operatsion tizimga bog‘liq bo‘ladi. Masalan, ko‘plab
+operatsion tizimlarda bir vaqtning o‘zida ochiq bo‘lishi mumkin bo‘lgan
+ulanishlar soni cheklangan bo‘ladi; bu limitdan oshib ketilganida, yangi
+ulanishga urinishlar xatolik chiqaradi, toki mavjud ulanishlardan ba’zilari
+yopilmaguncha.</p>
+<p>Keling, ushbu kodni ishga tushirib ko‘ramiz! Terminalda <code>cargo run</code> buyrug‘ini
+invoke qiling (yurg'azing) va so‘ng brauzeringizda <em>127.0.0.1:7878</em> manzilini
+oching. Brauzer “Connection reset” (Ulanish tiklandi) kabi xatolik xabarini
+ko‘rsatishi mumkin, chunki hozircha server hech qanday ma’lumot qaytarayotgani
+yo‘q. Biroq terminalingizga qarasangiz, brauzer serverga ulanganida chiqarilgan
+bir nechta xabarlarni ko‘rishingiz mumkin bo‘ladi!</p>
+<pre><code class="language-text">     Running `target/debug/salom`
 Connection established!
 Connection established!
 Connection established!
 </code></pre>
-<p>Sometimes, you’ll see multiple messages printed for one browser request; the
-reason might be that the browser is making a request for the page as well as a
-request for other resources, like the <em>favicon.ico</em> icon that appears in the
-browser tab.</p>
-<p>It could also be that the browser is trying to connect to the server multiple
-times because the server isn’t responding with any data. When <code>stream</code> goes out
-of scope and is dropped at the end of the loop, the connection is closed as
-part of the <code>drop</code> implementation. Browsers sometimes deal with closed
-connections by retrying, because the problem might be temporary. The important
-factor is that we’ve successfully gotten a handle to a TCP connection!</p>
-<p>Remember to stop the program by pressing <span class="keystroke">ctrl-c</span>
-when you’re done running a particular version of the code. Then restart the
-program by invoking the <code>cargo run</code> command after you’ve made each set of code
-changes to make sure you’re running the newest code.</p>
-<h3 id="reading-the-request"><a class="header" href="#reading-the-request">Reading the Request</a></h3>
-<p>Let’s implement the functionality to read the request from the browser! To
-separate the concerns of first getting a connection and then taking some action
-with the connection, we’ll start a new function for processing connections. In
-this new <code>handle_connection</code> function, we’ll read data from the TCP stream and
-print it so we can see the data being sent from the browser. Change the code to
-look like Listing 20-2.</p>
+<p>Ba’zan brauzerning bitta so‘rovi uchun bir nechta xabarlar chiqishini
+ko‘rishingiz mumkin; buning sababi shundaki, brauzer sahifa uchun so‘rov
+yuborish bilan birga, brauzer tabi da (yorlig‘ida) ko‘rinadigan <em>favicon.ico</em>
+kabi boshqa resurslar uchun ham so‘rov yuboradi.</p>
+<p>Brauzer bir necha marta serverga ulanishga harakat qilayotgan bo'lishi ham
+mumkin, chunki server hech qanday ma'lumot yubormayapti. <code>stream</code> sikl oxirida
+ko‘lam (scope) dan chiqib ketganda, <code>drop</code> implementatsiyasi orqali ulanish
+yopiladi. Brauzerlar ba’zida yopilgan ulanishlarga qayta urinish qiladi, chunki
+muammo vaqtincha bo‘lishi mumkin. Muhim jihati shuki - TCP ulanishni
+muvaffaqiyatli qo‘lga kiritdik!</p>
+<p>Dasturdan foydalanishni tugatganingizda, uni <span
+    class="keystroke">ctrl-c</span> tugmalari yordamida to‘xtatishni unutmang.
+Har safar kodga o‘zgartirish kiritganingizdan so‘ng, eng so‘nggi versiyasi
+ishga tushirilayotganiga ishonch hosil qilish uchun <code>cargo run</code> buyrug‘ini
+qayta ishga tushuring.</p>
+<h3 id="sorovni-oqish-reading-the-request"><a class="header" href="#sorovni-oqish-reading-the-request">So'rovni o'qish (Reading the request!)</a></h3>
+<p>Brauzerdan yuborilgan so‘rovni o‘qish funksiyasini ishlab chiqamiz! Avval
+ulanishni (connection) qabul qilish va keyin ular bilan ishlash bosqichlarini
+bir-biridan ajratish uchun, ulanishni qayta ishlovchi yangi funksiya yozamiz.
+Bu yangi <code>handle_connection</code> funksiyasida TCP oqimidan (stream) ma’lumotlarni
+o‘qiymiz va brauzer yuborayotgan ma’lumotlarni ko‘rish uchun ularni chop
+etamiz. Kodni 20-02 ro‘yxatdagidek qilib o‘zgartiring.</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><pre class="playground"><code class="language-rust no_run">use std::{
     io::{prelude::*, BufReader},
@@ -19196,26 +19222,30 @@ fn handle_connection(mut stream: TcpStream) {
 
     println!("Request: {:#?}", http_request);
 }</code></pre></pre>
-<p><span class="caption">Listing 20-2: Reading from the <code>TcpStream</code> and printing
-the data</span></p>
-<p>We bring <code>std::io::prelude</code> and <code>std::io::BufReader</code> into scope to get access
-to traits and types that let us read from and write to the stream. In the <code>for</code>
-loop in the <code>main</code> function, instead of printing a message that says we made a
-connection, we now call the new <code>handle_connection</code> function and pass the
-<code>stream</code> to it.</p>
-<p>In the <code>handle_connection</code> function, we create a new <code>BufReader</code> instance that
-wraps a mutable reference to the <code>stream</code>. <code>BufReader</code> adds buffering by
-managing calls to the <code>std::io::Read</code> trait methods for us.</p>
-<p>We create a variable named <code>http_request</code> to collect the lines of the request
-the browser sends to our server. We indicate that we want to collect these
-lines in a vector by adding the <code>Vec&lt;_&gt;</code> type annotation.</p>
-<p><code>BufReader</code> implements the <code>std::io::BufRead</code> trait, which provides the <code>lines</code>
-method. The <code>lines</code> method returns an iterator of <code>Result&lt;String, std::io::Error&gt;</code> by splitting the stream of data whenever it sees a newline
-byte. To get each <code>String</code>, we map and <code>unwrap</code> each <code>Result</code>. The <code>Result</code>
-might be an error if the data isn’t valid UTF-8 or if there was a problem
-reading from the stream. Again, a production program should handle these errors
-more gracefully, but we’re choosing to stop the program in the error case for
-simplicity.</p>
+<p><span class="caption">20-02 ro‘yxat: TcpStream dan o‘qish va yuborilgan ma’lumotni chop etish</span></p>
+<p><code>std::io::prelude</code> va <code>std::io::BufReader</code> ni ko‘lamga (scope) olib kiramiz -
+bu oqimdan (streamdan) o‘qish va yozish imkonini beradigan hislat (trait) va
+xillardan (tiplardan) foydalanish imkonini beradi. Endi <code>main</code> funksiyasidagi
+<code>for</code> siklida ulanish o‘rnatilgani haqida xabar chiqarish o‘rniga, yangi
+<code>handle_connection</code> funksiyasini chaqiramiz va unga <code>oqimni (streamni)</code>
+uzatamiz.</p>
+<p><code>handle_connection</code> funksiyasida biz <code>oqimga (streamga)</code> o‘zgaruvchan (mutable)
+murojaatni o‘rab oladigan yangi <code>BufReader</code> obyektini yaratamiz. <code>BufReader</code>
+buferlashni qo‘shadi - ya’ni u <code>std::io::Read</code> hislatining (traitining)
+metodlariga murojaat qilishni boshqaradi.</p>
+<p>Brauzer serverimizga yuboradigan so‘rov satrlarini yig‘ish uchun <code>http_request</code>
+nomli o‘zgaruvchi yaratamiz. Bu satrlarni vektor ko‘rinishida yig‘moqchi
+ekanligimizni ko‘rsatish uchun <code>Vec&lt;_&gt;</code> xil (type) annotatsiyasini qo‘shamiz.</p>
+<p><code>BufReader</code> <code>std::io::BufRead</code> xususiyatini (traitini) amalga oshiradi va shu
+orqali <code>lines</code> metodini taqdim etadi. <code>Lines</code> metodi har gal yangi qatordan
+ajratib, oqimdagi ma’lumotlarni <code>Result&lt;String, std::io::Error&gt;</code> ko‘rinishidagi
+iterator sifatida qaytaradi. Har bir String qiymatni olish uchun har bir natija
+(result) ustida <code>map</code> va <code>unwrap</code> funksiyalarini ishga tushuramiz. Agar
+ma’lumotlar yaroqsiz UTF-8 formatida bo‘lsa yoki oqimdan o‘qishda muammo yuz
+bersa, natija (result) xatolik (error) bo‘lishi mumkin. Ishlab chiqarish
+(Production) darajasidagi dastur bu xatolarni ancha ehtiyotkorlik bilan
+boshqarishi kerak, ammo soddalashtirish uchun biz bu yerda xatolik yuz bersa,
+dasturni to‘xtatamiz.</p>
 <p>The browser signals the end of an HTTP request by sending two newline
 characters in a row, so to get one request from the stream, we take lines until
 we get a line that is the empty string. Once we’ve collected the lines into the
