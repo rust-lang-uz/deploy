@@ -14827,19 +14827,18 @@ bermaydi. Shu bois, trait obyektlar boshqa tillardagi obyektlar kabi keng
 maqsadlarda emas, balki faqat umumiy xatti-harakatni abstraktsiyalash,
 ya’ni umumiy funksionallik asosida turli obyektlar bilan ishlash imkoniyatini
 yaratish uchun qo‘llaniladi.</p>
-<p>Listing 17-3 shows how to define a trait named <code>Draw</code> with one method named
-<code>draw</code>:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p>17-3-ro'yxat <code>Draw</code> trait'ini <code>draw</code> metodi bilan birga ta'riflash ko'rsatib beradi:</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub trait Draw {
     fn draw(&amp;self);
 }</code></pre>
-<p><span class="caption">Listing 17-3: Definition of the <code>Draw</code> trait</span></p>
-<p>This syntax should look familiar from our discussions on how to define traits
-in Chapter 10. Next comes some new syntax: Listing 17-4 defines a struct named
-<code>Screen</code> that holds a vector named <code>components</code>. This vector is of type
-<code>Box&lt;dyn Draw&gt;</code>, which is a trait object; it’s a stand-in for any type inside
-a <code>Box</code> that implements the <code>Draw</code> trait.</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">Ro'yxat 17-3: <code>Draw</code> trait'ining ta'rifi</span></p>
+<p>Ushbu sintaksis bizning 10-bo'limda bo'lib o'tgan Traitlarni joriy etish
+suhbatimizdan keyin tanish bo'lishi kerak. Keyingisi esa yana yangi sintaksis:
+17-4-ro'yxat <code>Screen</code> nomli <code>components</code> nomi ostidagi vekotr o'z ichiga olgan
+structni ta'riflaydi. Ushbu vektor <code>Box&lt;dyn Draw&gt;</code> turidan, ya'ni trait obyekt (bu
+<code>Box</code> ichida <code>Draw</code> tratini joriy etuvchi istalgan turga solishtiriluvchi).</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
 </span><span class="boring">    fn draw(&amp;self);
 </span><span class="boring">}
@@ -14847,12 +14846,12 @@ a <code>Box</code> that implements the <code>Draw</code> trait.</p>
 </span>pub struct Screen {
     pub components: Vec&lt;Box&lt;dyn Draw&gt;&gt;,
 }</code></pre>
-<p><span class="caption">Listing 17-4: Definition of the <code>Screen</code> struct with a
-<code>components</code> field holding a vector of trait objects that implement the <code>Draw</code>
-trait</span></p>
-<p>On the <code>Screen</code> struct, we’ll define a method named <code>run</code> that will call the
-<code>draw</code> method on each of its <code>components</code>, as shown in Listing 17-5:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">Ro'yxat 17-4: <code>Screen</code> structidagi <code>components</code> maydoni
+bir vektorda joylashgan va <code>Draw</code> tratini joriy etgan obyektlarni ushlab turibdi
+</span></p>
+<p><code>Screen</code> struktida, biz 17-5-ro'yxatda ko'rsatilganiday, <code>draw</code> metodini har
+bir <code>components</code> ustidan chaqiradigan <code>run</code> nomli metod yaratamiz:</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
 </span><span class="boring">    fn draw(&amp;self);
 </span><span class="boring">}
@@ -14868,15 +14867,15 @@ trait</span></p>
         }
     }
 }</code></pre>
-<p><span class="caption">Listing 17-5: A <code>run</code> method on <code>Screen</code> that calls the
-<code>draw</code> method on each component</span></p>
-<p>This works differently from defining a struct that uses a generic type
-parameter with trait bounds. A generic type parameter can only be substituted
-with one concrete type at a time, whereas trait objects allow for multiple
-concrete types to fill in for the trait object at runtime. For example, we
-could have defined the <code>Screen</code> struct using a generic type and a trait bound
-as in Listing 17-6:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<p><span class="caption">Ro'yxat 17-5: <code>Screen</code> da har bir komponent ustidan
+<code>draw</code> metodini chaqiradigan <code>run</code> metodi</span></p>
+<p>Bu generik tur ko'rsatkichi va trait cheklanmalardan farqli boshqacha
+ishlaydi. Generik tur parametr bir vaqt o'zida faqat bitta tur qabul qiladi,
+trait obyektlar esa boshqa tarafdan ko'plab konkret turlar ishlash vaqtidagi
+trait obyektlarni to'ldirib berish uchun ishlatsa bo'ladi. Misol uchun,
+<code>Screen</code> struktini 17-6-ro'yxatda ko'rsatilganiday generik tur va trait
+cheklanmalari bilan ta'riflasa bo'ladi:</p>
+<p><span class="filename">Fayl nomi: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
 </span><span class="boring">    fn draw(&amp;self);
 </span><span class="boring">}
@@ -14895,9 +14894,8 @@ where
         }
     }
 }</code></pre>
-<p><span class="caption"> 17-6 ro'yxat: <code>Screen</code> tuzilmasi va uning <code>run</code>
-usulining muqobil amalga oshirilishi, bunda generiklar va xususiyatlar
-chegaralari qo‘llaniladi</span></p>
+<p><span class="caption">Ro'yxat 17-6: <code>Screen</code> strukti va uning <code>run</code> metodining
+generik va trait cheklanmalarini ishlatgandagi alternativ ta'rifi.</span></p>
 <p>Bu faqat <code>Button</code> yoki faqat <code>TextField</code> turidagi komponentlar ro‘yxatiga
 ega bo‘lgan <code>Screen</code> nusxasi bilan cheklaydi. Agar sizda faqat bir xil
 to‘plamlar bo‘lsa, <code>generic</code> umumiy va <code>trait</code> xususiyat chegaralaridan
@@ -15083,15 +15081,16 @@ ataladi. Bu degani kompilyatsiya vaqtida kompilyator qaysi turga oid funksiya yo
 metod qayerda chaqirilishini biladi. Kompilyator bilmagan holat esa dynamic dispatch
 (ya’ni dinamik yo‘naltirish) deb ataladi va kompilyatsiya jarayonida dastur o‘zi
 ishga tushish vaqtida yo‘naltira oladigan kod yaratiladi.</p>
-<p>When we use trait objects, Rust must use dynamic dispatch. The compiler doesn’t
-know all the types that might be used with the code that’s using trait objects,
-so it doesn’t know which method implemented on which type to call. Instead, at
-runtime, Rust uses the pointers inside the trait object to know which method to
-call. This lookup incurs a runtime cost that doesn’t occur with static
-dispatch. Dynamic dispatch also prevents the compiler from choosing to inline a
-method’s code, which in turn prevents some optimizations. However, we did get
-extra flexibility in the code that we wrote in Listing 17-5 and were able to
-support in Listing 17-9, so it’s a trade-off to consider.</p>
+<p>Rust-da trait obyektlaridan foydalanganda, dinamik dispatch ishlatiladi.
+Kompilyator kodda qaysi turdagi qiymatlar ishlatilishini oldindan bilmaydi,
+shuning uchun qaysi turdagi metod chaqirilishini ham bilmaydi. Buning o‘rniga,
+bajarilish vaqtida (runtime) Rust trait obyektining ichidagi ko‘rsatkichlardan
+(pointer) qaysi metodni chaqirish kerakligini aniqlaydi. Bu esa statik dispatchiga
+nisbatan bajarilish vaqtida qo‘shimcha xarajatlarni keltirib chiqaradi. Shuningdek,
+dinamik dispatchi kompilyatorga metod kodini inline qilish imkonini bermaydi, bu esa
+ba’zi optimallashtirishlarni cheklaydi. Biroq, biz ro‘yxat 17-5 yozgan kodimizda
+qo‘shimcha moslashuvchanlikka ega bo‘ldik va ro‘yxat 17-9 da qo‘llab-quvvatlay oldik,
+shuning uchun buni hisobga olish kerak.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="implementing-an-object-oriented-design-pattern"><a class="header" href="#implementing-an-object-oriented-design-pattern">Implementing an Object-Oriented Design Pattern</a></h2>
 <p>The <em>state pattern</em> is an object-oriented design pattern. The crux of the
 pattern is that we define a set of states a value can have internally. The
