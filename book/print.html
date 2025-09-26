@@ -15938,32 +15938,36 @@ option.</p>
 <p>Next, we’ll look at patterns, which are another of Rust’s features that enable
 lots of flexibility. We’ve looked at them briefly throughout the book but
 haven’t seen their full capability yet. Let’s go!</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="patterns-and-matching"><a class="header" href="#patterns-and-matching">Patterns and Matching</a></h1>
-<p><em>Patterns</em> are a special syntax in Rust for matching against the structure of
-types, both complex and simple. Using patterns in conjunction with <code>match</code>
-expressions and other constructs gives you more control over a program’s
-control flow. A pattern consists of some combination of the following:</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="patternlar-va-matching"><a class="header" href="#patternlar-va-matching">Patternlar va matching</a></h1>
+<p><em>Pattern</em> (namuna, andaza) — Rust dasturlash tilida kodning biron qismini
+maʼlum bir tuzilma yoki qiymatga moslashtirish uchun ishlatiladigan maxsus
+sintaksis. Patternlarni <code>match</code> bilan birga ishlatish orqali siz dasturning
+ishlash jarayonini yana ham yaxshiroq boshqara olishingiz mumkin. Patternlar
+quyidagi kombinatsiyalardan iborat boʼlishi mumkin:</p>
 <ul>
-<li>Literals</li>
-<li>Destructured arrays, enums, structs, or tuples</li>
-<li>Variables</li>
-<li>Wildcards</li>
-<li>Placeholders</li>
+<li>Literallar</li>
+<li>Qayta strukturalangan arrayʼlar, enumʼlar, structlʼar yoki tupleʼlar</li>
+<li>Oʼzgaruvchilar</li>
+<li>Pastki chiziqcha (yohud Wildcards, <code>_</code> koʼrinishida yoziladi)</li>
+<li>Toʼldiruvchilar</li>
 </ul>
-<p>Some example patterns include <code>x</code>, <code>(a, 3)</code>, and <code>Some(Color::Red)</code>. In the
-contexts in which patterns are valid, these components describe the shape of
-data. Our program then matches values against the patterns to determine whether
-it has the correct shape of data to continue running a particular piece of code.</p>
-<p>To use a pattern, we compare it to some value. If the pattern matches the
-value, we use the value parts in our code. Recall the <code>match</code> expressions in
-Chapter 6 that used patterns, such as the coin-sorting machine example. If the
-value fits the shape of the pattern, we can use the named pieces. If it
-doesn’t, the code associated with the pattern won’t run.</p>
-<p>This chapter is a reference on all things related to patterns. We’ll cover the
-valid places to use patterns, the difference between refutable and irrefutable
-patterns, and the different kinds of pattern syntax that you might see. By the
-end of the chapter, you’ll know how to use patterns to express many concepts in
-a clear way.</p>
+<p>Ushbu kombinatsiyalarga misol qilib <code>x</code>, <code>(a, 3)</code> va <code>Some(Color::Red)</code> larni
+koʼrsatishimiz mumkin. Ushbu kombinatsiyalar maʼlumotning tuzilishini ifoda
+etadi. Dasturimiz biron maʼlumotni ushbu kombinatsiyalarga solishtirib koʼradi
+va maʼlumotimizning turi aynan biz istagan shaklda ekani yoki yoʼqligini
+tekshiradi. Maʼlumot tekshirilgach, dasturni davom ettirish mumkin boʼladi.</p>
+<p>Patternni ishlatish uchun, biz uni biron maʼlumot bilan solishtiramiz. Agar
+pattern maʼlumot bilan mos kelsa, biz u maʼlumotni kodning qolgan qismida
+ishlatishimiz mumkin boʼladi. 6-boʼlimdagi tangalarni tartiblovchi mashina
+misolini yodga oladigan boʼlsak, u yerda <code>match</code> ishlatilganiga guvoh boʼlamiz.
+Agar qiymat pattern bilan mos kelsa, biz uni ishlatishimiz mumkin. Aks holda,
+patternning qolgan qismi ishlamaydi.</p>
+<p>Ushbu boʼlim patternlarga tegishli barcha maʼlumotlar uchun manba hisoblanadi.
+Ushbu boʼlimda biz patternlarni qanday toʼgʼri ishlatish, aniq va noaniq
+patternlar oʼrtasidagi farq hamda patternlarning turli xil sintaks shakldagi
+koʼrinishlarini oʼrganamiz. Ushbu boʼlim yakunida siz patternlarni oʼz
+dasturlaringizdagi turli konseptsiyalarni sodda va oson yoʼl bilan ishlatishni
+boshlaysiz.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="all-the-places-patterns-can-be-used"><a class="header" href="#all-the-places-patterns-can-be-used">All the Places Patterns Can Be Used</a></h2>
 <p>Patterns pop up in a number of places in Rust, and you’ve been using them a lot
 without realizing it! This section discusses all the places where patterns are
