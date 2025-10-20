@@ -15968,19 +15968,20 @@ patternlar oʼrtasidagi farq hamda patternlarning turli xil sintaks shakldagi
 koʼrinishlarini oʼrganamiz. Ushbu boʼlim yakunida siz patternlarni oʼz
 dasturlaringizdagi turli konseptsiyalarni sodda va oson yoʼl bilan ishlatishni
 boshlaysiz.</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="all-the-places-patterns-can-be-used"><a class="header" href="#all-the-places-patterns-can-be-used">All the Places Patterns Can Be Used</a></h2>
-<p>Patterns pop up in a number of places in Rust, and you’ve been using them a lot
-without realizing it! This section discusses all the places where patterns are
-valid.</p>
-<h3 id="match-arms"><a class="header" href="#match-arms"><code>match</code> Arms</a></h3>
-<p>As discussed in Chapter 6, we use patterns in the arms of <code>match</code> expressions.
-Formally, <code>match</code> expressions are defined as the keyword <code>match</code>, a value to
-match on, and one or more match arms that consist of a pattern and an
-expression to run if the value matches that arm’s pattern, like this:</p>
-<pre><code class="language-text">match VALUE {
-    PATTERN =&gt; EXPRESSION,
-    PATTERN =&gt; EXPRESSION,
-    PATTERN =&gt; EXPRESSION,
+<div style="break-before: page; page-break-before: always;"></div><h2 id="qoliplar-qoʻllaniladigan-barcha-oʻrinlar"><a class="header" href="#qoliplar-qoʻllaniladigan-barcha-oʻrinlar">Qoliplar qoʻllaniladigan barcha oʻrinlar</a></h2>
+<p>Rust tilida, qoliplarga bir qancha joylarda duch kelish mumkin, va shu paytgacha,
+oʻzingiz sezmagan holda, ulardan foydalanib kelayotgan edingiz! Bu boʻlim
+qoliplapdan foydalanish joiz boʻlgan barcha oʻrinlar haqida soʻz yuritadi.</p>
+<h3 id="match-qoʻllari"><a class="header" href="#match-qoʻllari"><code>match</code> qoʻllari</a></h3>
+<p>6-bobda aytganimizdek, qoliplarni <code>match</code> ifodasining qoʻllarida ishlatamiz.
+Rasman, <code>match</code> quyidagilar bilan ifodalanadi: <code>match</code> kalitsoʻzi,
+qolipga solinayotgan qiymat, va qolip va unga qiymat mos tushganda bajariladigan
+ifodadan iborat bir yoki bir nechta <code>match</code> qoʻllari. Buni siz quyidagi misolda
+koʻrishingiz mumkin:</p>
+<pre><code class="language-text">match QIYMAT {
+    QOLIP =&gt; IFODA, // birinchi qoʻl
+    QOLIP =&gt; IFODA, // ikkinchi qoʻl
+    QOLIP =&gt; IFODA, // uchinchi qoʻl
 }
 </code></pre>
 <p>For example, here's the <code>match</code> expression from Listing 6-5 that matches on an
